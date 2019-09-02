@@ -1,5 +1,7 @@
 package dprec
 
+import "fmt"
+
 func NewVec3(x, y, z float64) Vec3 {
 	return Vec3{
 		X: x,
@@ -48,6 +50,19 @@ func UnitVec3(vector Vec3) Vec3 {
 	return Vec3Quot(vector, vector.Length())
 }
 
+func ResizedVec3(vector Vec3, newLength float64) Vec3 {
+	ratio := newLength / vector.Length()
+	return Vec3Prod(vector, ratio)
+}
+
+func InverseVec3(vector Vec3) Vec3 {
+	return Vec3{
+		X: -vector.X,
+		Y: -vector.Y,
+		Z: -vector.Z,
+	}
+}
+
 type Vec3 struct {
 	X float64
 	Y float64
@@ -58,6 +73,14 @@ func (v Vec3) IsZero() bool {
 	return Eq(v.X, 0.0) && Eq(v.Y, 0.0) && Eq(v.Z, 0.0)
 }
 
+func (v Vec3) SqrLength() float64 {
+	return Vec3Dot(v, v)
+}
+
 func (v Vec3) Length() float64 {
 	return Sqrt(Vec3Dot(v, v))
+}
+
+func (v Vec3) GoString() string {
+	return fmt.Sprintf("(%f, %f, %f)", v.X, v.Y, v.Z)
 }
