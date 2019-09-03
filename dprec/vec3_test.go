@@ -32,6 +32,26 @@ var _ = Describe("Vec3", func() {
 		Expect(vector).To(HaveVec3Coords(9.8, 2.3, 1.5))
 	})
 
+	Specify("ZeroVec3", func() {
+		vector := ZeroVec3()
+		Expect(vector).To(HaveVec3Coords(0.0, 0.0, 0.0))
+	})
+
+	Specify("BasisXVec3", func() {
+		vector := BasisXVec3()
+		Expect(vector).To(HaveVec3Coords(1.0, 0.0, 0.0))
+	})
+
+	Specify("BasisYVec3", func() {
+		vector := BasisYVec3()
+		Expect(vector).To(HaveVec3Coords(0.0, 1.0, 0.0))
+	})
+
+	Specify("BasisZVec3", func() {
+		vector := BasisZVec3()
+		Expect(vector).To(HaveVec3Coords(0.0, 0.0, 1.0))
+	})
+
 	Specify("Vec3Sum", func() {
 		result := Vec3Sum(firstVector, secondVector)
 		Expect(result).To(HaveVec3Coords(1.0, 5.0, 9.0))
@@ -55,6 +75,11 @@ var _ = Describe("Vec3", func() {
 	Specify("Vec3Dot", func() {
 		result := Vec3Dot(firstVector, secondVector)
 		Expect(result).To(EqualFloat64(24.0))
+	})
+
+	Specify("Vec3Cross", func() {
+		result := Vec3Cross(firstVector, secondVector)
+		Expect(result).To(HaveVec3Coords(7.0, -14.0, 7.0))
 	})
 
 	Specify("UnitVec3", func() {

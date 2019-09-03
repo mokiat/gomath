@@ -10,6 +10,34 @@ func NewVec3(x, y, z float64) Vec3 {
 	}
 }
 
+func ZeroVec3() Vec3 {
+	return Vec3{}
+}
+
+func BasisXVec3() Vec3 {
+	return Vec3{
+		X: 1.0,
+		Y: 0.0,
+		Z: 0.0,
+	}
+}
+
+func BasisYVec3() Vec3 {
+	return Vec3{
+		X: 0.0,
+		Y: 1.0,
+		Z: 0.0,
+	}
+}
+
+func BasisZVec3() Vec3 {
+	return Vec3{
+		X: 0.0,
+		Y: 0.0,
+		Z: 1.0,
+	}
+}
+
 func Vec3Sum(a, b Vec3) Vec3 {
 	return Vec3{
 		X: a.X + b.X,
@@ -44,6 +72,14 @@ func Vec3Quot(vector Vec3, value float64) Vec3 {
 
 func Vec3Dot(a, b Vec3) float64 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z
+}
+
+func Vec3Cross(a, b Vec3) Vec3 {
+	return Vec3{
+		X: a.Y*b.Z - a.Z*b.Y,
+		Y: a.Z*b.X - a.X*b.Z,
+		Z: a.X*b.Y - a.Y*b.X,
+	}
 }
 
 func UnitVec3(vector Vec3) Vec3 {
