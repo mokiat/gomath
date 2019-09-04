@@ -1,11 +1,11 @@
-package sprec_test
+package dprec_test
 
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/mokiat/gomath/sprec"
-	. "github.com/mokiat/gomath/testing/sprectest"
+	. "github.com/mokiat/gomath/dprec"
+	. "github.com/mokiat/gomath/testing/dprectest"
 )
 
 var _ = Describe("Vec2", func() {
@@ -67,7 +67,7 @@ var _ = Describe("Vec2", func() {
 
 	Specify("Vec2Dot", func() {
 		result := Vec2Dot(firstVector, secondVector)
-		Expect(result).To(EqualFloat32(4.0))
+		Expect(result).To(EqualFloat64(4.0))
 	})
 
 	Specify("UnitVec2", func() {
@@ -93,12 +93,12 @@ var _ = Describe("Vec2", func() {
 
 	Specify("#SqrLength", func() {
 		lng := firstVector.SqrLength()
-		Expect(lng).To(EqualFloat32(13.0))
+		Expect(lng).To(EqualFloat64(13.0))
 	})
 
 	Specify("#Length", func() {
 		lng := firstVector.Length()
-		Expect(lng).To(EqualFloat32(3.605551275463))
+		Expect(lng).To(EqualFloat64(3.605551275463))
 	})
 
 	Specify("#GoString", func() {
