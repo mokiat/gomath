@@ -30,6 +30,21 @@ var _ = Describe("Vec2", func() {
 		Expect(vector).To(HaveVec2Coords(9.8, 2.3))
 	})
 
+	Specify("ZeroVec2", func() {
+		vector := ZeroVec2()
+		Expect(vector).To(HaveVec2Coords(0.0, 0.0))
+	})
+
+	Specify("BasisXVec2", func() {
+		vector := BasisXVec2()
+		Expect(vector).To(HaveVec2Coords(1.0, 0.0))
+	})
+
+	Specify("BasisYVec2", func() {
+		vector := BasisYVec2()
+		Expect(vector).To(HaveVec2Coords(0.0, 1.0))
+	})
+
 	Specify("Vec2Sum", func() {
 		result := Vec2Sum(firstVector, secondVector)
 		Expect(result).To(HaveVec2Coords(1.0, 5.0))
@@ -57,7 +72,17 @@ var _ = Describe("Vec2", func() {
 
 	Specify("UnitVec2", func() {
 		result := UnitVec2(firstVector)
-		Expect(result).To(HaveVec2Coords(0.554700196225229, 0.832050294337844))
+		Expect(result).To(HaveVec2Coords(0.554700196225, 0.832050294337))
+	})
+
+	Specify("ResizedVec2", func() {
+		result := ResizedVec2(firstVector, 7.211102550926)
+		Expect(result).To(HaveVec2Coords(4.0, 6.0))
+	})
+
+	Specify("InverseVec2", func() {
+		result := InverseVec2(firstVector)
+		Expect(result).To(HaveVec2Coords(-2.0, -3.0))
 	})
 
 	Specify("#IsZero", func() {
@@ -66,8 +91,18 @@ var _ = Describe("Vec2", func() {
 		Expect(NewVec2(Epsilon, Epsilon).IsZero()).To(BeFalse())
 	})
 
+	Specify("#SqrLength", func() {
+		lng := firstVector.SqrLength()
+		Expect(lng).To(EqualFloat32(13.0))
+	})
+
 	Specify("#Length", func() {
 		lng := firstVector.Length()
-		Expect(lng).To(EqualFloat32(3.605551275463989))
+		Expect(lng).To(EqualFloat32(3.605551275463))
+	})
+
+	Specify("#GoString", func() {
+		result := firstVector.GoString()
+		Expect(result).To(Equal("(2.000000, 3.000000)"))
 	})
 })
