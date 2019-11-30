@@ -11,6 +11,20 @@ func Abs(value float64) float64 {
 	return math.Abs(value)
 }
 
+func Max(a, b float64) float64 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func Min(a, b float64) float64 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
 func Eq(a, b float64) bool {
 	return EqEps(a, b, Epsilon)
 }
