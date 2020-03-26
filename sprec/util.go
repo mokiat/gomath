@@ -36,3 +36,11 @@ func EqEps(a, b, epsilon float32) bool {
 func Sqrt(value float32) float32 {
 	return float32(math.Sqrt(float64(value)))
 }
+
+func Cos(radians float32) float32 {
+	return float32(math.Cos(float64(radians)))
+}
+
+func Sin(radians float32) float32 {
+	return float32(math.Sin(float64(radians)))
+}
