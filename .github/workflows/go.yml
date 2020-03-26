@@ -7,23 +7,28 @@ on:
     branches: [ master ]
 
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-
     - name: Set up Go 1.14
       uses: actions/setup-go@v1
       with:
         go-version: 1.14
-      id: go
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
+    - name: Setup Env
+      run: |
+        echo "::set-env name=GOPATH::$(go env GOPATH)"
+        echo "::add-path::$(go env GOPATH)/bin"
+      shell: bash
+
     - name: Get Ginkgo
-      run: echo $GOPATH && go get github.com/onsi/ginkgo/ginkgo && ls -la $GOPATH/bin
+      run: go get github.com/onsi/ginkgo/ginkgo
+      env:
+        GO111MODULE: on
 
     - name: Build
       run: $GOPATH/bin/ginkgo -r --race --randomizeAllSpecs --randomizeSuites
