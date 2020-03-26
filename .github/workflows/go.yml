@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Get Ginkgo
-      run: go get github.com/onsi/ginkgo/ginkgo
+      run: echo $GOPATH && go get github.com/onsi/ginkgo/ginkgo && ls -la $GOPATH/bin
 
     - name: Build
       run: $GOPATH/bin/ginkgo -r --race --randomizeAllSpecs --randomizeSuites
