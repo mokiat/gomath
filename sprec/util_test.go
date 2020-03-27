@@ -56,4 +56,9 @@ var _ = Describe("Util", func() {
 		Expect(Sin(Pi / 2)).To(EqualFloat32(1.0))
 	})
 
+	Specify("Sign", func() {
+		Expect(Sign(0.1)).To(EqualFloat32(1.0))
+		Expect(Sign(-0.1)).To(EqualFloat32(-1.0))
+	})
+
 })

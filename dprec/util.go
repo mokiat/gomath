@@ -44,3 +44,10 @@ func Cos(radians float64) float64 {
 func Sin(radians float64) float64 {
 	return math.Sin(radians)
 }
+
+func Sign(value float64) float64 {
+	if math.Signbit(value) {
+		return -1.0
+	}
+	return 1.0
+}
