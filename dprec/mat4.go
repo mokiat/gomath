@@ -156,6 +156,27 @@ func InverseMat4(m Mat4) Mat4 {
 	)
 }
 
+func TransformationMat4(orientX, orientY, orientZ, translation Vec3) Mat4 {
+	var result Mat4
+	result.M11 = orientX.X
+	result.M12 = orientY.X
+	result.M13 = orientZ.X
+	result.M14 = translation.X
+
+	result.M21 = orientX.Y
+	result.M22 = orientY.Y
+	result.M23 = orientZ.Y
+	result.M24 = translation.Y
+
+	result.M31 = orientX.Z
+	result.M32 = orientY.Z
+	result.M33 = orientZ.Z
+	result.M34 = translation.Z
+
+	result.M44 = 1.0
+	return result
+}
+
 func Mat4Prod(left, right Mat4) Mat4 {
 	return Mat4{
 		M11: left.M11*right.M11 + left.M12*right.M21 + left.M13*right.M31 + left.M14*right.M41,
@@ -180,6 +201,14 @@ func Mat4Prod(left, right Mat4) Mat4 {
 	}
 }
 
+func Mat4MultiProd(first Mat4, others ...Mat4) Mat4 {
+	result := first
+	for _, matrix := range others {
+		result = Mat4Prod(result, matrix)
+	}
+	return result
+}
+
 func Mat4Vec4Prod(mat Mat4, vec Vec4) Vec4 {
 	return Vec4{
 		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13*vec.Z + mat.M14*vec.W,
@@ -194,6 +223,22 @@ type Mat4 struct {
 	M21, M22, M23, M24 float64
 	M31, M32, M33, M34 float64
 	M41, M42, M43, M44 float64
+}
+
+func (m Mat4) OrientationX() Vec3 {
+	return NewVec3(m.M11, m.M21, m.M31)
+}
+
+func (m Mat4) OrientationY() Vec3 {
+	return NewVec3(m.M12, m.M22, m.M32)
+}
+
+func (m Mat4) OrientationZ() Vec3 {
+	return NewVec3(m.M13, m.M23, m.M33)
+}
+
+func (m Mat4) Translation() Vec3 {
+	return NewVec3(m.M14, m.M24, m.M34)
 }
 
 func (m Mat4) GoString() string {

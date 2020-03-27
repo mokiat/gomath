@@ -136,6 +136,21 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
+	Specify("TransformationMat4", func() {
+		matrix := TransformationMat4(
+			NewVec3(1.0, 2.0, 3.0),
+			NewVec3(5.0, 6.0, 7.0),
+			NewVec3(9.0, 10.0, 11.0),
+			NewVec3(13.0, 14.0, 15.0),
+		)
+		Expect(matrix).To(HaveMat4Elements(
+			1.0, 5.0, 9.0, 13.0,
+			2.0, 6.0, 10.0, 14.0,
+			3.0, 7.0, 11.0, 15.0,
+			0.0, 0.0, 0.0, 1.0,
+		))
+	})
+
 	Specify("Mat4Prod", func() {
 		result := Mat4Prod(matrix, otherMatrix)
 		Expect(result).To(HaveMat4Elements(
@@ -146,9 +161,38 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
+	Specify("Mat4MultiProd", func() {
+		matrix = Mat4MultiProd(
+			TranslationMat4(2.0, 3.0, 5.0),
+			ScaleMat4(2.0, 4.0, 8.0),
+		)
+		vector := Mat4Vec4Prod(matrix, NewVec4(1.0, 1.0, 1.0, 1.0))
+		Expect(vector).To(HaveVec4Coords(4.0, 7.0, 13.0, 1.0))
+	})
+
 	Specify("Mat4Vec4Prod", func() {
 		result := Mat4Vec4Prod(matrix, vector)
 		Expect(result).To(HaveVec4Coords(1.85, 5.05, 8.25, 11.45))
+	})
+
+	Specify("#OrientationX", func() {
+		vector := matrix.OrientationX()
+		Expect(vector).To(HaveVec3Coords(0.1, 0.5, 0.9))
+	})
+
+	Specify("#OrientationY", func() {
+		vector := matrix.OrientationY()
+		Expect(vector).To(HaveVec3Coords(0.2, 0.6, 1.0))
+	})
+
+	Specify("#OrientationZ", func() {
+		vector := matrix.OrientationZ()
+		Expect(vector).To(HaveVec3Coords(0.3, 0.7, 1.1))
+	})
+
+	Specify("#Translation", func() {
+		vector := matrix.Translation()
+		Expect(vector).To(HaveVec3Coords(0.4, 0.8, 1.2))
 	})
 
 	Specify("#GoString", func() {
