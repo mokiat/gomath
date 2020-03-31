@@ -1,0 +1,188 @@
+package dprec_test
+
+import (
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
+	. "github.com/mokiat/gomath/dprec"
+	. "github.com/mokiat/gomath/testing/dprectest"
+)
+
+var _ = Describe("Mat3", func() {
+	var matrix Mat3
+	var secondMatrix Mat3
+	var thirdMatrix Mat3
+	var vector Vec3
+
+	BeforeEach(func() {
+		matrix = NewMat3(
+			0.1, 0.2, 0.3,
+			0.4, 0.5, 0.6,
+			0.7, 0.8, 0.9,
+		)
+		secondMatrix = NewMat3(
+			1.1, 1.2, 1.3,
+			1.4, 1.5, 1.6,
+			1.7, 1.8, 1.9,
+		)
+		thirdMatrix = NewMat3(
+			2.1, 2.2, 2.3,
+			2.4, 2.5, 2.6,
+			2.7, 2.8, 2.9,
+		)
+		vector = NewVec3(2.5, 3.5, 1.0)
+	})
+
+	Specify("NewMat3", func() {
+		Expect(matrix).To(HaveMat3Elements(
+			0.1, 0.2, 0.3,
+			0.4, 0.5, 0.6,
+			0.7, 0.8, 0.9,
+		))
+	})
+
+	Specify("ZeroMat3", func() {
+		Expect(ZeroMat3()).To(HaveMat3Elements(
+			0.0, 0.0, 0.0,
+			0.0, 0.0, 0.0,
+			0.0, 0.0, 0.0,
+		))
+	})
+
+	Specify("IdentityMat3", func() {
+		identityMatrix := IdentityMat3()
+		transformedVector := Mat3Vec3Prod(identityMatrix, vector)
+		Expect(transformedVector).To(HaveVec3Coords(vector.X, vector.Y, vector.Z))
+	})
+
+	Specify("TranslationMat3", func() {
+		translationMatrix := TranslationMat3(2.0, -3.0)
+		transformedVector := Mat3Vec3Prod(translationMatrix, vector)
+		Expect(transformedVector).To(HaveVec3Coords(4.5, 0.5, 1.0))
+	})
+
+	Specify("ScaleMat3", func() {
+		scaleMatrix := ScaleMat3(2.0, -3.0)
+		transformedVector := Mat3Vec3Prod(scaleMatrix, vector)
+		Expect(transformedVector).To(HaveVec3Coords(5.0, -10.5, 1.0))
+	})
+
+	Specify("RotationMat3", func() {
+		vector := NewVec3(1.0, 0.0, 1.0)
+		rotationMatrix := RotationMat3(30.0)
+		transformedVector := Mat3Vec3Prod(rotationMatrix, vector)
+		Expect(transformedVector).To(HaveVec3Coords(0.866025403784, 0.5, 1.0))
+	})
+
+	Specify("OrthoMat3", func() {
+		orthoMatrix := OrthoMat3(-1.1, 2.1, 1.5, -3.4)
+
+		// test bottom left boundary vector projection
+		bottomLeftCorner := NewVec3(-1.1, -3.4, 1.0)
+		projectedBottomLeftCorner := Mat3Vec3Prod(orthoMatrix, bottomLeftCorner)
+		projectedBottomLeftCorner = Vec3Quot(projectedBottomLeftCorner, projectedBottomLeftCorner.Z)
+		Expect(projectedBottomLeftCorner).To(HaveVec3Coords(-1.0, -1.0, 1.0))
+
+		// test top right boundary vector projection
+		topRightCorner := NewVec3(2.1, 1.5, 1.0)
+		projectedTopRightCorner := Mat3Vec3Prod(orthoMatrix, topRightCorner)
+		projectedTopRightCorner = Vec3Quot(projectedTopRightCorner, projectedTopRightCorner.Z)
+		Expect(projectedTopRightCorner).To(HaveVec3Coords(1.0, 1.0, 1.0))
+	})
+
+	Specify("FastInverseMat3", func() {
+		matrix = IdentityMat3()
+		matrix = Mat3Prod(matrix, TranslationMat3(1.5, 2.3))
+		matrix = Mat3Prod(matrix, RotationMat3(45.0))
+
+		inverseMatrix := FastInverseMat3(matrix)
+		productMatrix := Mat3Prod(inverseMatrix, matrix)
+		Expect(productMatrix).To(HaveMat3Elements(
+			1.0, 0.0, 0.0,
+			0.0, 1.0, 0.0,
+			0.0, 0.0, 1.0,
+		))
+	})
+
+	Specify("InverseMat3", func() {
+		matrix := NewMat3(
+			4.0, 3.0, 2.0,
+			1.1, 4.1, 3.1,
+			2.2, 3.2, 4.2,
+		)
+		inverseMatrix := InverseMat3(matrix)
+		productMatrix := Mat3Prod(inverseMatrix, matrix)
+		Expect(productMatrix).To(HaveMat3Elements(
+			1.0, 0.0, 0.0,
+			0.0, 1.0, 0.0,
+			0.0, 0.0, 1.0,
+		))
+	})
+
+	Specify("TransformationMat3", func() {
+		matrix := TransformationMat3(
+			NewVec2(1.0, 2.0),
+			NewVec2(5.0, 6.0),
+			NewVec2(9.0, 10.0),
+		)
+		Expect(matrix).To(HaveMat3Elements(
+			1.0, 5.0, 9.0,
+			2.0, 6.0, 10.0,
+			0.0, 0.0, 1.0,
+		))
+	})
+
+	Specify("Mat3Prod", func() {
+		result := Mat3Prod(matrix, secondMatrix)
+		Expect(result).To(HaveMat3Elements(
+			0.9, 0.96, 1.02,
+			2.16, 2.31, 2.46,
+			3.42, 3.66, 3.9,
+		))
+	})
+
+	Specify("Mat3MultiProd", func() {
+		multiResult := Mat3MultiProd(
+			matrix,
+			secondMatrix,
+			thirdMatrix,
+		)
+		manualResult := matrix
+		manualResult = Mat3Prod(manualResult, secondMatrix)
+		manualResult = Mat3Prod(manualResult, thirdMatrix)
+		Expect(multiResult).To(HaveMat3Elements(
+			manualResult.M11, manualResult.M12, manualResult.M13,
+			manualResult.M21, manualResult.M22, manualResult.M23,
+			manualResult.M31, manualResult.M32, manualResult.M33,
+		))
+	})
+
+	Specify("Mat3Vec3Prod", func() {
+		result := Mat3Vec3Prod(matrix, vector)
+		Expect(result).To(HaveVec3Coords(1.25, 3.35, 5.45))
+	})
+
+	Specify("#OrientationX", func() {
+		vector := matrix.OrientationX()
+		Expect(vector).To(HaveVec2Coords(0.1, 0.4))
+	})
+
+	Specify("#OrientationY", func() {
+		vector := matrix.OrientationY()
+		Expect(vector).To(HaveVec2Coords(0.2, 0.5))
+	})
+
+	Specify("#Translation", func() {
+		vector := matrix.Translation()
+		Expect(vector).To(HaveVec2Coords(0.3, 0.6))
+	})
+
+	Specify("#GoString", func() {
+		result := matrix.GoString()
+		Expect(result).Should(Equal("(" +
+			"(0.100000, 0.200000, 0.300000), " +
+			"(0.400000, 0.500000, 0.600000), " +
+			"(0.700000, 0.800000, 0.900000))",
+		))
+	})
+})
