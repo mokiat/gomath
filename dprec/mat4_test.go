@@ -67,7 +67,7 @@ var _ = Describe("Mat4", func() {
 
 	Specify("RotationMat4", func() {
 		vector := NewVec4(1.0, 0.0, 0.0, 1.0)
-		rotationMatrix := RotationMat4(120.0, 1.0, 1.0, 1.0)
+		rotationMatrix := RotationMat4(Degrees(120.0), 1.0, 1.0, 1.0)
 		transformedVector := Mat4Vec4Prod(rotationMatrix, vector)
 		Expect(transformedVector).To(HaveVec4Coords(0.0, 1.0, 0.0, 1.0))
 	})
@@ -107,7 +107,7 @@ var _ = Describe("Mat4", func() {
 	Specify("FastInverseMat4", func() {
 		matrix = IdentityMat4()
 		matrix = Mat4Prod(matrix, TranslationMat4(1.5, 2.3, 3.7))
-		matrix = Mat4Prod(matrix, RotationMat4(45.0, 0.5, 0.3, 0.2))
+		matrix = Mat4Prod(matrix, RotationMat4(Degrees(45.0), 0.5, 0.3, 0.2))
 
 		inverseMatrix := FastInverseMat4(matrix)
 		productMatrix := Mat4Prod(inverseMatrix, matrix)

@@ -41,10 +41,9 @@ func ScaleMat3(x, y float64) Mat3 {
 	return result
 }
 
-func RotationMat3(angle float64) Mat3 {
-	radians := angle * Pi / 180.0
-	cs := Cos(radians)
-	sn := Sin(radians)
+func RotationMat3(angle Angle) Mat3 {
+	cs := Cos(angle)
+	sn := Sin(angle)
 
 	var result Mat3
 	result.M11 = cs

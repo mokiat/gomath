@@ -45,15 +45,15 @@ var _ = Describe("Util", func() {
 	})
 
 	Specify("Cos", func() {
-		Expect(Cos(0.0)).To(EqualFloat32(1.0))
-		Expect(Cos(Pi / 3)).To(EqualFloat32(0.5))
-		Expect(Cos(Pi / 2)).To(EqualFloat32(0.0))
+		Expect(Cos(Radians(0.0))).To(EqualFloat32(1.0))
+		Expect(Cos(Radians(Pi / 3))).To(EqualFloat32(0.5))
+		Expect(Cos(Radians(Pi / 2))).To(EqualFloat32(0.0))
 	})
 
 	Specify("Sin", func() {
-		Expect(Sin(0.0)).To(EqualFloat32(0.0))
-		Expect(Sin(Pi / 6)).To(EqualFloat32(0.5))
-		Expect(Sin(Pi / 2)).To(EqualFloat32(1.0))
+		Expect(Sin(Radians(0.0))).To(EqualFloat32(0.0))
+		Expect(Sin(Radians(Pi / 6))).To(EqualFloat32(0.5))
+		Expect(Sin(Radians(Pi / 2))).To(EqualFloat32(1.0))
 	})
 
 	Specify("Sign", func() {

@@ -69,7 +69,7 @@ var _ = Describe("Mat3", func() {
 
 	Specify("RotationMat3", func() {
 		vector := NewVec3(1.0, 0.0, 1.0)
-		rotationMatrix := RotationMat3(30.0)
+		rotationMatrix := RotationMat3(Degrees(30.0))
 		transformedVector := Mat3Vec3Prod(rotationMatrix, vector)
 		Expect(transformedVector).To(HaveVec3Coords(0.866025403784, 0.5, 1.0))
 	})
@@ -93,7 +93,7 @@ var _ = Describe("Mat3", func() {
 	Specify("FastInverseMat3", func() {
 		matrix = IdentityMat3()
 		matrix = Mat3Prod(matrix, TranslationMat3(1.5, 2.3))
-		matrix = Mat3Prod(matrix, RotationMat3(45.0))
+		matrix = Mat3Prod(matrix, RotationMat3(Degrees(45.0)))
 
 		inverseMatrix := FastInverseMat3(matrix)
 		productMatrix := Mat3Prod(inverseMatrix, matrix)

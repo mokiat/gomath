@@ -46,12 +46,9 @@ func ScaleMat4(x, y, z float64) Mat4 {
 	return result
 }
 
-func RotationMat4(angle, x, y, z float64) Mat4 {
-	radians := angle * Pi / 180.0
-	cs := Cos(radians)
-	sn := Sin(radians)
+func RotationMat4(angle Angle, x, y, z float64) Mat4 {
 	vector := UnitVec3(NewVec3(x, y, z))
-	return rotationMat4FromNormalizedData(cs, sn, vector)
+	return rotationMat4FromNormalizedData(Cos(angle), Sin(angle), vector)
 }
 
 func rotationMat4FromNormalizedData(cs, sn float64, vector Vec3) Mat4 {

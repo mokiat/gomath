@@ -37,12 +37,12 @@ func Sqrt(value float32) float32 {
 	return float32(math.Sqrt(float64(value)))
 }
 
-func Cos(radians float32) float32 {
-	return float32(math.Cos(float64(radians)))
+func Cos(angle Angle) float32 {
+	return float32(math.Cos(float64(angle.Radians())))
 }
 
-func Sin(radians float32) float32 {
-	return float32(math.Sin(float64(radians)))
+func Sin(angle Angle) float32 {
+	return float32(math.Sin(float64(angle.Radians())))
 }
 
 func Sign(value float32) float32 {
