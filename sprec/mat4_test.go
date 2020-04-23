@@ -175,6 +175,11 @@ var _ = Describe("Mat4", func() {
 		Expect(result).To(HaveVec4Coords(1.85, 5.05, 8.25, 11.45))
 	})
 
+	Specify("Mat4Vec3Transformation", func() {
+		result := Mat4Vec3Transformation(matrix, NewVec3(2.5, 1.5, 3.0))
+		Expect(result).To(HaveVec3Coords(1.85, 5.05, 8.25))
+	})
+
 	Specify("#OrientationX", func() {
 		vector := matrix.OrientationX()
 		Expect(vector).To(HaveVec3Coords(0.1, 0.5, 0.9))

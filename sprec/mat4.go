@@ -215,6 +215,14 @@ func Mat4Vec4Prod(mat Mat4, vec Vec4) Vec4 {
 	}
 }
 
+func Mat4Vec3Transformation(mat Mat4, vec Vec3) Vec3 {
+	return Vec3{
+		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13*vec.Z + mat.M14,
+		Y: mat.M21*vec.X + mat.M22*vec.Y + mat.M23*vec.Z + mat.M24,
+		Z: mat.M31*vec.X + mat.M32*vec.Y + mat.M33*vec.Z + mat.M34,
+	}
+}
+
 type Mat4 struct {
 	M11, M12, M13, M14 float32
 	M21, M22, M23, M24 float32
