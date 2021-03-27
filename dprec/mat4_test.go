@@ -151,6 +151,50 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
+	Specify("OrientationMat4", func() {
+		matrix := OrientationMat4(
+			NewVec3(1.0, 2.0, 3.0),
+			NewVec3(5.0, 6.0, 7.0),
+			NewVec3(9.0, 10.0, 11.0),
+		)
+		Expect(matrix).To(HaveMat4Elements(
+			1.0, 5.0, 9.0, 0.0,
+			2.0, 6.0, 10.0, 0.0,
+			3.0, 7.0, 11.0, 0.0,
+			0.0, 0.0, 0.0, 1.0,
+		))
+	})
+
+	Specify("RowMajorArrayMat4", func() {
+		matrix := RowMajorArrayMat4([16]float64{
+			1.0, 2.0, 3.0, 4.0,
+			5.0, 6.0, 7.0, 8.0,
+			9.0, 10.0, 11.0, 12.0,
+			13.0, 14.0, 15.0, 16.0,
+		})
+		Expect(matrix).To(HaveMat4Elements(
+			1.0, 2.0, 3.0, 4.0,
+			5.0, 6.0, 7.0, 8.0,
+			9.0, 10.0, 11.0, 12.0,
+			13.0, 14.0, 15.0, 16.0,
+		))
+	})
+
+	Specify("ColumnMajorArrayMat4", func() {
+		matrix := ColumnMajorArrayMat4([16]float64{
+			1.0, 5.0, 9.0, 13.0,
+			2.0, 6.0, 10.0, 14.0,
+			3.0, 7.0, 11.0, 15.0,
+			4.0, 8.0, 12.0, 16.0,
+		})
+		Expect(matrix).To(HaveMat4Elements(
+			1.0, 2.0, 3.0, 4.0,
+			5.0, 6.0, 7.0, 8.0,
+			9.0, 10.0, 11.0, 12.0,
+			13.0, 14.0, 15.0, 16.0,
+		))
+	})
+
 	Specify("Mat4Prod", func() {
 		result := Mat4Prod(matrix, otherMatrix)
 		Expect(result).To(HaveMat4Elements(
@@ -198,6 +242,46 @@ var _ = Describe("Mat4", func() {
 	Specify("#Translation", func() {
 		vector := matrix.Translation()
 		Expect(vector).To(HaveVec3Coords(0.4, 0.8, 1.2))
+	})
+
+	Specify("#RowMajorArray", func() {
+		array := matrix.RowMajorArray()
+		Expect(array[0]).To(EqualFloat64(0.1))
+		Expect(array[1]).To(EqualFloat64(0.2))
+		Expect(array[2]).To(EqualFloat64(0.3))
+		Expect(array[3]).To(EqualFloat64(0.4))
+		Expect(array[4]).To(EqualFloat64(0.5))
+		Expect(array[5]).To(EqualFloat64(0.6))
+		Expect(array[6]).To(EqualFloat64(0.7))
+		Expect(array[7]).To(EqualFloat64(0.8))
+		Expect(array[8]).To(EqualFloat64(0.9))
+		Expect(array[9]).To(EqualFloat64(1.0))
+		Expect(array[10]).To(EqualFloat64(1.1))
+		Expect(array[11]).To(EqualFloat64(1.2))
+		Expect(array[12]).To(EqualFloat64(1.3))
+		Expect(array[13]).To(EqualFloat64(1.4))
+		Expect(array[14]).To(EqualFloat64(1.5))
+		Expect(array[15]).To(EqualFloat64(1.6))
+	})
+
+	Specify("#ColumnMajorArray", func() {
+		array := matrix.ColumnMajorArray()
+		Expect(array[0]).To(EqualFloat64(0.1))
+		Expect(array[1]).To(EqualFloat64(0.5))
+		Expect(array[2]).To(EqualFloat64(0.9))
+		Expect(array[3]).To(EqualFloat64(1.3))
+		Expect(array[4]).To(EqualFloat64(0.2))
+		Expect(array[5]).To(EqualFloat64(0.6))
+		Expect(array[6]).To(EqualFloat64(1.0))
+		Expect(array[7]).To(EqualFloat64(1.4))
+		Expect(array[8]).To(EqualFloat64(0.3))
+		Expect(array[9]).To(EqualFloat64(0.7))
+		Expect(array[10]).To(EqualFloat64(1.1))
+		Expect(array[11]).To(EqualFloat64(1.5))
+		Expect(array[12]).To(EqualFloat64(0.4))
+		Expect(array[13]).To(EqualFloat64(0.8))
+		Expect(array[14]).To(EqualFloat64(1.2))
+		Expect(array[15]).To(EqualFloat64(1.6))
 	})
 
 	Specify("#GoString", func() {

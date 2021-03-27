@@ -174,6 +174,42 @@ func TransformationMat4(orientX, orientY, orientZ, translation Vec3) Mat4 {
 	return result
 }
 
+func OrientationMat4(orientX, orientY, orientZ Vec3) Mat4 {
+	var result Mat4
+	result.M11 = orientX.X
+	result.M12 = orientY.X
+	result.M13 = orientZ.X
+
+	result.M21 = orientX.Y
+	result.M22 = orientY.Y
+	result.M23 = orientZ.Y
+
+	result.M31 = orientX.Z
+	result.M32 = orientY.Z
+	result.M33 = orientZ.Z
+
+	result.M44 = 1.0
+	return result
+}
+
+func RowMajorArrayMat4(values [16]float64) Mat4 {
+	return Mat4{
+		M11: values[0], M12: values[1], M13: values[2], M14: values[3],
+		M21: values[4], M22: values[5], M23: values[6], M24: values[7],
+		M31: values[8], M32: values[9], M33: values[10], M34: values[11],
+		M41: values[12], M42: values[13], M43: values[14], M44: values[15],
+	}
+}
+
+func ColumnMajorArrayMat4(values [16]float64) Mat4 {
+	return Mat4{
+		M11: values[0], M12: values[4], M13: values[8], M14: values[12],
+		M21: values[1], M22: values[5], M23: values[9], M24: values[13],
+		M31: values[2], M32: values[6], M33: values[10], M34: values[14],
+		M41: values[3], M42: values[7], M43: values[11], M44: values[15],
+	}
+}
+
 func Mat4Prod(left, right Mat4) Mat4 {
 	return Mat4{
 		M11: left.M11*right.M11 + left.M12*right.M21 + left.M13*right.M31 + left.M14*right.M41,
@@ -244,6 +280,24 @@ func (m Mat4) OrientationZ() Vec3 {
 
 func (m Mat4) Translation() Vec3 {
 	return NewVec3(m.M14, m.M24, m.M34)
+}
+
+func (m Mat4) RowMajorArray() [16]float64 {
+	return [16]float64{
+		m.M11, m.M12, m.M13, m.M14,
+		m.M21, m.M22, m.M23, m.M24,
+		m.M31, m.M32, m.M33, m.M34,
+		m.M41, m.M42, m.M43, m.M44,
+	}
+}
+
+func (m Mat4) ColumnMajorArray() [16]float64 {
+	return [16]float64{
+		m.M11, m.M21, m.M31, m.M41,
+		m.M12, m.M22, m.M32, m.M42,
+		m.M13, m.M23, m.M33, m.M43,
+		m.M14, m.M24, m.M34, m.M44,
+	}
 }
 
 func (m Mat4) GoString() string {

@@ -25,6 +25,16 @@ func Min(a, b float32) float32 {
 	return b
 }
 
+func Clamp(value, min, max float32) float32 {
+	if value < min {
+		return min
+	}
+	if value > max {
+		return max
+	}
+	return value
+}
+
 func Eq(a, b float32) bool {
 	return EqEps(a, b, Epsilon)
 }
@@ -43,6 +53,10 @@ func Cos(angle Angle) float32 {
 
 func Sin(angle Angle) float32 {
 	return float32(math.Sin(float64(angle.Radians())))
+}
+
+func Tan(angle Angle) float32 {
+	return float32(math.Tan(float64(angle.Radians())))
 }
 
 func Sign(value float32) float32 {
