@@ -1,6 +1,8 @@
 package dprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -26,6 +28,12 @@ var _ = Describe("Util", func() {
 		Expect(Min(1.0, 2.0)).To(EqualFloat64(1.0))
 		Expect(Min(1.0, -1.0)).To(EqualFloat64(-1.0))
 		Expect(Min(5.0, 5.0)).To(EqualFloat64(5.0))
+	})
+
+	Specify("Clamp", func() {
+		Expect(Clamp(1.0, 2.0, 3.0)).To(EqualFloat64(2.0))
+		Expect(Clamp(2.5, 2.0, 3.0)).To(EqualFloat64(2.5))
+		Expect(Clamp(4.0, 2.0, 3.0)).To(EqualFloat64(3.0))
 	})
 
 	Specify("Eq", func() {
@@ -54,6 +62,12 @@ var _ = Describe("Util", func() {
 		Expect(Sin(Radians(0.0))).To(EqualFloat64(0.0))
 		Expect(Sin(Radians(Pi / 6))).To(EqualFloat64(0.5))
 		Expect(Sin(Radians(Pi / 2))).To(EqualFloat64(1.0))
+	})
+
+	Specify("Tan", func() {
+		Expect(Tan(Radians(0.0))).To(EqualFloat64(0.0))
+		Expect(Tan(Radians(Pi / 3))).To(EqualFloat64(math.Sqrt(3.0)))
+		Expect(Tan(Radians(Pi / 4))).To(EqualFloat64(1.0))
 	})
 
 	Specify("Sign", func() {
