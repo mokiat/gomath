@@ -36,6 +36,12 @@ var _ = Describe("Util", func() {
 		Expect(Clamp(4.0, 2.0, 3.0)).To(EqualFloat32(3.0))
 	})
 
+	Specify("Mix", func() {
+		Expect(Mix(1.0, 2.0, 0.0)).To(EqualFloat32(1.0))
+		Expect(Mix(1.0, 2.0, 1.0)).To(EqualFloat32(2.0))
+		Expect(Mix(1.0, 2.0, 0.5)).To(EqualFloat32(1.5))
+	})
+
 	Specify("Eq", func() {
 		Expect(Eq(0.000001, 0.000001)).To(BeTrue())
 		Expect(Eq(0.000001, 0.000002)).To(BeFalse())

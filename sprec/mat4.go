@@ -300,6 +300,51 @@ func (m Mat4) ColumnMajorArray() [16]float32 {
 	}
 }
 
+func (m Mat4) Scale() Vec3 {
+	return NewVec3(
+		m.OrientationX().Length(),
+		m.OrientationY().Length(),
+		m.OrientationZ().Length(),
+	)
+}
+
+func (m Mat4) RotationQuat() Quat {
+	// This is calculated by inversing the equations for
+	// quat.OrientationX, quat.OrientationY and quat.OrientationZ.
+
+	sqrX := (1.0 + m.M11 - m.M22 - m.M33) / 4.0
+	sqrY := (1.0 - m.M11 + m.M22 - m.M33) / 4.0
+	sqrZ := (1.0 - m.M11 - m.M22 + m.M33) / 4.0
+
+	var x, y, z, w float32
+	if sqrZ > sqrX && sqrZ > sqrY { // Z is largest
+		if Abs(sqrZ) < Epsilon {
+			return IdentityQuat()
+		}
+		z = Sqrt(sqrZ)
+		x = (m.M31 + m.M13) / (4 * z)
+		y = (m.M32 + m.M23) / (4 * z)
+		w = (m.M21 - m.M12) / (4 * z)
+	} else if sqrY > sqrX { // Y is largest
+		if Abs(sqrY) < Epsilon {
+			return IdentityQuat()
+		}
+		y = Sqrt(sqrY)
+		x = (m.M21 + m.M12) / (4 * y)
+		z = (m.M32 + m.M23) / (4 * y)
+		w = (m.M13 - m.M31) / (4 * y)
+	} else { // X is largest
+		if Abs(sqrX) < Epsilon {
+			return IdentityQuat()
+		}
+		x = Sqrt(sqrX)
+		y = (m.M21 + m.M12) / (4 * x)
+		z = (m.M31 + m.M13) / (4 * x)
+		w = (m.M32 - m.M23) / (4 * x)
+	}
+	return UnitQuat(NewQuat(w, x, y, z))
+}
+
 func (m Mat4) GoString() string {
 	return fmt.Sprintf("((%f, %f, %f, %f), (%f, %f, %f, %f), (%f, %f, %f, %f), (%f, %f, %f, %f))",
 		m.M11, m.M12, m.M13, m.M14,

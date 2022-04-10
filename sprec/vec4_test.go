@@ -77,6 +77,12 @@ var _ = Describe("Vec4", func() {
 		Expect(firstVector.VecXYZ()).To(HaveVec3Coords(2.0, 3.0, 4.0))
 	})
 
+	Specify("#Array", func() {
+		Expect(firstVector.Array()).To(Equal([4]float32{
+			2.0, 3.0, 4.0, 5.0,
+		}))
+	})
+
 	Specify("#GoString", func() {
 		result := firstVector.GoString()
 		Expect(result).To(Equal("(2.000000, 3.000000, 4.000000, 5.000000)"))

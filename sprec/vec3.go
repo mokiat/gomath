@@ -117,6 +117,10 @@ func (v Vec3) Length() float32 {
 	return Sqrt(Vec3Dot(v, v))
 }
 
+func (v Vec3) Array() [3]float32 {
+	return [3]float32{v.X, v.Y, v.Z}
+}
+
 func (v Vec3) GoString() string {
 	return fmt.Sprintf("(%f, %f, %f)", v.X, v.Y, v.Z)
 }

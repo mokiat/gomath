@@ -75,6 +75,10 @@ func (v Vec4) VecXYZ() Vec3 {
 	return NewVec3(v.X, v.Y, v.Z)
 }
 
+func (v Vec4) Array() [4]float32 {
+	return [4]float32{v.X, v.Y, v.Z, v.W}
+}
+
 func (v Vec4) GoString() string {
 	return fmt.Sprintf("(%f, %f, %f, %f)", v.X, v.Y, v.Z, v.W)
 }
