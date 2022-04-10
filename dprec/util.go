@@ -35,6 +35,10 @@ func Clamp(value, min, max float64) float64 {
 	return value
 }
 
+func Mix(a, b, amount float64) float64 {
+	return a*(1.0-amount) + b*amount
+}
+
 func Eq(a, b float64) bool {
 	return EqEps(a, b, Epsilon)
 }

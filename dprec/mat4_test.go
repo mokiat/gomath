@@ -244,6 +244,26 @@ var _ = Describe("Mat4", func() {
 		Expect(vector).To(HaveVec3Coords(0.4, 0.8, 1.2))
 	})
 
+	Specify("#Scale", func() {
+		Expect(IdentityMat4().Scale()).To(HaveVec3Coords(1.0, 1.0, 1.0))
+		Expect(matrix.Scale()).To(HaveVec3Coords(
+			1.034408043278860045433020786732,
+			1.183215956619923181492026742490,
+			1.337908816025965119678176051821,
+		))
+	})
+
+	Specify("#RotationQuat", func() {
+		matrix = IdentityMat4()
+		quat := matrix.RotationQuat()
+		Expect(quat).To(HaveQuatCoords(1.0, 0.0, 0.0, 0.0))
+
+		matrix = RotationMat4(Degrees(30), 0.0, 1.0, 0.0)
+		quat = matrix.RotationQuat()
+		rotatedVector := QuatVec3Rotation(quat, NewVec3(1.0, 0.0, 0.0))
+		Expect(rotatedVector).To(HaveVec3Coords(0.86602540378443870761, 0.0, -0.5))
+	})
+
 	Specify("#RowMajorArray", func() {
 		array := matrix.RowMajorArray()
 		Expect(array[0]).To(EqualFloat64(0.1))
