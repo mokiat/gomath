@@ -72,6 +72,25 @@ var _ = Describe("Mat4", func() {
 		Expect(transformedVector).To(HaveVec4Coords(0.0, 1.0, 0.0, 1.0))
 	})
 
+	Specify("TRSMat4", func() {
+		translation := NewVec3(5.5, 4.4, 3.3)
+		rotation := RotationQuat(Degrees(35), UnitVec3(NewVec3(1.0, 0.5, 0.25)))
+		scale := NewVec3(1.2, 1.3, 1.4)
+		slowTRS := Mat4MultiProd(
+			TranslationMat4(translation.X, translation.Y, translation.Z),
+			OrientationMat4(rotation.OrientationX(), rotation.OrientationY(), rotation.OrientationZ()),
+			ScaleMat4(scale.X, scale.Y, scale.Z),
+		)
+
+		trs := TRSMat4(translation, rotation, scale)
+		Expect(trs).To(HaveMat4Elements(
+			slowTRS.M11, slowTRS.M12, slowTRS.M13, slowTRS.M14,
+			slowTRS.M21, slowTRS.M22, slowTRS.M23, slowTRS.M24,
+			slowTRS.M31, slowTRS.M32, slowTRS.M33, slowTRS.M34,
+			slowTRS.M41, slowTRS.M42, slowTRS.M43, slowTRS.M44,
+		))
+	})
+
 	Specify("OrthoMat4", func() {
 		orthoMatrix := OrthoMat4(-1.1, 2.1, 1.5, -3.4, 1.7, 3.8)
 

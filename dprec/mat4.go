@@ -71,6 +71,31 @@ func rotationMat4FromNormalizedData(cs, sn float64, vector Vec3) Mat4 {
 	return result
 }
 
+func TRSMat4(translation Vec3, rotation Quat, scale Vec3) Mat4 {
+	orientX := rotation.OrientationX()
+	orientY := rotation.OrientationY()
+	orientZ := rotation.OrientationZ()
+
+	var result Mat4
+	result.M11 = orientX.X * scale.X
+	result.M12 = orientY.X * scale.Y
+	result.M13 = orientZ.X * scale.Z
+	result.M14 = translation.X
+
+	result.M21 = orientX.Y * scale.X
+	result.M22 = orientY.Y * scale.Y
+	result.M23 = orientZ.Y * scale.Z
+	result.M24 = translation.Y
+
+	result.M31 = orientX.Z * scale.X
+	result.M32 = orientY.Z * scale.Y
+	result.M33 = orientZ.Z * scale.Z
+	result.M34 = translation.Z
+
+	result.M44 = 1.0
+	return result
+}
+
 func OrthoMat4(left, right, top, bottom, near, far float64) Mat4 {
 	var result Mat4
 	result.M11 = 2.0 / (right - left)
