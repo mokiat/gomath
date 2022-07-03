@@ -60,6 +60,15 @@ func InverseVec4(vector Vec4) Vec4 {
 	}
 }
 
+func ArrayToVec4(array [4]float64) Vec4 {
+	return Vec4{
+		X: array[0],
+		Y: array[1],
+		Z: array[2],
+		W: array[3],
+	}
+}
+
 type Vec4 struct {
 	X float64
 	Y float64

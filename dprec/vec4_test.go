@@ -64,6 +64,11 @@ var _ = Describe("Vec4", func() {
 		Expect(result).To(HaveVec4Coords(-2.0, -3.0, -4.0, -5.0))
 	})
 
+	Specify("ArrayToVec4", func() {
+		result := ArrayToVec4([4]float64{1.1, 2.2, 3.3, 4.4})
+		Expect(result).To(HaveVec4Coords(1.1, 2.2, 3.3, 4.4))
+	})
+
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())
 		Expect(firstVector.IsZero()).To(BeFalse())

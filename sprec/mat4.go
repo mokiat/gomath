@@ -192,7 +192,7 @@ func OrientationMat4(orientX, orientY, orientZ Vec3) Mat4 {
 	return result
 }
 
-func RowMajorArrayMat4(values [16]float32) Mat4 {
+func RowMajorArrayToMat4(values [16]float32) Mat4 {
 	return Mat4{
 		M11: values[0], M12: values[1], M13: values[2], M14: values[3],
 		M21: values[4], M22: values[5], M23: values[6], M24: values[7],
@@ -201,7 +201,7 @@ func RowMajorArrayMat4(values [16]float32) Mat4 {
 	}
 }
 
-func ColumnMajorArrayMat4(values [16]float32) Mat4 {
+func ColumnMajorArrayToMat4(values [16]float32) Mat4 {
 	return Mat4{
 		M11: values[0], M12: values[4], M13: values[8], M14: values[12],
 		M21: values[1], M22: values[5], M23: values[9], M24: values[13],

@@ -165,8 +165,8 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
-	Specify("RowMajorArrayMat4", func() {
-		matrix := RowMajorArrayMat4([16]float32{
+	Specify("RowMajorArrayToMat4", func() {
+		matrix := RowMajorArrayToMat4([16]float32{
 			1.0, 2.0, 3.0, 4.0,
 			5.0, 6.0, 7.0, 8.0,
 			9.0, 10.0, 11.0, 12.0,
@@ -180,8 +180,8 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
-	Specify("ColumnMajorArrayMat4", func() {
-		matrix := ColumnMajorArrayMat4([16]float32{
+	Specify("ColumnMajorArrayToMat4", func() {
+		matrix := ColumnMajorArrayToMat4([16]float32{
 			1.0, 5.0, 9.0, 13.0,
 			2.0, 6.0, 10.0, 14.0,
 			3.0, 7.0, 11.0, 15.0,

@@ -132,6 +132,32 @@ var _ = Describe("Mat3", func() {
 		))
 	})
 
+	Specify("RowMajorArrayToMat3", func() {
+		matrix := RowMajorArrayToMat3([16]float64{
+			1.0, 2.0, 3.0,
+			5.0, 6.0, 7.0,
+			9.0, 10.0, 11.0,
+		})
+		Expect(matrix).To(HaveMat3Elements(
+			1.0, 2.0, 3.0,
+			5.0, 6.0, 7.0,
+			9.0, 10.0, 11.0,
+		))
+	})
+
+	Specify("ColumnMajorArrayToMat3", func() {
+		matrix := ColumnMajorArrayToMat3([16]float64{
+			1.0, 5.0, 9.0,
+			2.0, 6.0, 10.0,
+			3.0, 7.0, 11.0,
+		})
+		Expect(matrix).To(HaveMat3Elements(
+			1.0, 2.0, 3.0,
+			5.0, 6.0, 7.0,
+			9.0, 10.0, 11.0,
+		))
+	})
+
 	Specify("Mat3Prod", func() {
 		result := Mat3Prod(matrix, secondMatrix)
 		Expect(result).To(HaveMat3Elements(
@@ -175,6 +201,32 @@ var _ = Describe("Mat3", func() {
 	Specify("#Translation", func() {
 		vector := matrix.Translation()
 		Expect(vector).To(HaveVec2Coords(0.3, 0.6))
+	})
+
+	Specify("#RowMajorArray", func() {
+		array := matrix.RowMajorArray()
+		Expect(array[0]).To(EqualFloat64(0.1))
+		Expect(array[1]).To(EqualFloat64(0.2))
+		Expect(array[2]).To(EqualFloat64(0.3))
+		Expect(array[3]).To(EqualFloat64(0.4))
+		Expect(array[4]).To(EqualFloat64(0.5))
+		Expect(array[5]).To(EqualFloat64(0.6))
+		Expect(array[6]).To(EqualFloat64(0.7))
+		Expect(array[7]).To(EqualFloat64(0.8))
+		Expect(array[8]).To(EqualFloat64(0.9))
+	})
+
+	Specify("#ColumnMajorArray", func() {
+		array := matrix.ColumnMajorArray()
+		Expect(array[0]).To(EqualFloat64(0.1))
+		Expect(array[1]).To(EqualFloat64(0.4))
+		Expect(array[2]).To(EqualFloat64(0.7))
+		Expect(array[3]).To(EqualFloat64(0.2))
+		Expect(array[4]).To(EqualFloat64(0.5))
+		Expect(array[5]).To(EqualFloat64(0.8))
+		Expect(array[6]).To(EqualFloat64(0.3))
+		Expect(array[7]).To(EqualFloat64(0.6))
+		Expect(array[8]).To(EqualFloat64(0.9))
 	})
 
 	Specify("#GoString", func() {

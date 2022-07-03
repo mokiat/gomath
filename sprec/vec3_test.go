@@ -97,6 +97,11 @@ var _ = Describe("Vec3", func() {
 		Expect(result).To(HaveVec3Coords(-2.0, -3.0, -4.0))
 	})
 
+	Specify("ArrayToVec3", func() {
+		result := ArrayToVec3([3]float32{1.1, 2.2, 3.3})
+		Expect(result).To(HaveVec3Coords(1.1, 2.2, 3.3))
+	})
+
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())
 		Expect(firstVector.IsZero()).To(BeFalse())

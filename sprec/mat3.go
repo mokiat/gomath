@@ -123,6 +123,22 @@ func TransformationMat3(orientX, orientY, translation Vec2) Mat3 {
 	return result
 }
 
+func RowMajorArrayToMat3(values [16]float32) Mat3 {
+	return Mat3{
+		M11: values[0], M12: values[1], M13: values[2],
+		M21: values[3], M22: values[4], M23: values[5],
+		M31: values[6], M32: values[7], M33: values[8],
+	}
+}
+
+func ColumnMajorArrayToMat3(values [16]float32) Mat3 {
+	return Mat3{
+		M11: values[0], M12: values[3], M13: values[6],
+		M21: values[1], M22: values[4], M23: values[7],
+		M31: values[2], M32: values[5], M33: values[8],
+	}
+}
+
 func Mat3Prod(left, right Mat3) Mat3 {
 	return Mat3{
 		M11: left.M11*right.M11 + left.M12*right.M21 + left.M13*right.M31,
@@ -171,6 +187,22 @@ func (m Mat3) OrientationY() Vec2 {
 
 func (m Mat3) Translation() Vec2 {
 	return NewVec2(m.M13, m.M23)
+}
+
+func (m Mat3) RowMajorArray() [9]float32 {
+	return [9]float32{
+		m.M11, m.M12, m.M13,
+		m.M21, m.M22, m.M23,
+		m.M31, m.M32, m.M33,
+	}
+}
+
+func (m Mat3) ColumnMajorArray() [9]float32 {
+	return [9]float32{
+		m.M11, m.M21, m.M31,
+		m.M12, m.M22, m.M32,
+		m.M13, m.M23, m.M33,
+	}
 }
 
 func (m Mat3) GoString() string {
