@@ -51,12 +51,25 @@ func Vec4Quot(vector Vec4, value float64) Vec4 {
 	}
 }
 
+func Vec4Dot(a, b Vec4) float64 {
+	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
+}
+
 func InverseVec4(vector Vec4) Vec4 {
 	return Vec4{
 		X: -vector.X,
 		Y: -vector.Y,
 		Z: -vector.Z,
 		W: -vector.W,
+	}
+}
+
+func ArrayToVec4(array [4]float64) Vec4 {
+	return Vec4{
+		X: array[0],
+		Y: array[1],
+		Z: array[2],
+		W: array[3],
 	}
 }
 

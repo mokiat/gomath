@@ -99,6 +99,14 @@ func InverseVec3(vector Vec3) Vec3 {
 	}
 }
 
+func ArrayToVec3(array [3]float32) Vec3 {
+	return Vec3{
+		X: array[0],
+		Y: array[1],
+		Z: array[2],
+	}
+}
+
 type Vec3 struct {
 	X float32
 	Y float32

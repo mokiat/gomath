@@ -75,6 +75,13 @@ func InverseVec2(vector Vec2) Vec2 {
 	}
 }
 
+func ArrayToVec2(array [2]float32) Vec2 {
+	return Vec2{
+		X: array[0],
+		Y: array[1],
+	}
+}
+
 type Vec2 struct {
 	X float32
 	Y float32

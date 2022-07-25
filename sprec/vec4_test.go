@@ -44,7 +44,7 @@ var _ = Describe("Vec4", func() {
 		Expect(result).To(HaveVec4Coords(1.0, 5.0, 9.0, -2.0))
 	})
 
-	Specify("Vec3Diff", func() {
+	Specify("Vec4Diff", func() {
 		result := Vec4Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec4Coords(3.0, 1.0, -1.0, 12.0))
 	})
@@ -54,14 +54,24 @@ var _ = Describe("Vec4", func() {
 		Expect(result).To(HaveVec4Coords(4.0, 6.0, 8.0, 10.0))
 	})
 
-	Specify("Vec3Quot", func() {
+	Specify("Vec4Quot", func() {
 		result := Vec4Quot(firstVector, 2.0)
 		Expect(result).To(HaveVec4Coords(1.0, 1.5, 2.0, 2.5))
+	})
+
+	Specify("Vec4Dot", func() {
+		result := Vec4Dot(firstVector, secondVector)
+		Expect(result).To(EqualFloat32(-11.0))
 	})
 
 	Specify("InverseVec4", func() {
 		result := InverseVec4(firstVector)
 		Expect(result).To(HaveVec4Coords(-2.0, -3.0, -4.0, -5.0))
+	})
+
+	Specify("ArrayToVec4", func() {
+		result := ArrayToVec4([4]float32{1.1, 2.2, 3.3, 4.4})
+		Expect(result).To(HaveVec4Coords(1.1, 2.2, 3.3, 4.4))
 	})
 
 	Specify("#IsZero", func() {

@@ -72,6 +72,25 @@ var _ = Describe("Mat4", func() {
 		Expect(transformedVector).To(HaveVec4Coords(0.0, 1.0, 0.0, 1.0))
 	})
 
+	Specify("TRSMat4", func() {
+		translation := NewVec3(5.5, 4.4, 3.3)
+		rotation := RotationQuat(Degrees(35), UnitVec3(NewVec3(1.0, 0.5, 0.25)))
+		scale := NewVec3(1.2, 1.3, 1.4)
+		slowTRS := Mat4MultiProd(
+			TranslationMat4(translation.X, translation.Y, translation.Z),
+			OrientationMat4(rotation.OrientationX(), rotation.OrientationY(), rotation.OrientationZ()),
+			ScaleMat4(scale.X, scale.Y, scale.Z),
+		)
+
+		trs := TRSMat4(translation, rotation, scale)
+		Expect(trs).To(HaveMat4Elements(
+			slowTRS.M11, slowTRS.M12, slowTRS.M13, slowTRS.M14,
+			slowTRS.M21, slowTRS.M22, slowTRS.M23, slowTRS.M24,
+			slowTRS.M31, slowTRS.M32, slowTRS.M33, slowTRS.M34,
+			slowTRS.M41, slowTRS.M42, slowTRS.M43, slowTRS.M44,
+		))
+	})
+
 	Specify("OrthoMat4", func() {
 		orthoMatrix := OrthoMat4(-1.1, 2.1, 1.5, -3.4, 1.7, 3.8)
 
@@ -165,8 +184,8 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
-	Specify("RowMajorArrayMat4", func() {
-		matrix := RowMajorArrayMat4([16]float64{
+	Specify("RowMajorArrayToMat4", func() {
+		matrix := RowMajorArrayToMat4([16]float64{
 			1.0, 2.0, 3.0, 4.0,
 			5.0, 6.0, 7.0, 8.0,
 			9.0, 10.0, 11.0, 12.0,
@@ -180,8 +199,8 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
-	Specify("ColumnMajorArrayMat4", func() {
-		matrix := ColumnMajorArrayMat4([16]float64{
+	Specify("ColumnMajorArrayToMat4", func() {
+		matrix := ColumnMajorArrayToMat4([16]float64{
 			1.0, 5.0, 9.0, 13.0,
 			2.0, 6.0, 10.0, 14.0,
 			3.0, 7.0, 11.0, 15.0,
@@ -222,6 +241,46 @@ var _ = Describe("Mat4", func() {
 	Specify("Mat4Vec3Transformation", func() {
 		result := Mat4Vec3Transformation(matrix, NewVec3(2.5, 1.5, 3.0))
 		Expect(result).To(HaveVec3Coords(1.85, 5.05, 8.25))
+	})
+
+	Specify("#Row1", func() {
+		vector := matrix.Row1()
+		Expect(vector).To(HaveVec4Coords(0.1, 0.2, 0.3, 0.4))
+	})
+
+	Specify("#Row2", func() {
+		vector := matrix.Row2()
+		Expect(vector).To(HaveVec4Coords(0.5, 0.6, 0.7, 0.8))
+	})
+
+	Specify("#Row3", func() {
+		vector := matrix.Row3()
+		Expect(vector).To(HaveVec4Coords(0.9, 1.0, 1.1, 1.2))
+	})
+
+	Specify("#Row4", func() {
+		vector := matrix.Row4()
+		Expect(vector).To(HaveVec4Coords(1.3, 1.4, 1.5, 1.6))
+	})
+
+	Specify("#Column1", func() {
+		vector := matrix.Column1()
+		Expect(vector).To(HaveVec4Coords(0.1, 0.5, 0.9, 1.3))
+	})
+
+	Specify("#Column2", func() {
+		vector := matrix.Column2()
+		Expect(vector).To(HaveVec4Coords(0.2, 0.6, 1.0, 1.4))
+	})
+
+	Specify("#Column3", func() {
+		vector := matrix.Column3()
+		Expect(vector).To(HaveVec4Coords(0.3, 0.7, 1.1, 1.5))
+	})
+
+	Specify("#Column4", func() {
+		vector := matrix.Column4()
+		Expect(vector).To(HaveVec4Coords(0.4, 0.8, 1.2, 1.6))
 	})
 
 	Specify("#OrientationX", func() {

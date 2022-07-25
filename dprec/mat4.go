@@ -71,6 +71,31 @@ func rotationMat4FromNormalizedData(cs, sn float64, vector Vec3) Mat4 {
 	return result
 }
 
+func TRSMat4(translation Vec3, rotation Quat, scale Vec3) Mat4 {
+	orientX := rotation.OrientationX()
+	orientY := rotation.OrientationY()
+	orientZ := rotation.OrientationZ()
+
+	var result Mat4
+	result.M11 = orientX.X * scale.X
+	result.M12 = orientY.X * scale.Y
+	result.M13 = orientZ.X * scale.Z
+	result.M14 = translation.X
+
+	result.M21 = orientX.Y * scale.X
+	result.M22 = orientY.Y * scale.Y
+	result.M23 = orientZ.Y * scale.Z
+	result.M24 = translation.Y
+
+	result.M31 = orientX.Z * scale.X
+	result.M32 = orientY.Z * scale.Y
+	result.M33 = orientZ.Z * scale.Z
+	result.M34 = translation.Z
+
+	result.M44 = 1.0
+	return result
+}
+
 func OrthoMat4(left, right, top, bottom, near, far float64) Mat4 {
 	var result Mat4
 	result.M11 = 2.0 / (right - left)
@@ -192,7 +217,7 @@ func OrientationMat4(orientX, orientY, orientZ Vec3) Mat4 {
 	return result
 }
 
-func RowMajorArrayMat4(values [16]float64) Mat4 {
+func RowMajorArrayToMat4(values [16]float64) Mat4 {
 	return Mat4{
 		M11: values[0], M12: values[1], M13: values[2], M14: values[3],
 		M21: values[4], M22: values[5], M23: values[6], M24: values[7],
@@ -201,7 +226,7 @@ func RowMajorArrayMat4(values [16]float64) Mat4 {
 	}
 }
 
-func ColumnMajorArrayMat4(values [16]float64) Mat4 {
+func ColumnMajorArrayToMat4(values [16]float64) Mat4 {
 	return Mat4{
 		M11: values[0], M12: values[4], M13: values[8], M14: values[12],
 		M21: values[1], M22: values[5], M23: values[9], M24: values[13],
@@ -264,6 +289,38 @@ type Mat4 struct {
 	M21, M22, M23, M24 float64
 	M31, M32, M33, M34 float64
 	M41, M42, M43, M44 float64
+}
+
+func (m Mat4) Row1() Vec4 {
+	return NewVec4(m.M11, m.M12, m.M13, m.M14)
+}
+
+func (m Mat4) Row2() Vec4 {
+	return NewVec4(m.M21, m.M22, m.M23, m.M24)
+}
+
+func (m Mat4) Row3() Vec4 {
+	return NewVec4(m.M31, m.M32, m.M33, m.M34)
+}
+
+func (m Mat4) Row4() Vec4 {
+	return NewVec4(m.M41, m.M42, m.M43, m.M44)
+}
+
+func (m Mat4) Column1() Vec4 {
+	return NewVec4(m.M11, m.M21, m.M31, m.M41)
+}
+
+func (m Mat4) Column2() Vec4 {
+	return NewVec4(m.M12, m.M22, m.M32, m.M42)
+}
+
+func (m Mat4) Column3() Vec4 {
+	return NewVec4(m.M13, m.M23, m.M33, m.M43)
+}
+
+func (m Mat4) Column4() Vec4 {
+	return NewVec4(m.M14, m.M24, m.M34, m.M44)
 }
 
 func (m Mat4) OrientationX() Vec3 {
