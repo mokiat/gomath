@@ -188,6 +188,36 @@ var _ = Describe("Mat3", func() {
 		Expect(result).To(HaveVec3Coords(1.25, 3.35, 5.45))
 	})
 
+	Specify("#Row1", func() {
+		vector := matrix.Row1()
+		Expect(vector).To(HaveVec3Coords(0.1, 0.2, 0.3))
+	})
+
+	Specify("#Row2", func() {
+		vector := matrix.Row2()
+		Expect(vector).To(HaveVec3Coords(0.4, 0.5, 0.6))
+	})
+
+	Specify("#Row3", func() {
+		vector := matrix.Row3()
+		Expect(vector).To(HaveVec3Coords(0.7, 0.8, 0.9))
+	})
+
+	Specify("#Column1", func() {
+		vector := matrix.Column1()
+		Expect(vector).To(HaveVec3Coords(0.1, 0.4, 0.7))
+	})
+
+	Specify("#Column2", func() {
+		vector := matrix.Column2()
+		Expect(vector).To(HaveVec3Coords(0.2, 0.5, 0.8))
+	})
+
+	Specify("#Column3", func() {
+		vector := matrix.Column3()
+		Expect(vector).To(HaveVec3Coords(0.3, 0.6, 0.9))
+	})
+
 	Specify("#OrientationX", func() {
 		vector := matrix.OrientationX()
 		Expect(vector).To(HaveVec2Coords(0.1, 0.4))

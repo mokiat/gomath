@@ -243,6 +243,46 @@ var _ = Describe("Mat4", func() {
 		Expect(result).To(HaveVec3Coords(1.85, 5.05, 8.25))
 	})
 
+	Specify("#Row1", func() {
+		vector := matrix.Row1()
+		Expect(vector).To(HaveVec4Coords(0.1, 0.2, 0.3, 0.4))
+	})
+
+	Specify("#Row2", func() {
+		vector := matrix.Row2()
+		Expect(vector).To(HaveVec4Coords(0.5, 0.6, 0.7, 0.8))
+	})
+
+	Specify("#Row3", func() {
+		vector := matrix.Row3()
+		Expect(vector).To(HaveVec4Coords(0.9, 1.0, 1.1, 1.2))
+	})
+
+	Specify("#Row4", func() {
+		vector := matrix.Row4()
+		Expect(vector).To(HaveVec4Coords(1.3, 1.4, 1.5, 1.6))
+	})
+
+	Specify("#Column1", func() {
+		vector := matrix.Column1()
+		Expect(vector).To(HaveVec4Coords(0.1, 0.5, 0.9, 1.3))
+	})
+
+	Specify("#Column2", func() {
+		vector := matrix.Column2()
+		Expect(vector).To(HaveVec4Coords(0.2, 0.6, 1.0, 1.4))
+	})
+
+	Specify("#Column3", func() {
+		vector := matrix.Column3()
+		Expect(vector).To(HaveVec4Coords(0.3, 0.7, 1.1, 1.5))
+	})
+
+	Specify("#Column4", func() {
+		vector := matrix.Column4()
+		Expect(vector).To(HaveVec4Coords(0.4, 0.8, 1.2, 1.6))
+	})
+
 	Specify("#OrientationX", func() {
 		vector := matrix.OrientationX()
 		Expect(vector).To(HaveVec3Coords(0.1, 0.5, 0.9))

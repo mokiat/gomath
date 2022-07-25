@@ -177,6 +177,30 @@ type Mat3 struct {
 	M31, M32, M33 float64
 }
 
+func (m Mat3) Row1() Vec3 {
+	return NewVec3(m.M11, m.M12, m.M13)
+}
+
+func (m Mat3) Row2() Vec3 {
+	return NewVec3(m.M21, m.M22, m.M23)
+}
+
+func (m Mat3) Row3() Vec3 {
+	return NewVec3(m.M31, m.M32, m.M33)
+}
+
+func (m Mat3) Column1() Vec3 {
+	return NewVec3(m.M11, m.M21, m.M31)
+}
+
+func (m Mat3) Column2() Vec3 {
+	return NewVec3(m.M12, m.M22, m.M32)
+}
+
+func (m Mat3) Column3() Vec3 {
+	return NewVec3(m.M13, m.M23, m.M33)
+}
+
 func (m Mat3) OrientationX() Vec2 {
 	return NewVec2(m.M11, m.M21)
 }

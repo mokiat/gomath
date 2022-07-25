@@ -291,6 +291,38 @@ type Mat4 struct {
 	M41, M42, M43, M44 float32
 }
 
+func (m Mat4) Row1() Vec4 {
+	return NewVec4(m.M11, m.M12, m.M13, m.M14)
+}
+
+func (m Mat4) Row2() Vec4 {
+	return NewVec4(m.M21, m.M22, m.M23, m.M24)
+}
+
+func (m Mat4) Row3() Vec4 {
+	return NewVec4(m.M31, m.M32, m.M33, m.M34)
+}
+
+func (m Mat4) Row4() Vec4 {
+	return NewVec4(m.M41, m.M42, m.M43, m.M44)
+}
+
+func (m Mat4) Column1() Vec4 {
+	return NewVec4(m.M11, m.M21, m.M31, m.M41)
+}
+
+func (m Mat4) Column2() Vec4 {
+	return NewVec4(m.M12, m.M22, m.M32, m.M42)
+}
+
+func (m Mat4) Column3() Vec4 {
+	return NewVec4(m.M13, m.M23, m.M33, m.M43)
+}
+
+func (m Mat4) Column4() Vec4 {
+	return NewVec4(m.M14, m.M24, m.M34, m.M44)
+}
+
 func (m Mat4) OrientationX() Vec3 {
 	return NewVec3(m.M11, m.M21, m.M31)
 }
