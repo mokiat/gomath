@@ -59,6 +59,13 @@ func Vec2Dot(a, b Vec2) float32 {
 	return a.X*b.X + a.Y*b.Y
 }
 
+func Vec2Lerp(a, b Vec2, t float32) Vec2 {
+	return Vec2{
+		X: (1-t)*a.X + t*b.X,
+		Y: (1-t)*a.Y + t*b.Y,
+	}
+}
+
 func UnitVec2(vector Vec2) Vec2 {
 	return Vec2Quot(vector, vector.Length())
 }

@@ -64,6 +64,13 @@ var _ = Describe("Vec4", func() {
 		Expect(result).To(EqualFloat32(-11.0))
 	})
 
+	Specify("Vec4Lerp", func() {
+		first := NewVec4(1.0, 2.0, 3.0, 4.0)
+		second := NewVec4(5.0, 4.0, 3.0, 2.0)
+		result := Vec4Lerp(first, second, 0.25)
+		Expect(result).To(HaveVec4Coords(2.0, 2.5, 3.0, 3.5))
+	})
+
 	Specify("InverseVec4", func() {
 		result := InverseVec4(firstVector)
 		Expect(result).To(HaveVec4Coords(-2.0, -3.0, -4.0, -5.0))

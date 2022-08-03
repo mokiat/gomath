@@ -82,6 +82,13 @@ var _ = Describe("Vec3", func() {
 		Expect(result).To(HaveVec3Coords(7.0, -14.0, 7.0))
 	})
 
+	Specify("Vec3Lerp", func() {
+		first := NewVec3(1.0, 2.0, 3.0)
+		second := NewVec3(3.0, 2.0, 1.0)
+		result := Vec3Lerp(first, second, 0.25)
+		Expect(result).To(HaveVec3Coords(1.5, 2.0, 2.5))
+	})
+
 	Specify("UnitVec3", func() {
 		result := UnitVec3(firstVector)
 		Expect(result).To(HaveVec3Coords(0.371390676354, 0.557086014531, 0.742781352708))
