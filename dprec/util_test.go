@@ -64,10 +64,22 @@ var _ = Describe("Util", func() {
 		Expect(Cos(Radians(Pi / 2))).To(EqualFloat64(0.0))
 	})
 
+	Specify("Acos", func() {
+		Expect(Acos(1.0).Degrees()).To(EqualFloat64(0))
+		Expect(Acos(0.5).Degrees()).To(EqualFloat64(60))
+		Expect(Acos(0.0).Degrees()).To(EqualFloat64(90))
+	})
+
 	Specify("Sin", func() {
 		Expect(Sin(Radians(0.0))).To(EqualFloat64(0.0))
 		Expect(Sin(Radians(Pi / 6))).To(EqualFloat64(0.5))
 		Expect(Sin(Radians(Pi / 2))).To(EqualFloat64(1.0))
+	})
+
+	Specify("Asin", func() {
+		Expect(Asin(1.0).Degrees()).To(EqualFloat64(90))
+		Expect(Asin(0.5).Degrees()).To(EqualFloat64(30))
+		Expect(Asin(0.0).Degrees()).To(EqualFloat64(0))
 	})
 
 	Specify("Tan", func() {

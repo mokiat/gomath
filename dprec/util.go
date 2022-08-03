@@ -55,8 +55,16 @@ func Cos(angle Angle) float64 {
 	return math.Cos(angle.Radians())
 }
 
+func Acos(cs float64) Angle {
+	return Radians(math.Acos(cs))
+}
+
 func Sin(angle Angle) float64 {
 	return math.Sin(angle.Radians())
+}
+
+func Asin(sn float64) Angle {
+	return Radians(math.Asin(sn))
 }
 
 func Tan(angle Angle) float64 {
