@@ -30,6 +30,11 @@ var _ = Describe("QuatTest", func() {
 		Expect(quat).To(HaveQuatCoords(1.0, 0.0, 0.0, 0.0))
 	})
 
+	Specify("NegativeQuat", func() {
+		quat := NegativeQuat(NewQuat(1.0, 2.0, 3.0, 4.0))
+		Expect(quat).To(HaveQuatCoords(-1.0, -2.0, -3.0, -4.0))
+	})
+
 	Specify("RotationQuat", func() {
 		quat := RotationQuat(Degrees(60.0), NewVec3(2.0, 5.0, 3.0))
 		Expect(quat).To(HaveQuatCoords(0.866025403784, 0.162221421130763, 0.405553552826907, 0.243332131696144))
@@ -54,6 +59,76 @@ var _ = Describe("QuatTest", func() {
 		other := NewQuat(1.2, 1.3, 1.4, 1.5)
 		result := QuatProd(quat, other)
 		Expect(result).To(HaveQuatCoords(10.26, 9.3, 14.28, -4.64))
+	})
+
+	Specify("QuatDot", func() {
+		first := NewQuat(1.0, 2.0, 3.0, 4.0)
+		second := NewQuat(3.0, 4.0, 5.0, 6.0)
+		dot := QuatDot(first, second)
+		Expect(dot).To(EqualFloat64(50.0))
+	})
+
+	Specify("QuatLerp", func() {
+		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
+		second := RotationQuat(Degrees(45), NewVec3(1.0, 2.0, 3.0))
+
+		lerp := QuatLerp(first, second, 0.5)
+		expectedQuat := RotationQuat(Degrees(35), NewVec3(1.0, 2.0, 3.0))
+		Expect(lerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		lerp = QuatLerp(first, second, 0.0)
+		Expect(lerp).To(HaveQuatCoords(first.W, first.X, first.Y, first.Z))
+
+		lerp = QuatLerp(first, second, 1.0)
+		Expect(lerp).To(HaveQuatCoords(second.W, second.X, second.Y, second.Z))
+
+		// Linear interpolation does not handle such fractions
+		lerp = QuatLerp(first, second, 0.25)
+		idealQuat := RotationQuat(Degrees(30), NewVec3(1.0, 2.0, 3.0))
+		Expect(lerp).ToNot(HaveQuatCoords(idealQuat.W, idealQuat.X, idealQuat.Y, idealQuat.Z))
+
+		lerp = QuatLerp(first, second, 0.75)
+		idealQuat = RotationQuat(Degrees(40), NewVec3(1.0, 2.0, 3.0))
+		Expect(lerp).ToNot(HaveQuatCoords(idealQuat.W, idealQuat.X, idealQuat.Y, idealQuat.Z))
+	})
+
+	Specify("QuatDiff", func() {
+		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
+		second := RotationQuat(Degrees(45), NewVec3(1.0, 2.0, 3.0))
+		expectedQuat := RotationQuat(Degrees(20), NewVec3(1.0, 2.0, 3.0))
+		relative := QuatDiff(second, first, true)
+		Expect(relative).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+	})
+
+	Specify("QuatPow", func() {
+		q := RotationQuat(Degrees(20), NewVec3(1.0, 2.0, 3.0))
+		pow := QuatPow(q, 2.5)
+		expectedQuat := RotationQuat(Degrees(50), NewVec3(1.0, 2.0, 3.0))
+		Expect(pow).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+	})
+
+	Specify("QuatSlerp", func() {
+		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
+		second := RotationQuat(Degrees(45), NewVec3(1.0, 2.0, 3.0))
+
+		slerp := QuatSlerp(first, second, 0.5)
+		expectedQuat := RotationQuat(Degrees(35), NewVec3(1.0, 2.0, 3.0))
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		slerp = QuatSlerp(first, second, 0.0)
+		Expect(slerp).To(HaveQuatCoords(first.W, first.X, first.Y, first.Z))
+
+		slerp = QuatSlerp(first, second, 1.0)
+		Expect(slerp).To(HaveQuatCoords(second.W, second.X, second.Y, second.Z))
+
+		// Spherical interpolation handles such fractions (unlike linear)
+		slerp = QuatSlerp(first, second, 0.25)
+		expectedQuat = RotationQuat(Degrees(30), NewVec3(1.0, 2.0, 3.0))
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		slerp = QuatSlerp(first, second, 0.75)
+		expectedQuat = RotationQuat(Degrees(40), NewVec3(1.0, 2.0, 3.0))
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
 	})
 
 	Specify("#QuatVec3Rotation", func() {

@@ -20,6 +20,15 @@ func IdentityQuat() Quat {
 	}
 }
 
+func NegativeQuat(q Quat) Quat {
+	return Quat{
+		W: -q.W,
+		X: -q.X,
+		Y: -q.Y,
+		Z: -q.Z,
+	}
+}
+
 func RotationQuat(angle Angle, direction Vec3) Quat {
 	cs := Cos(angle / 2.0)
 	sn := Sin(angle / 2.0)
@@ -66,6 +75,47 @@ func QuatProd(first, second Quat) Quat {
 		Y: first.W*second.Y - first.X*second.Z + first.Y*second.W + first.Z*second.X,
 		Z: first.W*second.Z + first.X*second.Y - first.Y*second.X + first.Z*second.W,
 	}
+}
+
+func QuatDot(a, b Quat) float32 {
+	return a.W*b.W + a.X*b.X + a.Y*b.Y + a.Z*b.Z
+}
+
+func QuatLerp(first, second Quat, t float32) Quat {
+	return UnitQuat(Quat{
+		W: (1-t)*first.W + t*second.W,
+		X: (1-t)*first.X + t*second.X,
+		Y: (1-t)*first.Y + t*second.Y,
+		Z: (1-t)*first.Z + t*second.Z,
+	})
+}
+
+func QuatDiff(second, first Quat, shortest bool) Quat {
+	if shortest && (QuatDot(second, first) < 0) {
+		second = NegativeQuat(second)
+	}
+	return QuatProd(second, ConjugateQuat(first))
+}
+
+func QuatPow(q Quat, pow float32) Quat {
+	if q.W > 1.0 {
+		return IdentityQuat()
+	}
+	if q.W < -1.0 {
+		return NegativeQuat(IdentityQuat())
+	}
+	norm := NewVec3(q.X, q.Y, q.Z)
+	if norm.IsZero() {
+		return IdentityQuat()
+	}
+	angle := (2 * Acos(q.W)) * Angle(pow)
+	return RotationQuat(angle, norm)
+}
+
+func QuatSlerp(first, second Quat, t float32) Quat {
+	delta := QuatDiff(second, first, true)
+	fractDelta := QuatPow(delta, t)
+	return UnitQuat(QuatProd(fractDelta, first))
 }
 
 func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
