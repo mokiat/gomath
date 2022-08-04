@@ -55,6 +55,15 @@ func Vec4Dot(a, b Vec4) float32 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
 }
 
+func Vec4Lerp(a, b Vec4, t float32) Vec4 {
+	return Vec4{
+		X: (1-t)*a.X + t*b.X,
+		Y: (1-t)*a.Y + t*b.Y,
+		Z: (1-t)*a.Z + t*b.Z,
+		W: (1-t)*a.W + t*b.W,
+	}
+}
+
 func InverseVec4(vector Vec4) Vec4 {
 	return Vec4{
 		X: -vector.X,

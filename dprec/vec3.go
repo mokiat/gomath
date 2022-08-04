@@ -82,6 +82,14 @@ func Vec3Cross(a, b Vec3) Vec3 {
 	}
 }
 
+func Vec3Lerp(a, b Vec3, t float64) Vec3 {
+	return Vec3{
+		X: (1-t)*a.X + t*b.X,
+		Y: (1-t)*a.Y + t*b.Y,
+		Z: (1-t)*a.Z + t*b.Z,
+	}
+}
+
 func UnitVec3(vector Vec3) Vec3 {
 	return Vec3Quot(vector, vector.Length())
 }

@@ -70,6 +70,13 @@ var _ = Describe("Vec2", func() {
 		Expect(result).To(EqualFloat32(4.0))
 	})
 
+	Specify("Vec2Lerp", func() {
+		first := NewVec2(1.0, 2.0)
+		second := NewVec2(2.0, 1.0)
+		result := Vec2Lerp(first, second, 0.25)
+		Expect(result).To(HaveVec2Coords(1.25, 1.75))
+	})
+
 	Specify("UnitVec2", func() {
 		result := UnitVec2(firstVector)
 		Expect(result).To(HaveVec2Coords(0.554700196225, 0.832050294337))
