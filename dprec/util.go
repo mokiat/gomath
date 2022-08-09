@@ -7,25 +7,25 @@ const (
 	Epsilon = float64(0.000000000001)
 )
 
-func Abs(value float64) float64 {
-	return math.Abs(value)
+func Abs[T ~float64](value T) T {
+	return T(math.Abs(float64(value)))
 }
 
-func Max(a, b float64) float64 {
+func Max[T ~float64](a, b T) T {
 	if a > b {
 		return a
 	}
 	return b
 }
 
-func Min(a, b float64) float64 {
+func Min[T ~float64](a, b T) T {
 	if a < b {
 		return a
 	}
 	return b
 }
 
-func Clamp(value, min, max float64) float64 {
+func Clamp[T ~float64](value, min, max T) T {
 	if value < min {
 		return min
 	}
@@ -35,8 +35,8 @@ func Clamp(value, min, max float64) float64 {
 	return value
 }
 
-func Mix(a, b, amount float64) float64 {
-	return a*(1.0-amount) + b*amount
+func Mix[T ~float64](a, b T, amount float64) T {
+	return T(float64(a)*(1.0-amount) + float64(b)*amount)
 }
 
 func Eq(a, b float64) bool {
