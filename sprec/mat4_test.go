@@ -53,6 +53,16 @@ var _ = Describe("Mat4", func() {
 		Expect(transformedVector).To(HaveVec4Coords(vector.X, vector.Y, vector.Z, vector.W))
 	})
 
+	Specify("TransposedMat4", func() {
+		result := TransposedMat4(matrix)
+		Expect(result).To(HaveMat4Elements(
+			0.1, 0.5, 0.9, 1.3,
+			0.2, 0.6, 1.0, 1.4,
+			0.3, 0.7, 1.1, 1.5,
+			0.4, 0.8, 1.2, 1.6,
+		))
+	})
+
 	Specify("TranslationMat4", func() {
 		translationMatrix := TranslationMat4(2.0, -3.0, 4.0)
 		transformedVector := Mat4Vec4Prod(translationMatrix, vector)

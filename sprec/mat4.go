@@ -29,6 +29,15 @@ func IdentityMat4() Mat4 {
 	return result
 }
 
+func TransposedMat4(m Mat4) Mat4 {
+	return NewMat4(
+		m.M11, m.M21, m.M31, m.M41,
+		m.M12, m.M22, m.M32, m.M42,
+		m.M13, m.M23, m.M33, m.M43,
+		m.M14, m.M24, m.M34, m.M44,
+	)
+}
+
 func TranslationMat4(x, y, z float32) Mat4 {
 	result := IdentityMat4()
 	result.M14 = x

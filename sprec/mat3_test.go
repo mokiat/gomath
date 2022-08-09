@@ -55,6 +55,15 @@ var _ = Describe("Mat3", func() {
 		Expect(transformedVector).To(HaveVec3Coords(vector.X, vector.Y, vector.Z))
 	})
 
+	Specify("TransposedMat3", func() {
+		result := TransposedMat3(matrix)
+		Expect(result).To(HaveMat3Elements(
+			0.1, 0.4, 0.7,
+			0.2, 0.5, 0.8,
+			0.3, 0.6, 0.9,
+		))
+	})
+
 	Specify("TranslationMat3", func() {
 		translationMatrix := TranslationMat3(2.0, -3.0)
 		transformedVector := Mat3Vec3Prod(translationMatrix, vector)

@@ -26,6 +26,14 @@ func IdentityMat3() Mat3 {
 	return result
 }
 
+func TransposedMat3(m Mat3) Mat3 {
+	return NewMat3(
+		m.M11, m.M21, m.M31,
+		m.M12, m.M22, m.M32,
+		m.M13, m.M23, m.M33,
+	)
+}
+
 func TranslationMat3(x, y float64) Mat3 {
 	result := IdentityMat3()
 	result.M13 = x
