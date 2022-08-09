@@ -333,6 +333,18 @@ var _ = Describe("Mat4", func() {
 		Expect(rotatedVector).To(HaveVec3Coords(0.86602540378443870761, 0.0, -0.5))
 	})
 
+	Specify("#TRS", func() {
+		translation := NewVec3(15.0, 5.0, -3.0)
+		rotation := RotationQuat(Degrees(30), BasisXVec3())
+		scale := NewVec3(0.1, 0.5, 0.3)
+		matrix := TRSMat4(translation, rotation, scale)
+
+		t, r, s := matrix.TRS()
+		Expect(t).To(HaveVec3Coords(translation.X, translation.Y, translation.Z))
+		Expect(r).To(HaveQuatCoords(rotation.W, rotation.X, rotation.Y, rotation.Z))
+		Expect(s).To(HaveVec3Coords(scale.X, scale.Y, scale.Z))
+	})
+
 	Specify("#RowMajorArray", func() {
 		array := matrix.RowMajorArray()
 		Expect(array[0]).To(EqualFloat64(0.1))

@@ -397,6 +397,22 @@ func (m Mat4) Rotation() Quat {
 	return UnitQuat(NewQuat(w, x, y, z))
 }
 
+func (m Mat4) TRS() (Vec3, Quat, Vec3) {
+	translation := m.Translation()
+	scale := m.Scale()
+	m.M11 /= scale.X
+	m.M21 /= scale.X
+	m.M31 /= scale.X
+	m.M12 /= scale.Y
+	m.M22 /= scale.Y
+	m.M32 /= scale.Y
+	m.M13 /= scale.Z
+	m.M23 /= scale.Z
+	m.M33 /= scale.Z
+	rotation := m.Rotation()
+	return translation, rotation, scale
+}
+
 func (m Mat4) RowMajorArray() [16]float64 {
 	return [16]float64{
 		m.M11, m.M12, m.M13, m.M14,
