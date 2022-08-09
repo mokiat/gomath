@@ -322,13 +322,13 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
-	Specify("#RotationQuat", func() {
+	Specify("#Rotation", func() {
 		matrix = IdentityMat4()
-		quat := matrix.RotationQuat()
+		quat := matrix.Rotation()
 		Expect(quat).To(HaveQuatCoords(1.0, 0.0, 0.0, 0.0))
 
 		matrix = RotationMat4(Degrees(30), 0.0, 1.0, 0.0)
-		quat = matrix.RotationQuat()
+		quat = matrix.Rotation()
 		rotatedVector := QuatVec3Rotation(quat, NewVec3(1.0, 0.0, 0.0))
 		Expect(rotatedVector).To(HaveVec3Coords(0.86602540378443870761, 0.0, -0.5))
 	})

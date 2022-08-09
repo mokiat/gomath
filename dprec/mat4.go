@@ -356,7 +356,11 @@ func (m Mat4) Scale() Vec3 {
 	)
 }
 
-func (m Mat4) RotationQuat() Quat {
+// Rotation returns the rotation that is represented by this matrix.
+// NOTE: This function assumes that the matrix has identity scale. If you
+// want to get the rotation of a matrix that has non-identity scale, consider
+// using the TRS method.
+func (m Mat4) Rotation() Quat {
 	// This is calculated by inversing the equations for
 	// quat.OrientationX, quat.OrientationY and quat.OrientationZ.
 
