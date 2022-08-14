@@ -29,6 +29,15 @@ func IdentityMat4() Mat4 {
 	return result
 }
 
+func TransposedMat4(m Mat4) Mat4 {
+	return NewMat4(
+		m.M11, m.M21, m.M31, m.M41,
+		m.M12, m.M22, m.M32, m.M42,
+		m.M13, m.M23, m.M33, m.M43,
+		m.M14, m.M24, m.M34, m.M44,
+	)
+}
+
 func TranslationMat4(x, y, z float32) Mat4 {
 	result := IdentityMat4()
 	result.M14 = x
@@ -339,24 +348,6 @@ func (m Mat4) Translation() Vec3 {
 	return NewVec3(m.M14, m.M24, m.M34)
 }
 
-func (m Mat4) RowMajorArray() [16]float32 {
-	return [16]float32{
-		m.M11, m.M12, m.M13, m.M14,
-		m.M21, m.M22, m.M23, m.M24,
-		m.M31, m.M32, m.M33, m.M34,
-		m.M41, m.M42, m.M43, m.M44,
-	}
-}
-
-func (m Mat4) ColumnMajorArray() [16]float32 {
-	return [16]float32{
-		m.M11, m.M21, m.M31, m.M41,
-		m.M12, m.M22, m.M32, m.M42,
-		m.M13, m.M23, m.M33, m.M43,
-		m.M14, m.M24, m.M34, m.M44,
-	}
-}
-
 func (m Mat4) Scale() Vec3 {
 	return NewVec3(
 		m.OrientationX().Length(),
@@ -365,7 +356,11 @@ func (m Mat4) Scale() Vec3 {
 	)
 }
 
-func (m Mat4) RotationQuat() Quat {
+// Rotation returns the rotation that is represented by this matrix.
+// NOTE: This function assumes that the matrix has identity scale. If you
+// want to get the rotation of a matrix that has non-identity scale, consider
+// using the TRS method.
+func (m Mat4) Rotation() Quat {
 	// This is calculated by inversing the equations for
 	// quat.OrientationX, quat.OrientationY and quat.OrientationZ.
 
@@ -400,6 +395,40 @@ func (m Mat4) RotationQuat() Quat {
 		w = (m.M32 - m.M23) / (4 * x)
 	}
 	return UnitQuat(NewQuat(w, x, y, z))
+}
+
+func (m Mat4) TRS() (Vec3, Quat, Vec3) {
+	translation := m.Translation()
+	scale := m.Scale()
+	m.M11 /= scale.X
+	m.M21 /= scale.X
+	m.M31 /= scale.X
+	m.M12 /= scale.Y
+	m.M22 /= scale.Y
+	m.M32 /= scale.Y
+	m.M13 /= scale.Z
+	m.M23 /= scale.Z
+	m.M33 /= scale.Z
+	rotation := m.Rotation()
+	return translation, rotation, scale
+}
+
+func (m Mat4) RowMajorArray() [16]float32 {
+	return [16]float32{
+		m.M11, m.M12, m.M13, m.M14,
+		m.M21, m.M22, m.M23, m.M24,
+		m.M31, m.M32, m.M33, m.M34,
+		m.M41, m.M42, m.M43, m.M44,
+	}
+}
+
+func (m Mat4) ColumnMajorArray() [16]float32 {
+	return [16]float32{
+		m.M11, m.M21, m.M31, m.M41,
+		m.M12, m.M22, m.M32, m.M42,
+		m.M13, m.M23, m.M33, m.M43,
+		m.M14, m.M24, m.M34, m.M44,
+	}
 }
 
 func (m Mat4) GoString() string {

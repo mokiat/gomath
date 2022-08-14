@@ -53,6 +53,16 @@ var _ = Describe("Mat4", func() {
 		Expect(transformedVector).To(HaveVec4Coords(vector.X, vector.Y, vector.Z, vector.W))
 	})
 
+	Specify("TransposedMat4", func() {
+		result := TransposedMat4(matrix)
+		Expect(result).To(HaveMat4Elements(
+			0.1, 0.5, 0.9, 1.3,
+			0.2, 0.6, 1.0, 1.4,
+			0.3, 0.7, 1.1, 1.5,
+			0.4, 0.8, 1.2, 1.6,
+		))
+	})
+
 	Specify("TranslationMat4", func() {
 		translationMatrix := TranslationMat4(2.0, -3.0, 4.0)
 		transformedVector := Mat4Vec4Prod(translationMatrix, vector)
@@ -312,15 +322,27 @@ var _ = Describe("Mat4", func() {
 		))
 	})
 
-	Specify("#RotationQuat", func() {
+	Specify("#Rotation", func() {
 		matrix = IdentityMat4()
-		quat := matrix.RotationQuat()
+		quat := matrix.Rotation()
 		Expect(quat).To(HaveQuatCoords(1.0, 0.0, 0.0, 0.0))
 
 		matrix = RotationMat4(Degrees(30), 0.0, 1.0, 0.0)
-		quat = matrix.RotationQuat()
+		quat = matrix.Rotation()
 		rotatedVector := QuatVec3Rotation(quat, NewVec3(1.0, 0.0, 0.0))
 		Expect(rotatedVector).To(HaveVec3Coords(0.86602540378443870761, 0.0, -0.5))
+	})
+
+	Specify("#TRS", func() {
+		translation := NewVec3(15.0, 5.0, -3.0)
+		rotation := RotationQuat(Degrees(30), BasisXVec3())
+		scale := NewVec3(0.1, 0.5, 0.3)
+		matrix := TRSMat4(translation, rotation, scale)
+
+		t, r, s := matrix.TRS()
+		Expect(t).To(HaveVec3Coords(translation.X, translation.Y, translation.Z))
+		Expect(r).To(HaveQuatCoords(rotation.W, rotation.X, rotation.Y, rotation.Z))
+		Expect(s).To(HaveVec3Coords(scale.X, scale.Y, scale.Z))
 	})
 
 	Specify("#RowMajorArray", func() {
