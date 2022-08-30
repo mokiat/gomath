@@ -142,7 +142,7 @@ var _ = Describe("Mat3", func() {
 	})
 
 	Specify("RowMajorArrayToMat3", func() {
-		matrix := RowMajorArrayToMat3([16]float32{
+		matrix := RowMajorArrayToMat3([9]float32{
 			1.0, 2.0, 3.0,
 			5.0, 6.0, 7.0,
 			9.0, 10.0, 11.0,
@@ -155,7 +155,7 @@ var _ = Describe("Mat3", func() {
 	})
 
 	Specify("ColumnMajorArrayToMat3", func() {
-		matrix := ColumnMajorArrayToMat3([16]float32{
+		matrix := ColumnMajorArrayToMat3([9]float32{
 			1.0, 5.0, 9.0,
 			2.0, 6.0, 10.0,
 			3.0, 7.0, 11.0,
