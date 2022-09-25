@@ -131,7 +131,7 @@ func TransformationMat3(orientX, orientY, translation Vec2) Mat3 {
 	return result
 }
 
-func RowMajorArrayToMat3(values [16]float64) Mat3 {
+func RowMajorArrayToMat3(values [9]float64) Mat3 {
 	return Mat3{
 		M11: values[0], M12: values[1], M13: values[2],
 		M21: values[3], M22: values[4], M23: values[5],
@@ -139,7 +139,7 @@ func RowMajorArrayToMat3(values [16]float64) Mat3 {
 	}
 }
 
-func ColumnMajorArrayToMat3(values [16]float64) Mat3 {
+func ColumnMajorArrayToMat3(values [9]float64) Mat3 {
 	return Mat3{
 		M11: values[0], M12: values[3], M13: values[6],
 		M21: values[1], M22: values[4], M23: values[7],
