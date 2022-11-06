@@ -147,6 +147,14 @@ var _ = Describe("QuatTest", func() {
 		Expect(QuatProd(quat, inverse)).To(HaveQuatCoords(1.0, 0.0, 0.0, 0.0))
 	})
 
+	Specify("#IsIdentity", func() {
+		quat := QuatProd(
+			RotationQuat(Degrees(180), BasisXVec3()),
+			RotationQuat(-Degrees(180), BasisXVec3()),
+		)
+		Expect(quat.IsIdentity()).To(BeTrue())
+	})
+
 	Specify("#SqrNorm", func() {
 		norm := quat.SqrNorm()
 		Expect(norm).To(EqualFloat64(56.84))

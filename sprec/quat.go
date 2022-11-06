@@ -148,6 +148,10 @@ type Quat struct {
 	Z float32
 }
 
+func (q Quat) IsIdentity() bool {
+	return Eq(q.X, 0.0) && Eq(q.Y, 0.0) && Eq(q.Z, 0.0) && Eq(q.W, 1.0)
+}
+
 func (q Quat) SqrNorm() float32 {
 	return q.W*q.W + q.X*q.X + q.Y*q.Y + q.Z*q.Z
 }
