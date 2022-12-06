@@ -46,9 +46,27 @@ var _ = Describe("Vec4", func() {
 		Expect(result).To(HaveVec4Coords(1.0, 5.0, 9.0, -2.0))
 	})
 
+	Specify("Vec4MultiSum", func() {
+		result := Vec4MultiSum(
+			NewVec4(1.0, 2.0, 3.0, 4.0),
+			NewVec4(5.0, 6.0, 7.0, 8.0),
+			NewVec4(9.0, 10.0, 11.0, 12.0),
+		)
+		Expect(result).To(HaveVec4Coords(15.0, 18.0, 21.0, 24.0))
+	})
+
 	Specify("Vec4Diff", func() {
 		result := Vec4Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec4Coords(3.0, 1.0, -1.0, 12.0))
+	})
+
+	Specify("Vec4MultiDiff", func() {
+		result := Vec4MultiDiff(
+			NewVec4(1.0, 2.0, 3.0, 4.0),
+			NewVec4(5.0, 6.0, 7.0, 8.0),
+			NewVec4(9.0, 10.0, 11.0, 12.0),
+		)
+		Expect(result).To(HaveVec4Coords(-13.0, -14.0, -15.0, -16.0))
 	})
 
 	Specify("Vec4Prod", func() {

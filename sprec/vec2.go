@@ -37,11 +37,29 @@ func Vec2Sum(a, b Vec2) Vec2 {
 	}
 }
 
+func Vec2MultiSum(first Vec2, others ...Vec2) Vec2 {
+	result := first
+	for _, other := range others {
+		result.X += other.X
+		result.Y += other.Y
+	}
+	return result
+}
+
 func Vec2Diff(a, b Vec2) Vec2 {
 	return Vec2{
 		X: a.X - b.X,
 		Y: a.Y - b.Y,
 	}
+}
+
+func Vec2MultiDiff(first Vec2, others ...Vec2) Vec2 {
+	result := first
+	for _, other := range others {
+		result.X -= other.X
+		result.Y -= other.Y
+	}
+	return result
 }
 
 func Vec2Prod(vector Vec2, value float32) Vec2 {

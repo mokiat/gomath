@@ -27,6 +27,17 @@ func Vec4Sum(a, b Vec4) Vec4 {
 	}
 }
 
+func Vec4MultiSum(first Vec4, others ...Vec4) Vec4 {
+	result := first
+	for _, other := range others {
+		result.X += other.X
+		result.Y += other.Y
+		result.Z += other.Z
+		result.W += other.W
+	}
+	return result
+}
+
 func Vec4Diff(a, b Vec4) Vec4 {
 	return Vec4{
 		X: a.X - b.X,
@@ -34,6 +45,17 @@ func Vec4Diff(a, b Vec4) Vec4 {
 		Z: a.Z - b.Z,
 		W: a.W - b.W,
 	}
+}
+
+func Vec4MultiDiff(first Vec4, others ...Vec4) Vec4 {
+	result := first
+	for _, other := range others {
+		result.X -= other.X
+		result.Y -= other.Y
+		result.Z -= other.Z
+		result.W -= other.W
+	}
+	return result
 }
 
 func Vec4Prod(vector Vec4, value float32) Vec4 {

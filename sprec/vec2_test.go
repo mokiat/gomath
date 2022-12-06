@@ -52,9 +52,27 @@ var _ = Describe("Vec2", func() {
 		Expect(result).To(HaveVec2Coords(1.0, 5.0))
 	})
 
+	Specify("Vec2MultiSum", func() {
+		result := Vec2MultiSum(
+			NewVec2(1.0, 2.0),
+			NewVec2(3.0, 4.0),
+			NewVec2(5.0, 6.0),
+		)
+		Expect(result).To(HaveVec2Coords(9.0, 12.0))
+	})
+
 	Specify("Vec2Diff", func() {
 		result := Vec2Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec2Coords(3.0, 1.0))
+	})
+
+	Specify("Vec2MultiDiff", func() {
+		result := Vec2MultiDiff(
+			NewVec2(1.0, 2.0),
+			NewVec2(3.0, 4.0),
+			NewVec2(5.0, 6.0),
+		)
+		Expect(result).To(HaveVec2Coords(-7.0, -8.0))
 	})
 
 	Specify("Vec2Prod", func() {

@@ -59,9 +59,27 @@ var _ = Describe("Vec3", func() {
 		Expect(result).To(HaveVec3Coords(1.0, 5.0, 9.0))
 	})
 
+	Specify("Vec3MultiSum", func() {
+		result := Vec3MultiSum(
+			NewVec3(1.0, 2.0, 3.0),
+			NewVec3(4.0, 5.0, 6.0),
+			NewVec3(7.0, 8.0, 9.0),
+		)
+		Expect(result).To(HaveVec3Coords(12.0, 15.0, 18.0))
+	})
+
 	Specify("Vec3Diff", func() {
 		result := Vec3Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec3Coords(3.0, 1.0, -1.0))
+	})
+
+	Specify("Vec3MultiDiff", func() {
+		result := Vec3MultiDiff(
+			NewVec3(1.0, 2.0, 3.0),
+			NewVec3(4.0, 5.0, 6.0),
+			NewVec3(7.0, 8.0, 9.0),
+		)
+		Expect(result).To(HaveVec3Coords(-10.0, -11.0, -12.0))
 	})
 
 	Specify("Vec3Prod", func() {

@@ -49,12 +49,32 @@ func Vec3Sum(a, b Vec3) Vec3 {
 	}
 }
 
+func Vec3MultiSum(first Vec3, others ...Vec3) Vec3 {
+	result := first
+	for _, other := range others {
+		result.X += other.X
+		result.Y += other.Y
+		result.Z += other.Z
+	}
+	return result
+}
+
 func Vec3Diff(a, b Vec3) Vec3 {
 	return Vec3{
 		X: a.X - b.X,
 		Y: a.Y - b.Y,
 		Z: a.Z - b.Z,
 	}
+}
+
+func Vec3MultiDiff(first Vec3, others ...Vec3) Vec3 {
+	result := first
+	for _, other := range others {
+		result.X -= other.X
+		result.Y -= other.Y
+		result.Z -= other.Z
+	}
+	return result
 }
 
 func Vec3Prod(vector Vec3, value float64) Vec3 {
