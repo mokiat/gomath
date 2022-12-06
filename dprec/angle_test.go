@@ -1,6 +1,8 @@
 package dprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -52,4 +54,24 @@ var _ = Describe("Angle", func() {
 			Expect(vertical.Radians()).To(EqualFloat64(Pi / 2.0))
 		})
 	})
+
+	DescribeTable("#IsNaN",
+		func(angle Angle, expected bool) {
+			Expect(angle.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard float", Angle(0.0), false),
+		Entry("+inf", Angle(math.Inf(1)), false),
+		Entry("-inf", Angle(math.Inf(-1)), false),
+		Entry("NaN", Angle(math.NaN()), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(angle Angle, expected bool) {
+			Expect(angle.IsInf()).To(Equal(expected))
+		},
+		Entry("standard float", Angle(0.0), false),
+		Entry("+inf", Angle(math.Inf(1)), true),
+		Entry("-inf", Angle(math.Inf(-1)), true),
+		Entry("NaN", Angle(math.NaN()), false),
+	)
 })

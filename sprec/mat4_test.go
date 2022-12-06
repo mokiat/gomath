@@ -1,6 +1,8 @@
 package sprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -252,6 +254,134 @@ var _ = Describe("Mat4", func() {
 		result := Mat4Vec3Transformation(matrix, NewVec3(2.5, 1.5, 3.0))
 		Expect(result).To(HaveVec3Coords(1.85, 5.05, 8.25))
 	})
+
+	DescribeTable("#IsNaN",
+		func(mat Mat4, expected bool) {
+			Expect(mat.IsNaN()).To(Equal(expected))
+		},
+
+		Entry("standard floats", NewMat4(
+			1.0, 2.0, 3.0, 4.0,
+			5.0, 6.0, 7.0, 8.0,
+			9.0, 10.0, 11.0, 12.0,
+			13.0, 14.0, 15.0, 16.0,
+		), false),
+
+		Entry("M11 is +inf", Mat4{M11: float32(math.Inf(1))}, false),
+		Entry("M12 is +inf", Mat4{M12: float32(math.Inf(1))}, false),
+		Entry("M13 is +inf", Mat4{M13: float32(math.Inf(1))}, false),
+		Entry("M14 is +inf", Mat4{M14: float32(math.Inf(1))}, false),
+		Entry("M21 is +inf", Mat4{M21: float32(math.Inf(1))}, false),
+		Entry("M22 is +inf", Mat4{M22: float32(math.Inf(1))}, false),
+		Entry("M23 is +inf", Mat4{M23: float32(math.Inf(1))}, false),
+		Entry("M24 is +inf", Mat4{M24: float32(math.Inf(1))}, false),
+		Entry("M31 is +inf", Mat4{M31: float32(math.Inf(1))}, false),
+		Entry("M32 is +inf", Mat4{M32: float32(math.Inf(1))}, false),
+		Entry("M33 is +inf", Mat4{M33: float32(math.Inf(1))}, false),
+		Entry("M34 is +inf", Mat4{M34: float32(math.Inf(1))}, false),
+		Entry("M41 is +inf", Mat4{M41: float32(math.Inf(1))}, false),
+		Entry("M42 is +inf", Mat4{M42: float32(math.Inf(1))}, false),
+		Entry("M43 is +inf", Mat4{M43: float32(math.Inf(1))}, false),
+		Entry("M44 is +inf", Mat4{M44: float32(math.Inf(1))}, false),
+
+		Entry("M11 is -inf", Mat4{M11: float32(math.Inf(-1))}, false),
+		Entry("M12 is -inf", Mat4{M12: float32(math.Inf(-1))}, false),
+		Entry("M13 is -inf", Mat4{M13: float32(math.Inf(-1))}, false),
+		Entry("M14 is -inf", Mat4{M14: float32(math.Inf(-1))}, false),
+		Entry("M21 is -inf", Mat4{M21: float32(math.Inf(-1))}, false),
+		Entry("M22 is -inf", Mat4{M22: float32(math.Inf(-1))}, false),
+		Entry("M23 is -inf", Mat4{M23: float32(math.Inf(-1))}, false),
+		Entry("M24 is -inf", Mat4{M24: float32(math.Inf(-1))}, false),
+		Entry("M31 is -inf", Mat4{M31: float32(math.Inf(-1))}, false),
+		Entry("M32 is -inf", Mat4{M32: float32(math.Inf(-1))}, false),
+		Entry("M33 is -inf", Mat4{M33: float32(math.Inf(-1))}, false),
+		Entry("M34 is -inf", Mat4{M34: float32(math.Inf(-1))}, false),
+		Entry("M41 is -inf", Mat4{M41: float32(math.Inf(-1))}, false),
+		Entry("M42 is -inf", Mat4{M42: float32(math.Inf(-1))}, false),
+		Entry("M43 is -inf", Mat4{M43: float32(math.Inf(-1))}, false),
+		Entry("M44 is -inf", Mat4{M44: float32(math.Inf(-1))}, false),
+
+		Entry("M11 is NaN", Mat4{M11: float32(math.NaN())}, true),
+		Entry("M12 is NaN", Mat4{M12: float32(math.NaN())}, true),
+		Entry("M13 is NaN", Mat4{M13: float32(math.NaN())}, true),
+		Entry("M14 is NaN", Mat4{M14: float32(math.NaN())}, true),
+		Entry("M21 is NaN", Mat4{M21: float32(math.NaN())}, true),
+		Entry("M22 is NaN", Mat4{M22: float32(math.NaN())}, true),
+		Entry("M23 is NaN", Mat4{M23: float32(math.NaN())}, true),
+		Entry("M24 is NaN", Mat4{M24: float32(math.NaN())}, true),
+		Entry("M31 is NaN", Mat4{M31: float32(math.NaN())}, true),
+		Entry("M32 is NaN", Mat4{M32: float32(math.NaN())}, true),
+		Entry("M33 is NaN", Mat4{M33: float32(math.NaN())}, true),
+		Entry("M34 is NaN", Mat4{M34: float32(math.NaN())}, true),
+		Entry("M41 is NaN", Mat4{M41: float32(math.NaN())}, true),
+		Entry("M42 is NaN", Mat4{M42: float32(math.NaN())}, true),
+		Entry("M43 is NaN", Mat4{M43: float32(math.NaN())}, true),
+		Entry("M44 is NaN", Mat4{M44: float32(math.NaN())}, true),
+	)
+
+	DescribeTable("#IsInf",
+		func(mat Mat4, expected bool) {
+			Expect(mat.IsInf()).To(Equal(expected))
+		},
+
+		Entry("standard floats", NewMat4(
+			1.0, 2.0, 3.0, 4.0,
+			5.0, 6.0, 7.0, 8.0,
+			9.0, 10.0, 11.0, 12.0,
+			13.0, 14.0, 15.0, 16.0,
+		), false),
+
+		Entry("M11 is +inf", Mat4{M11: float32(math.Inf(1))}, true),
+		Entry("M12 is +inf", Mat4{M12: float32(math.Inf(1))}, true),
+		Entry("M13 is +inf", Mat4{M13: float32(math.Inf(1))}, true),
+		Entry("M14 is +inf", Mat4{M14: float32(math.Inf(1))}, true),
+		Entry("M21 is +inf", Mat4{M21: float32(math.Inf(1))}, true),
+		Entry("M22 is +inf", Mat4{M22: float32(math.Inf(1))}, true),
+		Entry("M23 is +inf", Mat4{M23: float32(math.Inf(1))}, true),
+		Entry("M24 is +inf", Mat4{M24: float32(math.Inf(1))}, true),
+		Entry("M31 is +inf", Mat4{M31: float32(math.Inf(1))}, true),
+		Entry("M32 is +inf", Mat4{M32: float32(math.Inf(1))}, true),
+		Entry("M33 is +inf", Mat4{M33: float32(math.Inf(1))}, true),
+		Entry("M34 is +inf", Mat4{M34: float32(math.Inf(1))}, true),
+		Entry("M41 is +inf", Mat4{M41: float32(math.Inf(1))}, true),
+		Entry("M42 is +inf", Mat4{M42: float32(math.Inf(1))}, true),
+		Entry("M43 is +inf", Mat4{M43: float32(math.Inf(1))}, true),
+		Entry("M44 is +inf", Mat4{M44: float32(math.Inf(1))}, true),
+
+		Entry("M11 is -inf", Mat4{M11: float32(math.Inf(-1))}, true),
+		Entry("M12 is -inf", Mat4{M12: float32(math.Inf(-1))}, true),
+		Entry("M13 is -inf", Mat4{M13: float32(math.Inf(-1))}, true),
+		Entry("M14 is -inf", Mat4{M14: float32(math.Inf(-1))}, true),
+		Entry("M21 is -inf", Mat4{M21: float32(math.Inf(-1))}, true),
+		Entry("M22 is -inf", Mat4{M22: float32(math.Inf(-1))}, true),
+		Entry("M23 is -inf", Mat4{M23: float32(math.Inf(-1))}, true),
+		Entry("M24 is -inf", Mat4{M24: float32(math.Inf(-1))}, true),
+		Entry("M31 is -inf", Mat4{M31: float32(math.Inf(-1))}, true),
+		Entry("M32 is -inf", Mat4{M32: float32(math.Inf(-1))}, true),
+		Entry("M33 is -inf", Mat4{M33: float32(math.Inf(-1))}, true),
+		Entry("M34 is -inf", Mat4{M34: float32(math.Inf(-1))}, true),
+		Entry("M41 is -inf", Mat4{M41: float32(math.Inf(-1))}, true),
+		Entry("M42 is -inf", Mat4{M42: float32(math.Inf(-1))}, true),
+		Entry("M43 is -inf", Mat4{M43: float32(math.Inf(-1))}, true),
+		Entry("M44 is -inf", Mat4{M44: float32(math.Inf(-1))}, true),
+
+		Entry("M11 is NaN", Mat4{M11: float32(math.NaN())}, false),
+		Entry("M12 is NaN", Mat4{M12: float32(math.NaN())}, false),
+		Entry("M13 is NaN", Mat4{M13: float32(math.NaN())}, false),
+		Entry("M14 is NaN", Mat4{M14: float32(math.NaN())}, false),
+		Entry("M21 is NaN", Mat4{M21: float32(math.NaN())}, false),
+		Entry("M22 is NaN", Mat4{M22: float32(math.NaN())}, false),
+		Entry("M23 is NaN", Mat4{M23: float32(math.NaN())}, false),
+		Entry("M24 is NaN", Mat4{M24: float32(math.NaN())}, false),
+		Entry("M31 is NaN", Mat4{M31: float32(math.NaN())}, false),
+		Entry("M32 is NaN", Mat4{M32: float32(math.NaN())}, false),
+		Entry("M33 is NaN", Mat4{M33: float32(math.NaN())}, false),
+		Entry("M34 is NaN", Mat4{M34: float32(math.NaN())}, false),
+		Entry("M41 is NaN", Mat4{M41: float32(math.NaN())}, false),
+		Entry("M42 is NaN", Mat4{M42: float32(math.NaN())}, false),
+		Entry("M43 is NaN", Mat4{M43: float32(math.NaN())}, false),
+		Entry("M44 is NaN", Mat4{M44: float32(math.NaN())}, false),
+	)
 
 	Specify("#Row1", func() {
 		vector := matrix.Row1()

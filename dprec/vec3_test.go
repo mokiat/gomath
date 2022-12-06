@@ -1,6 +1,8 @@
 package dprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -57,9 +59,27 @@ var _ = Describe("Vec3", func() {
 		Expect(result).To(HaveVec3Coords(1.0, 5.0, 9.0))
 	})
 
+	Specify("Vec3MultiSum", func() {
+		result := Vec3MultiSum(
+			NewVec3(1.0, 2.0, 3.0),
+			NewVec3(4.0, 5.0, 6.0),
+			NewVec3(7.0, 8.0, 9.0),
+		)
+		Expect(result).To(HaveVec3Coords(12.0, 15.0, 18.0))
+	})
+
 	Specify("Vec3Diff", func() {
 		result := Vec3Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec3Coords(3.0, 1.0, -1.0))
+	})
+
+	Specify("Vec3MultiDiff", func() {
+		result := Vec3MultiDiff(
+			NewVec3(1.0, 2.0, 3.0),
+			NewVec3(4.0, 5.0, 6.0),
+			NewVec3(7.0, 8.0, 9.0),
+		)
+		Expect(result).To(HaveVec3Coords(-10.0, -11.0, -12.0))
 	})
 
 	Specify("Vec3Prod", func() {
@@ -104,10 +124,48 @@ var _ = Describe("Vec3", func() {
 		Expect(result).To(HaveVec3Coords(-2.0, -3.0, -4.0))
 	})
 
+	Specify("NormalVec3", func() {
+		result := NormalVec3(firstVector)
+		Expect(Vec3Dot(firstVector, result)).To(EqualFloat64(0.0))
+		Expect(result.Length()).To(EqualFloat64(1.0))
+	})
+
 	Specify("ArrayToVec3", func() {
 		result := ArrayToVec3([3]float64{1.1, 2.2, 3.3})
 		Expect(result).To(HaveVec3Coords(1.1, 2.2, 3.3))
 	})
+
+	DescribeTable("#IsNaN",
+		func(vec Vec3, expected bool) {
+			Expect(vec.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec3(1.0, 2.0, 3.0), false),
+		Entry("X is +inf", NewVec3(math.Inf(1), 2.0, 3.0), false),
+		Entry("Y is +inf", NewVec3(1.0, math.Inf(1), 3.0), false),
+		Entry("Z is +inf", NewVec3(1.0, 2.0, math.Inf(1)), false),
+		Entry("X is -inf", NewVec3(math.Inf(-1), 2.0, 3.0), false),
+		Entry("Y is -inf", NewVec3(1.0, math.Inf(-1), 3.0), false),
+		Entry("Z is -inf", NewVec3(1.0, 2.0, math.Inf(-1)), false),
+		Entry("X is NaN", NewVec3(math.NaN(), 2.0, 3.0), true),
+		Entry("Y is NaN", NewVec3(1.0, math.NaN(), 3.0), true),
+		Entry("Z is NaN", NewVec3(1.0, 2.0, math.NaN()), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(vec Vec3, expected bool) {
+			Expect(vec.IsInf()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec3(1.0, 2.0, 3.0), false),
+		Entry("X is +inf", NewVec3(math.Inf(1), 2.0, 3.0), true),
+		Entry("Y is +inf", NewVec3(1.0, math.Inf(1), 3.0), true),
+		Entry("Z is +inf", NewVec3(1.0, 2.0, math.Inf(1)), true),
+		Entry("X is -inf", NewVec3(math.Inf(-1), 2.0, 3.0), true),
+		Entry("Y is -inf", NewVec3(1.0, math.Inf(-1), 3.0), true),
+		Entry("Z is -inf", NewVec3(1.0, 2.0, math.Inf(-1)), true),
+		Entry("X is NaN", NewVec3(math.NaN(), 2.0, 3.0), false),
+		Entry("Y is NaN", NewVec3(1.0, math.NaN(), 3.0), false),
+		Entry("Z is NaN", NewVec3(1.0, 2.0, math.NaN()), false),
+	)
 
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())

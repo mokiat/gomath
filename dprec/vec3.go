@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec3(x, y, z float64) Vec3 {
 	return Vec3{
@@ -46,12 +49,32 @@ func Vec3Sum(a, b Vec3) Vec3 {
 	}
 }
 
+func Vec3MultiSum(first Vec3, others ...Vec3) Vec3 {
+	result := first
+	for _, other := range others {
+		result.X += other.X
+		result.Y += other.Y
+		result.Z += other.Z
+	}
+	return result
+}
+
 func Vec3Diff(a, b Vec3) Vec3 {
 	return Vec3{
 		X: a.X - b.X,
 		Y: a.Y - b.Y,
 		Z: a.Z - b.Z,
 	}
+}
+
+func Vec3MultiDiff(first Vec3, others ...Vec3) Vec3 {
+	result := first
+	for _, other := range others {
+		result.X -= other.X
+		result.Y -= other.Y
+		result.Z -= other.Z
+	}
+	return result
 }
 
 func Vec3Prod(vector Vec3, value float64) Vec3 {
@@ -107,6 +130,33 @@ func InverseVec3(vector Vec3) Vec3 {
 	}
 }
 
+func NormalVec3(vector Vec3) Vec3 {
+	sqrX := vector.X * vector.X
+	sqrY := vector.Y * vector.Y
+	sqrZ := vector.Z * vector.Z
+	if (sqrZ > sqrX) && (sqrZ > sqrY) {
+		return UnitVec3(Vec3{
+			X: 1.0,
+			Y: 1.0,
+			Z: -(vector.X + vector.Y) / vector.Z,
+		})
+	} else {
+		if sqrX > sqrY {
+			return UnitVec3(Vec3{
+				X: -(vector.Y + vector.Z) / vector.X,
+				Y: 1.0,
+				Z: 1.0,
+			})
+		} else {
+			return UnitVec3(Vec3{
+				X: 1.0,
+				Y: -(vector.X + vector.Z) / vector.Y,
+				Z: 1.0,
+			})
+		}
+	}
+}
+
 func ArrayToVec3(array [3]float64) Vec3 {
 	return Vec3{
 		X: array[0],
@@ -119,6 +169,14 @@ type Vec3 struct {
 	X float64
 	Y float64
 	Z float64
+}
+
+func (v Vec3) IsNaN() bool {
+	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z)
+}
+
+func (v Vec3) IsInf() bool {
+	return math.IsInf(v.X, 0) || math.IsInf(v.Y, 0) || math.IsInf(v.Z, 0)
 }
 
 func (v Vec3) IsZero() bool {

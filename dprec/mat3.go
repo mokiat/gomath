@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewMat3(
 	m11, m12, m13 float64,
@@ -183,6 +186,18 @@ type Mat3 struct {
 	M11, M12, M13 float64
 	M21, M22, M23 float64
 	M31, M32, M33 float64
+}
+
+func (m Mat3) IsNaN() bool {
+	return math.IsNaN(m.M11) || math.IsNaN(m.M12) || math.IsNaN(m.M13) ||
+		math.IsNaN(m.M21) || math.IsNaN(m.M22) || math.IsNaN(m.M23) ||
+		math.IsNaN(m.M31) || math.IsNaN(m.M32) || math.IsNaN(m.M33)
+}
+
+func (m Mat3) IsInf() bool {
+	return math.IsInf(m.M11, 0) || math.IsInf(m.M12, 0) || math.IsInf(m.M13, 0) ||
+		math.IsInf(m.M21, 0) || math.IsInf(m.M22, 0) || math.IsInf(m.M23, 0) ||
+		math.IsInf(m.M31, 0) || math.IsInf(m.M32, 0) || math.IsInf(m.M33, 0)
 }
 
 func (m Mat3) Row1() Vec3 {

@@ -1,6 +1,8 @@
 package sprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -44,9 +46,27 @@ var _ = Describe("Vec4", func() {
 		Expect(result).To(HaveVec4Coords(1.0, 5.0, 9.0, -2.0))
 	})
 
+	Specify("Vec4MultiSum", func() {
+		result := Vec4MultiSum(
+			NewVec4(1.0, 2.0, 3.0, 4.0),
+			NewVec4(5.0, 6.0, 7.0, 8.0),
+			NewVec4(9.0, 10.0, 11.0, 12.0),
+		)
+		Expect(result).To(HaveVec4Coords(15.0, 18.0, 21.0, 24.0))
+	})
+
 	Specify("Vec4Diff", func() {
 		result := Vec4Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec4Coords(3.0, 1.0, -1.0, 12.0))
+	})
+
+	Specify("Vec4MultiDiff", func() {
+		result := Vec4MultiDiff(
+			NewVec4(1.0, 2.0, 3.0, 4.0),
+			NewVec4(5.0, 6.0, 7.0, 8.0),
+			NewVec4(9.0, 10.0, 11.0, 12.0),
+		)
+		Expect(result).To(HaveVec4Coords(-13.0, -14.0, -15.0, -16.0))
 	})
 
 	Specify("Vec4Prod", func() {
@@ -80,6 +100,44 @@ var _ = Describe("Vec4", func() {
 		result := ArrayToVec4([4]float32{1.1, 2.2, 3.3, 4.4})
 		Expect(result).To(HaveVec4Coords(1.1, 2.2, 3.3, 4.4))
 	})
+
+	DescribeTable("#IsNaN",
+		func(vec Vec4, expected bool) {
+			Expect(vec.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec4(1.0, 2.0, 3.0, 4.0), false),
+		Entry("X is +inf", NewVec4(float32(math.Inf(1)), 2.0, 3.0, 4.0), false),
+		Entry("Y is +inf", NewVec4(1.0, float32(math.Inf(1)), 3.0, 4.0), false),
+		Entry("Z is +inf", NewVec4(1.0, 2.0, float32(math.Inf(1)), 4.0), false),
+		Entry("W is +inf", NewVec4(1.0, 2.0, 3.0, float32(math.Inf(1))), false),
+		Entry("X is -inf", NewVec4(float32(math.Inf(-1)), 2.0, 3.0, 4.0), false),
+		Entry("Y is -inf", NewVec4(1.0, float32(math.Inf(-1)), 3.0, 4.0), false),
+		Entry("Z is -inf", NewVec4(1.0, 2.0, float32(math.Inf(-1)), 4.0), false),
+		Entry("W is -inf", NewVec4(1.0, 2.0, 3.0, float32(math.Inf(-1))), false),
+		Entry("X is NaN", NewVec4(float32(math.NaN()), 2.0, 3.0, 4.0), true),
+		Entry("Y is NaN", NewVec4(1.0, float32(math.NaN()), 3.0, 4.0), true),
+		Entry("Z is NaN", NewVec4(1.0, 2.0, float32(math.NaN()), 4.0), true),
+		Entry("W is NaN", NewVec4(1.0, 2.0, 3.0, float32(math.NaN())), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(vec Vec4, expected bool) {
+			Expect(vec.IsInf()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec4(1.0, 2.0, 3.0, 4.0), false),
+		Entry("X is +inf", NewVec4(float32(math.Inf(1)), 2.0, 3.0, 4.0), true),
+		Entry("Y is +inf", NewVec4(1.0, float32(math.Inf(1)), 3.0, 4.0), true),
+		Entry("Z is +inf", NewVec4(1.0, 2.0, float32(math.Inf(1)), 4.0), true),
+		Entry("W is +inf", NewVec4(1.0, 2.0, 3.0, float32(math.Inf(1))), true),
+		Entry("X is -inf", NewVec4(float32(math.Inf(-1)), 2.0, 3.0, 4.0), true),
+		Entry("Y is -inf", NewVec4(1.0, float32(math.Inf(-1)), 3.0, 4.0), true),
+		Entry("Z is -inf", NewVec4(1.0, 2.0, float32(math.Inf(-1)), 4.0), true),
+		Entry("W is -inf", NewVec4(1.0, 2.0, 3.0, float32(math.Inf(-1))), true),
+		Entry("X is NaN", NewVec4(float32(math.NaN()), 2.0, 3.0, 4.0), false),
+		Entry("Y is NaN", NewVec4(1.0, float32(math.NaN()), 3.0, 4.0), false),
+		Entry("Z is NaN", NewVec4(1.0, 2.0, float32(math.NaN()), 4.0), false),
+		Entry("W is NaN", NewVec4(1.0, 2.0, 3.0, float32(math.NaN())), false),
+	)
 
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())

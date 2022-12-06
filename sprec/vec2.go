@@ -1,6 +1,9 @@
 package sprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec2(x, y float32) Vec2 {
 	return Vec2{
@@ -34,11 +37,29 @@ func Vec2Sum(a, b Vec2) Vec2 {
 	}
 }
 
+func Vec2MultiSum(first Vec2, others ...Vec2) Vec2 {
+	result := first
+	for _, other := range others {
+		result.X += other.X
+		result.Y += other.Y
+	}
+	return result
+}
+
 func Vec2Diff(a, b Vec2) Vec2 {
 	return Vec2{
 		X: a.X - b.X,
 		Y: a.Y - b.Y,
 	}
+}
+
+func Vec2MultiDiff(first Vec2, others ...Vec2) Vec2 {
+	result := first
+	for _, other := range others {
+		result.X -= other.X
+		result.Y -= other.Y
+	}
+	return result
 }
 
 func Vec2Prod(vector Vec2, value float32) Vec2 {
@@ -82,6 +103,13 @@ func InverseVec2(vector Vec2) Vec2 {
 	}
 }
 
+func NormalVec2(vector Vec2) Vec2 {
+	return UnitVec2(Vec2{
+		X: -vector.Y,
+		Y: vector.X,
+	})
+}
+
 func ArrayToVec2(array [2]float32) Vec2 {
 	return Vec2{
 		X: array[0],
@@ -92,6 +120,14 @@ func ArrayToVec2(array [2]float32) Vec2 {
 type Vec2 struct {
 	X float32
 	Y float32
+}
+
+func (v Vec2) IsNaN() bool {
+	return math.IsNaN(float64(v.X)) || math.IsNaN(float64(v.Y))
+}
+
+func (v Vec2) IsInf() bool {
+	return math.IsInf(float64(v.X), 0) || math.IsInf(float64(v.Y), 0)
 }
 
 func (v Vec2) IsZero() bool {

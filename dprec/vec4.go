@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec4(x, y, z, w float64) Vec4 {
 	return Vec4{
@@ -24,6 +27,17 @@ func Vec4Sum(a, b Vec4) Vec4 {
 	}
 }
 
+func Vec4MultiSum(first Vec4, others ...Vec4) Vec4 {
+	result := first
+	for _, other := range others {
+		result.X += other.X
+		result.Y += other.Y
+		result.Z += other.Z
+		result.W += other.W
+	}
+	return result
+}
+
 func Vec4Diff(a, b Vec4) Vec4 {
 	return Vec4{
 		X: a.X - b.X,
@@ -31,6 +45,17 @@ func Vec4Diff(a, b Vec4) Vec4 {
 		Z: a.Z - b.Z,
 		W: a.W - b.W,
 	}
+}
+
+func Vec4MultiDiff(first Vec4, others ...Vec4) Vec4 {
+	result := first
+	for _, other := range others {
+		result.X -= other.X
+		result.Y -= other.Y
+		result.Z -= other.Z
+		result.W -= other.W
+	}
+	return result
 }
 
 func Vec4Prod(vector Vec4, value float64) Vec4 {
@@ -87,6 +112,14 @@ type Vec4 struct {
 	Y float64
 	Z float64
 	W float64
+}
+
+func (v Vec4) IsNaN() bool {
+	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z) || math.IsNaN(v.W)
+}
+
+func (v Vec4) IsInf() bool {
+	return math.IsInf(v.X, 0) || math.IsInf(v.Y, 0) || math.IsInf(v.Z, 0) || math.IsInf(v.W, 0)
 }
 
 func (v Vec4) IsZero() bool {

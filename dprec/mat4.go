@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewMat4(
 	m11, m12, m13, m14 float64,
@@ -298,6 +301,20 @@ type Mat4 struct {
 	M21, M22, M23, M24 float64
 	M31, M32, M33, M34 float64
 	M41, M42, M43, M44 float64
+}
+
+func (m Mat4) IsNaN() bool {
+	return math.IsNaN(m.M11) || math.IsNaN(m.M12) || math.IsNaN(m.M13) || math.IsNaN(m.M14) ||
+		math.IsNaN(m.M21) || math.IsNaN(m.M22) || math.IsNaN(m.M23) || math.IsNaN(m.M24) ||
+		math.IsNaN(m.M31) || math.IsNaN(m.M32) || math.IsNaN(m.M33) || math.IsNaN(m.M34) ||
+		math.IsNaN(m.M41) || math.IsNaN(m.M42) || math.IsNaN(m.M43) || math.IsNaN(m.M44)
+}
+
+func (m Mat4) IsInf() bool {
+	return math.IsInf(m.M11, 0) || math.IsInf(m.M12, 0) || math.IsInf(m.M13, 0) || math.IsInf(m.M14, 0) ||
+		math.IsInf(m.M21, 0) || math.IsInf(m.M22, 0) || math.IsInf(m.M23, 0) || math.IsInf(m.M24, 0) ||
+		math.IsInf(m.M31, 0) || math.IsInf(m.M32, 0) || math.IsInf(m.M33, 0) || math.IsInf(m.M34, 0) ||
+		math.IsInf(m.M41, 0) || math.IsInf(m.M42, 0) || math.IsInf(m.M43, 0) || math.IsInf(m.M44, 0)
 }
 
 func (m Mat4) Row1() Vec4 {

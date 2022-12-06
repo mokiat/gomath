@@ -1,6 +1,8 @@
 package sprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -50,9 +52,27 @@ var _ = Describe("Vec2", func() {
 		Expect(result).To(HaveVec2Coords(1.0, 5.0))
 	})
 
+	Specify("Vec2MultiSum", func() {
+		result := Vec2MultiSum(
+			NewVec2(1.0, 2.0),
+			NewVec2(3.0, 4.0),
+			NewVec2(5.0, 6.0),
+		)
+		Expect(result).To(HaveVec2Coords(9.0, 12.0))
+	})
+
 	Specify("Vec2Diff", func() {
 		result := Vec2Diff(firstVector, secondVector)
 		Expect(result).To(HaveVec2Coords(3.0, 1.0))
+	})
+
+	Specify("Vec2MultiDiff", func() {
+		result := Vec2MultiDiff(
+			NewVec2(1.0, 2.0),
+			NewVec2(3.0, 4.0),
+			NewVec2(5.0, 6.0),
+		)
+		Expect(result).To(HaveVec2Coords(-7.0, -8.0))
 	})
 
 	Specify("Vec2Prod", func() {
@@ -92,10 +112,42 @@ var _ = Describe("Vec2", func() {
 		Expect(result).To(HaveVec2Coords(-2.0, -3.0))
 	})
 
+	Specify("NormalVec2", func() {
+		result := NormalVec2(firstVector)
+		Expect(Vec2Dot(firstVector, result)).To(EqualFloat32(0.0))
+		Expect(result.Length()).To(EqualFloat32(1.0))
+	})
+
 	Specify("ArrayToVec2", func() {
 		result := ArrayToVec2([2]float32{1.1, 2.2})
 		Expect(result).To(HaveVec2Coords(1.1, 2.2))
 	})
+
+	DescribeTable("#IsNaN",
+		func(vec Vec2, expected bool) {
+			Expect(vec.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec2(1.0, 2.0), false),
+		Entry("X is +inf", NewVec2(float32(math.Inf(1)), 2.0), false),
+		Entry("Y is +inf", NewVec2(1.0, float32(math.Inf(1))), false),
+		Entry("X is -inf", NewVec2(float32(math.Inf(-1)), 2.0), false),
+		Entry("Y is -inf", NewVec2(1.0, float32(math.Inf(-1))), false),
+		Entry("X is NaN", NewVec2(float32(math.NaN()), 2.0), true),
+		Entry("Y is NaN", NewVec2(1.0, float32(math.NaN())), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(vec Vec2, expected bool) {
+			Expect(vec.IsInf()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec2(1.0, 2.0), false),
+		Entry("X is +inf", NewVec2(float32(math.Inf(1)), 2.0), true),
+		Entry("Y is +inf", NewVec2(1.0, float32(math.Inf(1))), true),
+		Entry("X is -inf", NewVec2(float32(math.Inf(-1)), 2.0), true),
+		Entry("Y is -inf", NewVec2(1.0, float32(math.Inf(-1))), true),
+		Entry("X is NaN", NewVec2(float32(math.NaN()), 2.0), false),
+		Entry("Y is NaN", NewVec2(1.0, float32(math.NaN())), false),
+	)
 
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())
