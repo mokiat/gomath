@@ -130,6 +130,33 @@ func InverseVec3(vector Vec3) Vec3 {
 	}
 }
 
+func NormalVec3(vector Vec3) Vec3 {
+	sqrX := vector.X * vector.X
+	sqrY := vector.Y * vector.Y
+	sqrZ := vector.Z * vector.Z
+	if (sqrZ > sqrX) && (sqrZ > sqrY) {
+		return UnitVec3(Vec3{
+			X: 1.0,
+			Y: 1.0,
+			Z: -(vector.X + vector.Y) / vector.Z,
+		})
+	} else {
+		if sqrX > sqrY {
+			return UnitVec3(Vec3{
+				X: -(vector.Y + vector.Z) / vector.X,
+				Y: 1.0,
+				Z: 1.0,
+			})
+		} else {
+			return UnitVec3(Vec3{
+				X: 1.0,
+				Y: -(vector.X + vector.Z) / vector.Y,
+				Z: 1.0,
+			})
+		}
+	}
+}
+
 func ArrayToVec3(array [3]float64) Vec3 {
 	return Vec3{
 		X: array[0],

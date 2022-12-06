@@ -124,6 +124,12 @@ var _ = Describe("Vec3", func() {
 		Expect(result).To(HaveVec3Coords(-2.0, -3.0, -4.0))
 	})
 
+	Specify("NormalVec3", func() {
+		result := NormalVec3(firstVector)
+		Expect(Vec3Dot(firstVector, result)).To(EqualFloat32(0.0))
+		Expect(result.Length()).To(EqualFloat32(1.0))
+	})
+
 	Specify("ArrayToVec3", func() {
 		result := ArrayToVec3([3]float32{1.1, 2.2, 3.3})
 		Expect(result).To(HaveVec3Coords(1.1, 2.2, 3.3))

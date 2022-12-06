@@ -103,6 +103,13 @@ func InverseVec2(vector Vec2) Vec2 {
 	}
 }
 
+func NormalVec2(vector Vec2) Vec2 {
+	return UnitVec2(Vec2{
+		X: -vector.Y,
+		Y: vector.X,
+	})
+}
+
 func ArrayToVec2(array [2]float32) Vec2 {
 	return Vec2{
 		X: array[0],
