@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec2(x, y float64) Vec2 {
 	return Vec2{
@@ -92,6 +95,14 @@ func ArrayToVec2(array [2]float64) Vec2 {
 type Vec2 struct {
 	X float64
 	Y float64
+}
+
+func (v Vec2) IsNaN() bool {
+	return math.IsNaN(v.X) || math.IsNaN(v.Y)
+}
+
+func (v Vec2) IsInf() bool {
+	return math.IsInf(v.X, 0) || math.IsInf(v.Y, 0)
 }
 
 func (v Vec2) IsZero() bool {

@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewQuat(w, x, y, z float64) Quat {
 	return Quat{
@@ -146,6 +149,14 @@ type Quat struct {
 	X float64
 	Y float64
 	Z float64
+}
+
+func (q Quat) IsNaN() bool {
+	return math.IsNaN(q.X) || math.IsNaN(q.Y) || math.IsNaN(q.Z) || math.IsNaN(q.W)
+}
+
+func (q Quat) IsInf() bool {
+	return math.IsInf(q.X, 0) || math.IsInf(q.Y, 0) || math.IsInf(q.Z, 0) || math.IsInf(q.W, 0)
 }
 
 func (q Quat) IsIdentity() bool {

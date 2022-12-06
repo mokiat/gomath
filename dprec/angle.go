@@ -1,5 +1,7 @@
 package dprec
 
+import "math"
+
 func Radians(radians float64) Angle {
 	return Angle(radians)
 }
@@ -9,6 +11,14 @@ func Degrees(degrees float64) Angle {
 }
 
 type Angle float64
+
+func (a Angle) IsNaN() bool {
+	return math.IsNaN(float64(a))
+}
+
+func (a Angle) IsInf() bool {
+	return math.IsInf(float64(a), 0)
+}
 
 func (a Angle) Degrees() float64 {
 	return 180.0 * (float64(a) / Pi)

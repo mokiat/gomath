@@ -1,6 +1,9 @@
 package sprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec3(x, y, z float32) Vec3 {
 	return Vec3{
@@ -119,6 +122,14 @@ type Vec3 struct {
 	X float32
 	Y float32
 	Z float32
+}
+
+func (v Vec3) IsNaN() bool {
+	return math.IsNaN(float64(v.X)) || math.IsNaN(float64(v.Y)) || math.IsNaN(float64(v.Z))
+}
+
+func (v Vec3) IsInf() bool {
+	return math.IsInf(float64(v.X), 0) || math.IsInf(float64(v.Y), 0) || math.IsInf(float64(v.Z), 0)
 }
 
 func (v Vec3) IsZero() bool {

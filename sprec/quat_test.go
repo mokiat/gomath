@@ -1,6 +1,8 @@
 package sprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -146,6 +148,44 @@ var _ = Describe("QuatTest", func() {
 		inverse := InverseQuat(quat)
 		Expect(QuatProd(quat, inverse)).To(HaveQuatCoords(1.0, 0.0, 0.0, 0.0))
 	})
+
+	DescribeTable("#IsNaN",
+		func(quat Quat, expected bool) {
+			Expect(quat.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard floats", NewQuat(1.0, 2.0, 3.0, 4.0), false),
+		Entry("X is +inf", NewQuat(float32(math.Inf(1)), 2.0, 3.0, 4.0), false),
+		Entry("Y is +inf", NewQuat(1.0, float32(math.Inf(1)), 3.0, 4.0), false),
+		Entry("Z is +inf", NewQuat(1.0, 2.0, float32(math.Inf(1)), 4.0), false),
+		Entry("W is +inf", NewQuat(1.0, 2.0, 3.0, float32(math.Inf(1))), false),
+		Entry("X is -inf", NewQuat(float32(math.Inf(-1)), 2.0, 3.0, 4.0), false),
+		Entry("Y is -inf", NewQuat(1.0, float32(math.Inf(-1)), 3.0, 4.0), false),
+		Entry("Z is -inf", NewQuat(1.0, 2.0, float32(math.Inf(-1)), 4.0), false),
+		Entry("W is -inf", NewQuat(1.0, 2.0, 3.0, float32(math.Inf(-1))), false),
+		Entry("X is NaN", NewQuat(float32(math.NaN()), 2.0, 3.0, 4.0), true),
+		Entry("Y is NaN", NewQuat(1.0, float32(math.NaN()), 3.0, 4.0), true),
+		Entry("Z is NaN", NewQuat(1.0, 2.0, float32(math.NaN()), 4.0), true),
+		Entry("W is NaN", NewQuat(1.0, 2.0, 3.0, float32(math.NaN())), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(quat Quat, expected bool) {
+			Expect(quat.IsInf()).To(Equal(expected))
+		},
+		Entry("standard floats", NewQuat(1.0, 2.0, 3.0, 4.0), false),
+		Entry("X is +inf", NewQuat(float32(math.Inf(1)), 2.0, 3.0, 4.0), true),
+		Entry("Y is +inf", NewQuat(1.0, float32(math.Inf(1)), 3.0, 4.0), true),
+		Entry("Z is +inf", NewQuat(1.0, 2.0, float32(math.Inf(1)), 4.0), true),
+		Entry("W is +inf", NewQuat(1.0, 2.0, 3.0, float32(math.Inf(1))), true),
+		Entry("X is -inf", NewQuat(float32(math.Inf(-1)), 2.0, 3.0, 4.0), true),
+		Entry("Y is -inf", NewQuat(1.0, float32(math.Inf(-1)), 3.0, 4.0), true),
+		Entry("Z is -inf", NewQuat(1.0, 2.0, float32(math.Inf(-1)), 4.0), true),
+		Entry("W is -inf", NewQuat(1.0, 2.0, 3.0, float32(math.Inf(-1))), true),
+		Entry("X is NaN", NewQuat(float32(math.NaN()), 2.0, 3.0, 4.0), false),
+		Entry("Y is NaN", NewQuat(1.0, float32(math.NaN()), 3.0, 4.0), false),
+		Entry("Z is NaN", NewQuat(1.0, 2.0, float32(math.NaN()), 4.0), false),
+		Entry("W is NaN", NewQuat(1.0, 2.0, 3.0, float32(math.NaN())), false),
+	)
 
 	Specify("#IsIdentity", func() {
 		quat := QuatProd(

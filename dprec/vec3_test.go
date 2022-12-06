@@ -1,6 +1,8 @@
 package dprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -108,6 +110,38 @@ var _ = Describe("Vec3", func() {
 		result := ArrayToVec3([3]float64{1.1, 2.2, 3.3})
 		Expect(result).To(HaveVec3Coords(1.1, 2.2, 3.3))
 	})
+
+	DescribeTable("#IsNaN",
+		func(vec Vec3, expected bool) {
+			Expect(vec.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec3(1.0, 2.0, 3.0), false),
+		Entry("X is +inf", NewVec3(math.Inf(1), 2.0, 3.0), false),
+		Entry("Y is +inf", NewVec3(1.0, math.Inf(1), 3.0), false),
+		Entry("Z is +inf", NewVec3(1.0, 2.0, math.Inf(1)), false),
+		Entry("X is -inf", NewVec3(math.Inf(-1), 2.0, 3.0), false),
+		Entry("Y is -inf", NewVec3(1.0, math.Inf(-1), 3.0), false),
+		Entry("Z is -inf", NewVec3(1.0, 2.0, math.Inf(-1)), false),
+		Entry("X is NaN", NewVec3(math.NaN(), 2.0, 3.0), true),
+		Entry("Y is NaN", NewVec3(1.0, math.NaN(), 3.0), true),
+		Entry("Z is NaN", NewVec3(1.0, 2.0, math.NaN()), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(vec Vec3, expected bool) {
+			Expect(vec.IsInf()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec3(1.0, 2.0, 3.0), false),
+		Entry("X is +inf", NewVec3(math.Inf(1), 2.0, 3.0), true),
+		Entry("Y is +inf", NewVec3(1.0, math.Inf(1), 3.0), true),
+		Entry("Z is +inf", NewVec3(1.0, 2.0, math.Inf(1)), true),
+		Entry("X is -inf", NewVec3(math.Inf(-1), 2.0, 3.0), true),
+		Entry("Y is -inf", NewVec3(1.0, math.Inf(-1), 3.0), true),
+		Entry("Z is -inf", NewVec3(1.0, 2.0, math.Inf(-1)), true),
+		Entry("X is NaN", NewVec3(math.NaN(), 2.0, 3.0), false),
+		Entry("Y is NaN", NewVec3(1.0, math.NaN(), 3.0), false),
+		Entry("Z is NaN", NewVec3(1.0, 2.0, math.NaN()), false),
+	)
 
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())

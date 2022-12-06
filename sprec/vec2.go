@@ -1,6 +1,9 @@
 package sprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec2(x, y float32) Vec2 {
 	return Vec2{
@@ -92,6 +95,14 @@ func ArrayToVec2(array [2]float32) Vec2 {
 type Vec2 struct {
 	X float32
 	Y float32
+}
+
+func (v Vec2) IsNaN() bool {
+	return math.IsNaN(float64(v.X)) || math.IsNaN(float64(v.Y))
+}
+
+func (v Vec2) IsInf() bool {
+	return math.IsInf(float64(v.X), 0) || math.IsInf(float64(v.Y), 0)
 }
 
 func (v Vec2) IsZero() bool {

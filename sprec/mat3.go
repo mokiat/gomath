@@ -1,6 +1,9 @@
 package sprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewMat3(
 	m11, m12, m13 float32,
@@ -183,6 +186,18 @@ type Mat3 struct {
 	M11, M12, M13 float32
 	M21, M22, M23 float32
 	M31, M32, M33 float32
+}
+
+func (m Mat3) IsNaN() bool {
+	return math.IsNaN(float64(m.M11)) || math.IsNaN(float64(m.M12)) || math.IsNaN(float64(m.M13)) ||
+		math.IsNaN(float64(m.M21)) || math.IsNaN(float64(m.M22)) || math.IsNaN(float64(m.M23)) ||
+		math.IsNaN(float64(m.M31)) || math.IsNaN(float64(m.M32)) || math.IsNaN(float64(m.M33))
+}
+
+func (m Mat3) IsInf() bool {
+	return math.IsInf(float64(m.M11), 0) || math.IsInf(float64(m.M12), 0) || math.IsInf(float64(m.M13), 0) ||
+		math.IsInf(float64(m.M21), 0) || math.IsInf(float64(m.M22), 0) || math.IsInf(float64(m.M23), 0) ||
+		math.IsInf(float64(m.M31), 0) || math.IsInf(float64(m.M32), 0) || math.IsInf(float64(m.M33), 0)
 }
 
 func (m Mat3) Row1() Vec3 {

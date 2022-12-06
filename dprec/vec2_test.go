@@ -1,6 +1,8 @@
 package dprec_test
 
 import (
+	"math"
+
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
@@ -96,6 +98,32 @@ var _ = Describe("Vec2", func() {
 		result := ArrayToVec2([2]float64{1.1, 2.2})
 		Expect(result).To(HaveVec2Coords(1.1, 2.2))
 	})
+
+	DescribeTable("#IsNaN",
+		func(vec Vec2, expected bool) {
+			Expect(vec.IsNaN()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec2(1.0, 2.0), false),
+		Entry("X is +inf", NewVec2(math.Inf(1), 2.0), false),
+		Entry("Y is +inf", NewVec2(1.0, math.Inf(1)), false),
+		Entry("X is -inf", NewVec2(math.Inf(-1), 2.0), false),
+		Entry("Y is -inf", NewVec2(1.0, math.Inf(-1)), false),
+		Entry("X is NaN", NewVec2(math.NaN(), 2.0), true),
+		Entry("Y is NaN", NewVec2(1.0, math.NaN()), true),
+	)
+
+	DescribeTable("#IsInf",
+		func(vec Vec2, expected bool) {
+			Expect(vec.IsInf()).To(Equal(expected))
+		},
+		Entry("standard floats", NewVec2(1.0, 2.0), false),
+		Entry("X is +inf", NewVec2(math.Inf(1), 2.0), true),
+		Entry("Y is +inf", NewVec2(1.0, math.Inf(1)), true),
+		Entry("X is -inf", NewVec2(math.Inf(-1), 2.0), true),
+		Entry("Y is -inf", NewVec2(1.0, math.Inf(-1)), true),
+		Entry("X is NaN", NewVec2(math.NaN(), 2.0), false),
+		Entry("Y is NaN", NewVec2(1.0, math.NaN()), false),
+	)
 
 	Specify("#IsZero", func() {
 		Expect(nullVector.IsZero()).To(BeTrue())

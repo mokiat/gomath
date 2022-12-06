@@ -1,6 +1,9 @@
 package sprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewQuat(w, x, y, z float32) Quat {
 	return Quat{
@@ -146,6 +149,14 @@ type Quat struct {
 	X float32
 	Y float32
 	Z float32
+}
+
+func (q Quat) IsNaN() bool {
+	return math.IsNaN(float64(q.X)) || math.IsNaN(float64(q.Y)) || math.IsNaN(float64(q.Z)) || math.IsNaN(float64(q.W))
+}
+
+func (q Quat) IsInf() bool {
+	return math.IsInf(float64(q.X), 0) || math.IsInf(float64(q.Y), 0) || math.IsInf(float64(q.Z), 0) || math.IsInf(float64(q.W), 0)
 }
 
 func (q Quat) IsIdentity() bool {

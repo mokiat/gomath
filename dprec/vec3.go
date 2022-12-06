@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec3(x, y, z float64) Vec3 {
 	return Vec3{
@@ -119,6 +122,14 @@ type Vec3 struct {
 	X float64
 	Y float64
 	Z float64
+}
+
+func (v Vec3) IsNaN() bool {
+	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z)
+}
+
+func (v Vec3) IsInf() bool {
+	return math.IsInf(v.X, 0) || math.IsInf(v.Y, 0) || math.IsInf(v.Z, 0)
 }
 
 func (v Vec3) IsZero() bool {

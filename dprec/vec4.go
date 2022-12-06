@@ -1,6 +1,9 @@
 package dprec
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func NewVec4(x, y, z, w float64) Vec4 {
 	return Vec4{
@@ -87,6 +90,14 @@ type Vec4 struct {
 	Y float64
 	Z float64
 	W float64
+}
+
+func (v Vec4) IsNaN() bool {
+	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z) || math.IsNaN(v.W)
+}
+
+func (v Vec4) IsInf() bool {
+	return math.IsInf(v.X, 0) || math.IsInf(v.Y, 0) || math.IsInf(v.Z, 0) || math.IsInf(v.W, 0)
 }
 
 func (v Vec4) IsZero() bool {
