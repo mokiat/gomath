@@ -12,27 +12,15 @@ func Abs[T ~float32](value T) T {
 }
 
 func Max[T ~float32](a, b T) T {
-	if a > b {
-		return a
-	}
-	return b
+	return max(a, b)
 }
 
 func Min[T ~float32](a, b T) T {
-	if a < b {
-		return a
-	}
-	return b
+	return min(a, b)
 }
 
-func Clamp[T ~float32](value, min, max T) T {
-	if value < min {
-		return min
-	}
-	if value > max {
-		return max
-	}
-	return value
+func Clamp[T ~float32](value, lower, upper T) T {
+	return min(max(lower, value), upper)
 }
 
 func Mix[T ~float32](a, b T, amount float32) T {
