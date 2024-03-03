@@ -30,6 +30,16 @@ var _ = Describe("Util", func() {
 		Expect(Min(5.0, 5.0)).To(EqualFloat64(5.0))
 	})
 
+	Specify("Floor", func() {
+		Expect(Floor(1.1)).To(EqualFloat64(1.0))
+		Expect(Floor(5.9)).To(EqualFloat64(5.0))
+	})
+
+	Specify("Ceil", func() {
+		Expect(Ceil(1.1)).To(EqualFloat64(2.0))
+		Expect(Ceil(5.9)).To(EqualFloat64(6.0))
+	})
+
 	Specify("Clamp", func() {
 		Expect(Clamp(1.0, 2.0, 3.0)).To(EqualFloat64(2.0))
 		Expect(Clamp(2.5, 2.0, 3.0)).To(EqualFloat64(2.5))

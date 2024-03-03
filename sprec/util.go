@@ -19,6 +19,14 @@ func Min[T ~float32](a, b T) T {
 	return min(a, b)
 }
 
+func Floor[T ~float32](value T) T {
+	return T(math.Floor(float64(value)))
+}
+
+func Ceil[T ~float32](value T) T {
+	return T(math.Ceil(float64(value)))
+}
+
 func Clamp[T ~float32](value, lower, upper T) T {
 	return min(max(lower, value), upper)
 }
