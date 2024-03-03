@@ -68,6 +68,10 @@ var _ = Describe("Util", func() {
 		Expect(Sqrt(17.64)).To(EqualFloat32(4.2))
 	})
 
+	Specify("Pow", func() {
+		Expect(Pow(2.0, 4.0)).To(EqualFloat32(16.0))
+	})
+
 	Specify("Cos", func() {
 		Expect(Cos(Radians(0.0))).To(EqualFloat32(1.0))
 		Expect(Cos(Radians(Pi / 3))).To(EqualFloat32(0.5))

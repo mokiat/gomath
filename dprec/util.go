@@ -47,6 +47,10 @@ func Sqrt(value float64) float64 {
 	return math.Sqrt(value)
 }
 
+func Pow(a, b float64) float64 {
+	return math.Pow(a, b)
+}
+
 func Cos(angle Angle) float64 {
 	return math.Cos(angle.Radians())
 }
