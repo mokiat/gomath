@@ -64,6 +64,10 @@ var _ = Describe("Util", func() {
 		Expect(EqEps(0.003, 0.002, 0.01)).To(BeTrue()) // outside precision
 	})
 
+	Specify("Mod", func() {
+		Expect(Mod(5.0, 3.0)).To(EqualFloat64(2.0))
+	})
+
 	Specify("Sqrt", func() {
 		Expect(Sqrt(17.64)).To(EqualFloat64(4.2))
 	})

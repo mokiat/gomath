@@ -43,6 +43,10 @@ func EqEps(a, b, epsilon float32) bool {
 	return Abs(a-b) < epsilon
 }
 
+func Mod(a, b float32) float32 {
+	return float32(math.Mod(float64(a), float64(b)))
+}
+
 func Sqrt(value float32) float32 {
 	return float32(math.Sqrt(float64(value)))
 }
