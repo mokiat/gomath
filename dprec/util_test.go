@@ -109,4 +109,13 @@ var _ = Describe("Util", func() {
 		Expect(IsNegative(-0.1)).To(BeTrue())
 	})
 
+	Specify("IsValid", func() {
+		Expect(IsValid(0.0)).To(BeTrue())
+		Expect(IsValid(-15.0)).To(BeTrue())
+		Expect(IsValid(3.4)).To(BeTrue())
+		Expect(IsValid(math.NaN())).To(BeFalse())
+		Expect(IsValid(math.Inf(1))).To(BeFalse())
+		Expect(IsValid(math.Inf(-1))).To(BeFalse())
+	})
+
 })

@@ -74,6 +74,10 @@ func Sign(value float64) float64 {
 	return 1.0
 }
 
-func IsNegative(value float64) bool {
-	return math.Signbit(value)
+func IsNegative[T ~float64](value T) bool {
+	return math.Signbit(float64(value))
+}
+
+func IsValid[T ~float64](value T) bool {
+	return !math.IsNaN(float64(value)) && !math.IsInf(float64(value), 0)
 }

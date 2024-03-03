@@ -104,9 +104,18 @@ var _ = Describe("Util", func() {
 	})
 
 	Specify("IsNegative", func() {
-		Expect(IsNegative(0.1)).To(BeFalse())
-		Expect(IsNegative(0.0)).To(BeFalse())
-		Expect(IsNegative(-0.1)).To(BeTrue())
+		Expect(IsNegative(float32(0.1))).To(BeFalse())
+		Expect(IsNegative(float32(0.0))).To(BeFalse())
+		Expect(IsNegative(float32(-0.1))).To(BeTrue())
+	})
+
+	Specify("IsValid", func() {
+		Expect(IsValid(float32(0.0))).To(BeTrue())
+		Expect(IsValid(float32(-15.0))).To(BeTrue())
+		Expect(IsValid(float32(3.4))).To(BeTrue())
+		Expect(IsValid(float32(math.NaN()))).To(BeFalse())
+		Expect(IsValid(float32(math.Inf(1)))).To(BeFalse())
+		Expect(IsValid(float32(math.Inf(-1)))).To(BeFalse())
 	})
 
 })
