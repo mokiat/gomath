@@ -1,8 +1,6 @@
 module github.com/mokiat/gomath
 
-go 1.21
-
-toolchain go1.21.1
+go 1.22
 
 require (
 	github.com/onsi/ginkgo/v2 v2.13.0
