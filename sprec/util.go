@@ -75,6 +75,10 @@ func Tan(angle Angle) float32 {
 	return float32(math.Tan(float64(angle.Radians())))
 }
 
+func Atan2(y, x float32) Angle {
+	return Radians(float32(math.Atan2(float64(y), float64(x))))
+}
+
 func Sign(value float32) float32 {
 	if math.Signbit(float64(value)) {
 		return -1.0

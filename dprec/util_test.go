@@ -106,6 +106,12 @@ var _ = Describe("Util", func() {
 		Expect(Tan(Radians(Pi / 4))).To(EqualFloat64(1.0))
 	})
 
+	Specify("Atan2", func() {
+		Expect(Atan2(1.0, 1.0).Degrees()).To(EqualFloat64(45))
+		Expect(Atan2(1.0, 0.0).Degrees()).To(EqualFloat64(90))
+		Expect(Atan2(0.0, 1.0).Degrees()).To(EqualFloat64(0))
+	})
+
 	Specify("Sign", func() {
 		Expect(Sign(0.1)).To(EqualFloat64(1.0))
 		Expect(Sign(-0.1)).To(EqualFloat64(-1.0))
