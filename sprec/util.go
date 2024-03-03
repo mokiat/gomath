@@ -19,6 +19,14 @@ func Min[T ~float32](a, b T) T {
 	return min(a, b)
 }
 
+func Floor[T ~float32](value T) T {
+	return T(math.Floor(float64(value)))
+}
+
+func Ceil[T ~float32](value T) T {
+	return T(math.Ceil(float64(value)))
+}
+
 func Clamp[T ~float32](value, lower, upper T) T {
 	return min(max(lower, value), upper)
 }
@@ -35,8 +43,16 @@ func EqEps(a, b, epsilon float32) bool {
 	return Abs(a-b) < epsilon
 }
 
+func Mod(a, b float32) float32 {
+	return float32(math.Mod(float64(a), float64(b)))
+}
+
 func Sqrt(value float32) float32 {
 	return float32(math.Sqrt(float64(value)))
+}
+
+func Pow(a, b float32) float32 {
+	return float32(math.Pow(float64(a), float64(b)))
 }
 
 func Cos(angle Angle) float32 {
@@ -59,9 +75,21 @@ func Tan(angle Angle) float32 {
 	return float32(math.Tan(float64(angle.Radians())))
 }
 
+func Atan2(y, x float32) Angle {
+	return Radians(float32(math.Atan2(float64(y), float64(x))))
+}
+
 func Sign(value float32) float32 {
 	if math.Signbit(float64(value)) {
 		return -1.0
 	}
 	return 1.0
+}
+
+func IsNegative[T ~float32](value T) bool {
+	return math.Signbit(float64(value))
+}
+
+func IsValid[T ~float32](value T) bool {
+	return !math.IsNaN(float64(value)) && !math.IsInf(float64(value), 0)
 }
