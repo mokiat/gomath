@@ -73,3 +73,7 @@ func Sign(value float64) float64 {
 	}
 	return 1.0
 }
+
+func IsNegative(value float64) bool {
+	return math.Signbit(value)
+}

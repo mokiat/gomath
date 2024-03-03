@@ -103,4 +103,10 @@ var _ = Describe("Util", func() {
 		Expect(Sign(-0.1)).To(EqualFloat32(-1.0))
 	})
 
+	Specify("IsNegative", func() {
+		Expect(IsNegative(0.1)).To(BeFalse())
+		Expect(IsNegative(0.0)).To(BeFalse())
+		Expect(IsNegative(-0.1)).To(BeTrue())
+	})
+
 })
