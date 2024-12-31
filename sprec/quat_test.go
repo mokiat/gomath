@@ -42,6 +42,16 @@ var _ = Describe("QuatTest", func() {
 		Expect(quat).To(HaveQuatCoords(0.866025403784, 0.162221421130763, 0.405553552826907, 0.243332131696144))
 	})
 
+	Specify("EulerQuat", func() {
+		xAxis := BasisXVec3()
+		yAxis := BasisYVec3()
+		zAxis := BasisZVec3()
+		rotation := EulerQuat(Degrees(30.0), Degrees(45.0), Degrees(90.0), RotationOrderGlobalXYZ)
+		Expect(QuatVec3Rotation(rotation, xAxis)).To(HaveVec3Coords(0.0, 0.7071067811865475, -0.7071067811865475))
+		Expect(QuatVec3Rotation(rotation, yAxis)).To(HaveVec3Coords(-0.8660254037844386, 0.35355339059327373, 0.35355339059327373))
+		Expect(QuatVec3Rotation(rotation, zAxis)).To(HaveVec3Coords(0.5, 0.6123724356957945, 0.6123724356957945))
+	})
+
 	Specify("ConjugateQuat", func() {
 		conjugate := ConjugateQuat(quat)
 		Expect(conjugate).To(HaveQuatCoords(5.1, 4.1, -3.1, 2.1))
