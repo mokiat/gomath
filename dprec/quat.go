@@ -272,6 +272,78 @@ func (q Quat) OrientationZ() Vec3 {
 	}
 }
 
+// EulerAngles returns the Euler rotation angles for the given quaternion
+// and rotation order in which it was presumably created.
+//
+// The rotations are always returned for X, Y, Z axis in that order.
+//
+// NOTE: This assumes that the quaternion is normalized.
+func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
+	switch order {
+	case RotationOrderGlobalXYZ:
+		x = Atan2(
+			2.0*(q.W*q.X+q.Y*q.Z),
+			1.0-2.0*(q.X*q.X+q.Y*q.Y),
+		)
+		y = Asin(2.0 * (q.W*q.Y - q.X*q.Z))
+		z = Atan2(
+			2.0*(q.W*q.Z+q.X*q.Y),
+			1.0-2.0*(q.Y*q.Y+q.Z*q.Z),
+		)
+	case RotationOrderGlobalXZY:
+		x = Atan2(
+			2.0*(q.W*q.X-q.Z*q.Y),
+			1.0-2.0*(q.X*q.X+q.Z*q.Z),
+		)
+		y = Atan2(
+			2.0*(q.W*q.Y-q.X*q.Z),
+			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
+		)
+		z = Asin(2.0 * (q.W*q.Z + q.X*q.Y))
+	case RotationOrderGlobalYXZ:
+		x = Asin(2.0 * (q.W*q.X + q.Z*q.Y))
+		y = Atan2(
+			2.0*(q.W*q.Y-q.Z*q.X),
+			1.0-2.0*(q.X*q.X+q.Y*q.Y),
+		)
+		z = Atan2(
+			2.0*(q.W*q.Z-q.X*q.Y),
+			1.0-2.0*(q.Z*q.Z+q.X*q.X),
+		)
+	case RotationOrderGlobalYZX:
+		x = Atan2(
+			2.0*(q.W*q.X+q.Z*q.Y),
+			1.0-2.0*(q.X*q.X+q.Z*q.Z),
+		)
+		y = Atan2(
+			2.0*(q.W*q.Y+q.X*q.Z),
+			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
+		)
+		z = Asin(2.0 * (q.W*q.Z - q.X*q.Y))
+	case RotationOrderGlobalZXY:
+		x = Asin(2.0 * (q.W*q.X - q.Z*q.Y))
+		y = Atan2(
+			2.0*(q.W*q.Y+q.Z*q.X),
+			1.0-2.0*(q.X*q.X+q.Y*q.Y),
+		)
+		z = Atan2(
+			2.0*(q.W*q.Z+q.X*q.Y),
+			1.0-2.0*(q.Z*q.Z+q.X*q.X),
+		)
+	case RotationOrderGlobalZYX:
+		x = Atan2(
+			2.0*(q.W*q.X-q.Z*q.Y),
+			1.0-2.0*(q.Y*q.Y+q.X*q.X),
+		)
+		y = Asin(2.0 * (q.W*q.Y + q.Z*q.X))
+		z = Atan2(
+			2.0*(q.W*q.Z-q.Y*q.X),
+			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
+		)
+	}
+	return
+}
+
 func (q Quat) GoString() string {
 	return fmt.Sprintf("(%f, %f, %f, %f)", q.W, q.X, q.Y, q.Z)
 }

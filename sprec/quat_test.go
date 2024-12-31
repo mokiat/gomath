@@ -239,6 +239,33 @@ var _ = Describe("QuatTest", func() {
 		Expect(quat.OrientationZ()).To(HaveVec3Coords(1.0, 0.0, 0.0))
 	})
 
+	Specify("#EulerAngles", func() {
+		orders := []RotationOrder{
+			RotationOrderGlobalXYZ,
+			RotationOrderGlobalXZY,
+			RotationOrderGlobalYXZ,
+			RotationOrderGlobalYZX,
+			RotationOrderGlobalZXY,
+			RotationOrderGlobalZYX,
+		}
+		for _, order := range orders {
+			for x := -85; x <= 85; x += 5 {
+				for y := -85; y <= 85; y += 5 {
+					for z := -85; z <= 85; z += 5 {
+						xAng := Degrees(float32(x))
+						yAng := Degrees(float32(y))
+						zAng := Degrees(float32(z))
+						quat := EulerQuat(xAng, yAng, zAng, order)
+						actualX, actualY, actualZ := quat.EulerAngles(order)
+						Expect(actualX.Degrees()).To(BeNumerically("~", xAng.Degrees(), 0.001))
+						Expect(actualY.Degrees()).To(BeNumerically("~", yAng.Degrees(), 0.001))
+						Expect(actualZ.Degrees()).To(BeNumerically("~", zAng.Degrees(), 0.001))
+					}
+				}
+			}
+		}
+	})
+
 	Specify("#GoString", func() {
 		result := quat.GoString()
 		Expect(result).To(Equal("(5.100000, -4.100000, 3.100000, -2.100000)"))
