@@ -5,6 +5,61 @@ import (
 	"math"
 )
 
+// RotationOrder specifies the order in which rotations are applied.
+type RotationOrder uint8
+
+const (
+	// RotationOrderGlobalXYZ specifies that rotations are applied in the order
+	// of X, Y, Z using a global gizmo.
+	RotationOrderGlobalXYZ RotationOrder = iota
+
+	// RotationOrderGlobalXZY specifies that rotations are applied in the order
+	// of X, Z, Y using a global gizmo.
+	RotationOrderGlobalXZY
+
+	// RotationOrderGlobalYXZ specifies that rotations are applied in the order
+	// of Y, X, Z using a global gizmo.
+	RotationOrderGlobalYXZ
+
+	// RotationOrderGlobalYZX specifies that rotations are applied in the order
+	// of Y, Z, X using a global gizmo.
+	RotationOrderGlobalYZX
+
+	// RotationOrderGlobalZXY specifies that rotations are applied in the order
+	// of Z, X, Y using a global gizmo.
+	RotationOrderGlobalZXY
+
+	// RotationOrderGlobalZYX specifies that rotations are applied in the order
+	// of Z, Y, X using a global gizmo.
+	RotationOrderGlobalZYX
+)
+
+const (
+	// RotationOrderLocalXYZ specifies that rotations are applied in the order
+	// of X, Y, Z using a local gizmo (i.e. from the point of view of the object).
+	RotationOrderLocalXYZ = RotationOrderGlobalZYX
+
+	// RotationOrderLocalXZY specifies that rotations are applied in the order
+	// of X, Z, Y using a local gizmo (i.e. from the point of view of the object).
+	RotationOrderLocalXZY = RotationOrderGlobalYZX
+
+	// RotationOrderLocalYXZ specifies that rotations are applied in the order
+	// of Y, X, Z using a local gizmo (i.e. from the point of view of the object).
+	RotationOrderLocalYXZ = RotationOrderGlobalZXY
+
+	// RotationOrderLocalYZX specifies that rotations are applied in the order
+	// of Y, Z, X using a local gizmo (i.e. from the point of view of the object).
+	RotationOrderLocalYZX = RotationOrderGlobalXZY
+
+	// RotationOrderLocalZXY specifies that rotations are applied in the order
+	// of Z, X, Y using a local gizmo (i.e. from the point of view of the object).
+	RotationOrderLocalZXY = RotationOrderGlobalYXZ
+
+	// RotationOrderLocalZYX specifies that rotations are applied in the order
+	// of Z, Y, X using a local gizmo (i.e. from the point of view of the object).
+	RotationOrderLocalZYX = RotationOrderGlobalXYZ
+)
+
 func NewQuat(w, x, y, z float32) Quat {
 	return Quat{
 		W: w,
@@ -41,6 +96,28 @@ func RotationQuat(angle Angle, direction Vec3) Quat {
 		X: sn * normalizedDirection.X,
 		Y: sn * normalizedDirection.Y,
 		Z: sn * normalizedDirection.Z,
+	}
+}
+
+func EulerQuat(x, y, z Angle, order RotationOrder) Quat {
+	xRot := RotationQuat(x, BasisXVec3())
+	yRot := RotationQuat(y, BasisYVec3())
+	zRot := RotationQuat(z, BasisZVec3())
+	switch order {
+	case RotationOrderGlobalXYZ:
+		return QuatProd(QuatProd(zRot, yRot), xRot)
+	case RotationOrderGlobalXZY:
+		return QuatProd(QuatProd(yRot, zRot), xRot)
+	case RotationOrderGlobalYXZ:
+		return QuatProd(QuatProd(zRot, xRot), yRot)
+	case RotationOrderGlobalYZX:
+		return QuatProd(QuatProd(xRot, zRot), yRot)
+	case RotationOrderGlobalZXY:
+		return QuatProd(QuatProd(yRot, xRot), zRot)
+	case RotationOrderGlobalZYX:
+		return QuatProd(QuatProd(xRot, yRot), zRot)
+	default:
+		return IdentityQuat()
 	}
 }
 
@@ -193,6 +270,78 @@ func (q Quat) OrientationZ() Vec3 {
 		Y: 2.0 * (q.Y*q.Z - q.W*q.X),
 		Z: 1.0 - 2.0*(q.X*q.X+q.Y*q.Y),
 	}
+}
+
+// EulerAngles returns the Euler rotation angles for the given quaternion
+// and rotation order in which it was presumably created.
+//
+// The rotations are always returned for X, Y, Z axis in that order.
+//
+// NOTE: This assumes that the quaternion is normalized.
+func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
+	switch order {
+	case RotationOrderGlobalXYZ:
+		x = Atan2(
+			2.0*(q.W*q.X+q.Y*q.Z),
+			1.0-2.0*(q.X*q.X+q.Y*q.Y),
+		)
+		y = Asin(2.0 * (q.W*q.Y - q.X*q.Z))
+		z = Atan2(
+			2.0*(q.W*q.Z+q.X*q.Y),
+			1.0-2.0*(q.Y*q.Y+q.Z*q.Z),
+		)
+	case RotationOrderGlobalXZY:
+		x = Atan2(
+			2.0*(q.W*q.X-q.Z*q.Y),
+			1.0-2.0*(q.X*q.X+q.Z*q.Z),
+		)
+		y = Atan2(
+			2.0*(q.W*q.Y-q.X*q.Z),
+			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
+		)
+		z = Asin(2.0 * (q.W*q.Z + q.X*q.Y))
+	case RotationOrderGlobalYXZ:
+		x = Asin(2.0 * (q.W*q.X + q.Z*q.Y))
+		y = Atan2(
+			2.0*(q.W*q.Y-q.Z*q.X),
+			1.0-2.0*(q.X*q.X+q.Y*q.Y),
+		)
+		z = Atan2(
+			2.0*(q.W*q.Z-q.X*q.Y),
+			1.0-2.0*(q.Z*q.Z+q.X*q.X),
+		)
+	case RotationOrderGlobalYZX:
+		x = Atan2(
+			2.0*(q.W*q.X+q.Z*q.Y),
+			1.0-2.0*(q.X*q.X+q.Z*q.Z),
+		)
+		y = Atan2(
+			2.0*(q.W*q.Y+q.X*q.Z),
+			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
+		)
+		z = Asin(2.0 * (q.W*q.Z - q.X*q.Y))
+	case RotationOrderGlobalZXY:
+		x = Asin(2.0 * (q.W*q.X - q.Z*q.Y))
+		y = Atan2(
+			2.0*(q.W*q.Y+q.Z*q.X),
+			1.0-2.0*(q.X*q.X+q.Y*q.Y),
+		)
+		z = Atan2(
+			2.0*(q.W*q.Z+q.X*q.Y),
+			1.0-2.0*(q.Z*q.Z+q.X*q.X),
+		)
+	case RotationOrderGlobalZYX:
+		x = Atan2(
+			2.0*(q.W*q.X-q.Z*q.Y),
+			1.0-2.0*(q.Y*q.Y+q.X*q.X),
+		)
+		y = Asin(2.0 * (q.W*q.Y + q.Z*q.X))
+		z = Atan2(
+			2.0*(q.W*q.Z-q.Y*q.X),
+			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
+		)
+	}
+	return
 }
 
 func (q Quat) GoString() string {

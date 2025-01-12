@@ -130,6 +130,29 @@ var _ = Describe("Vec3", func() {
 		Expect(result.Length()).To(EqualFloat64(1.0))
 	})
 
+	Specify("Vec3Angle", func() {
+		rotation := RotationQuat(Degrees(35.0), BasisYVec3())
+		a := NewVec3(1.0, 0.0, 1.0)
+		b := QuatVec3Rotation(rotation, a)
+		angle := Vec3Angle(a, b)
+		Expect(angle.Degrees()).To(BeNumerically("~", 35.0, 0.0000001))
+	})
+
+	Specify("Vec3Projection", func() {
+		normal := BasisYVec3()
+		result := Vec3Projection(firstVector, normal)
+		Expect(result).To(HaveVec3Coords(firstVector.X, 0.0, firstVector.Z))
+	})
+
+	Specify("Vec3ProjectionAngle", func() {
+		axis := UnitVec3(NewVec3(1.0, 0.5, 0.2))
+		rotation := RotationQuat(Degrees(-35.0), axis)
+		a := NewVec3(1.0, 0.5, 1.3)
+		b := QuatVec3Rotation(rotation, a)
+		angle := Vec3ProjectionAngle(a, b, axis)
+		Expect(angle.Degrees()).To(BeNumerically("~", -35.0, 0.0000001))
+	})
+
 	Specify("ArrayToVec3", func() {
 		result := ArrayToVec3([3]float64{1.1, 2.2, 3.3})
 		Expect(result).To(HaveVec3Coords(1.1, 2.2, 3.3))

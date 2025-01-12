@@ -157,6 +157,35 @@ func NormalVec3(vector Vec3) Vec3 {
 	}
 }
 
+// Vec3Angle returns the shortest angle between two vectors. It always
+// returns a positive angle.
+func Vec3Angle(a, b Vec3) Angle {
+	a = UnitVec3(a)
+	b = UnitVec3(b)
+	dot := Vec3Dot(a, b)
+	cross := Vec3Cross(a, b)
+	return Atan2(cross.Length(), dot)
+}
+
+// Vec3Projection returns the specified vector flattened along the specified
+// normal. The normal must be a unit vector. The result is the projection of
+// the vector onto the plane defined by the normal.
+func Vec3Projection(vector Vec3, normal Vec3) Vec3 {
+	dot := Vec3Dot(vector, normal)
+	return Vec3Diff(vector, Vec3Prod(normal, dot))
+}
+
+// Vec3ProjectionAngle returns the angle between two vectors projected onto
+// a plane defined by a normal vector. Unlike Vec3Angle, this function
+// returns a signed angle and the ordering of the vectors matters.
+func Vec3ProjectionAngle(a, b, normal Vec3) Angle {
+	flatA := UnitVec3(Vec3Projection(a, normal))
+	flatB := UnitVec3(Vec3Projection(b, normal))
+	dot := Vec3Dot(flatA, flatB)
+	cross := Vec3Cross(flatA, flatB)
+	return Atan2(Vec3Dot(cross, normal), dot)
+}
+
 func ArrayToVec3(array [3]float64) Vec3 {
 	return Vec3{
 		X: array[0],
