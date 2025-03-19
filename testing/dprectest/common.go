@@ -15,7 +15,7 @@ func AreEqualFloat64(a, b float64) bool {
 }
 
 func EqualFloat64(expectedValue float64) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue interface{}) (testing.MatchStatus, error) {
+	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
 		floatValue, ok := actualValue.(float64)
 		if !ok {
 			return testing.MatchStatus{}, fmt.Errorf("EqualFloat64 matcher expects a float64")

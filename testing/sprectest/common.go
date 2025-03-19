@@ -15,7 +15,7 @@ func AreEqualFloat32(a, b float32) bool {
 }
 
 func EqualFloat32(expectedValue float32) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue interface{}) (testing.MatchStatus, error) {
+	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
 		floatValue, ok := actualValue.(float32)
 		if !ok {
 			return testing.MatchStatus{}, fmt.Errorf("EqualFloat32 matcher expects a float32")

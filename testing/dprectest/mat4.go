@@ -14,7 +14,7 @@ func HaveMat4Elements(
 	e31, e32, e33, e34 float64,
 	e41, e42, e43, e44 float64,
 ) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue interface{}) (testing.MatchStatus, error) {
+	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
 		matrix, ok := actualValue.(dprec.Mat4)
 		if !ok {
 			return testing.MatchStatus{}, fmt.Errorf("HaveMat4Elements matcher expects a dprec.Mat4")
