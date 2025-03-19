@@ -4,6 +4,7 @@ import "math"
 
 const (
 	Pi      = float64(math.Pi)
+	Tau     = float64(math.Pi * 2.0)
 	Epsilon = float64(0.000000000001)
 )
 

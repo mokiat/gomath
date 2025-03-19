@@ -22,7 +22,7 @@ func FailureMatchStatus(failureMessage, negativeFailureMessage string) MatchStat
 	}
 }
 
-type MatchCheckFunc func(actualValue interface{}) (MatchStatus, error)
+type MatchCheckFunc func(actualValue any) (MatchStatus, error)
 
 func SimpleMatcher(checkFunc MatchCheckFunc) types.GomegaMatcher {
 	return &simpleMatcher{
@@ -35,7 +35,7 @@ type simpleMatcher struct {
 	status    MatchStatus
 }
 
-func (m *simpleMatcher) Match(actualValue interface{}) (bool, error) {
+func (m *simpleMatcher) Match(actualValue any) (bool, error) {
 	var err error
 	if m.status, err = m.checkFunc(actualValue); err != nil {
 		return false, err
@@ -43,10 +43,10 @@ func (m *simpleMatcher) Match(actualValue interface{}) (bool, error) {
 	return m.status.success, nil
 }
 
-func (m *simpleMatcher) FailureMessage(actualValue interface{}) string {
+func (m *simpleMatcher) FailureMessage(actualValue any) string {
 	return m.status.failureMessage
 }
 
-func (m *simpleMatcher) NegatedFailureMessage(actualValue interface{}) string {
+func (m *simpleMatcher) NegatedFailureMessage(actualValue any) string {
 	return m.status.negativeFailureMessage
 }

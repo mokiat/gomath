@@ -9,7 +9,7 @@ import (
 )
 
 func HaveVec3Coords(expectedX, expectedY, expectedZ float32) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue interface{}) (testing.MatchStatus, error) {
+	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
 		vector, ok := actualValue.(sprec.Vec3)
 		if !ok {
 			return testing.MatchStatus{}, fmt.Errorf("HaveVec3Coords matcher expects a sprec.Vec3")

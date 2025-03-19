@@ -9,7 +9,7 @@ import (
 )
 
 func HaveQuatCoords(expectedW, expectedX, expectedY, expectedZ float32) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue interface{}) (testing.MatchStatus, error) {
+	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
 		quat, ok := actualValue.(sprec.Quat)
 		if !ok {
 			return testing.MatchStatus{}, fmt.Errorf("HaveQuatCoords matcher expects a sprec.Quat")

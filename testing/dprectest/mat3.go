@@ -13,7 +13,7 @@ func HaveMat3Elements(
 	e21, e22, e23 float64,
 	e31, e32, e33 float64,
 ) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue interface{}) (testing.MatchStatus, error) {
+	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
 		matrix, ok := actualValue.(dprec.Mat3)
 		if !ok {
 			return testing.MatchStatus{}, fmt.Errorf("HaveMat3Elements matcher expects a dprec.Mat3")
