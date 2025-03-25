@@ -182,6 +182,13 @@ func Mat3Vec3Prod(mat Mat3, vec Vec3) Vec3 {
 	}
 }
 
+func Mat3Vec2Transformation(mat Mat3, vec Vec2) Vec2 {
+	return Vec2{
+		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13,
+		Y: mat.M21*vec.X + mat.M22*vec.Y + mat.M23,
+	}
+}
+
 type Mat3 struct {
 	M11, M12, M13 float64
 	M21, M22, M23 float64

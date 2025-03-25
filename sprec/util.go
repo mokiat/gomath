@@ -20,6 +20,18 @@ func Min[T ~float32](a, b T) T {
 	return min(a, b)
 }
 
+func Sum[T ~float32](values ...T) T {
+	var sum T
+	for _, value := range values {
+		sum += value
+	}
+	return sum
+}
+
+func Sqr[T ~float32](value T) T {
+	return value * value
+}
+
 func Floor[T ~float32](value T) T {
 	return T(math.Floor(float64(value)))
 }

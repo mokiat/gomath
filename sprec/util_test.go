@@ -30,6 +30,17 @@ var _ = Describe("Util", func() {
 		Expect(Min(float32(5.0), float32(5.0))).To(EqualFloat32(5.0))
 	})
 
+	Specify("Sum", func() {
+		Expect(Sum(float32(1.0), float32(2.0))).To(EqualFloat32(3.0))
+		Expect(Sum(float32(1.0), float32(-1.0))).To(EqualFloat32(0.0))
+	})
+
+	Specify("Sqr", func() {
+		Expect(Sqr(float32(2.0))).To(EqualFloat32(4.0))
+		Expect(Sqr(float32(-3.0))).To(EqualFloat32(9.0))
+		Expect(Sqr(float32(0.0))).To(EqualFloat32(0.0))
+	})
+
 	Specify("Floor", func() {
 		Expect(Floor(float32(1.1))).To(EqualFloat32(1.0))
 		Expect(Floor(float32(5.9))).To(EqualFloat32(5.0))

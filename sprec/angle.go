@@ -10,6 +10,14 @@ func Degrees(degrees float32) Angle {
 	return Angle(Pi * (degrees / 180.0))
 }
 
+func NormalizeAngle(a Angle) Angle {
+	radians := Mod(float32(a), Tau)
+	if radians < 0.0 {
+		radians += Tau
+	}
+	return Angle(radians)
+}
+
 type Angle float32
 
 func (a Angle) IsNaN() bool {

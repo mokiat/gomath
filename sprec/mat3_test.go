@@ -199,6 +199,11 @@ var _ = Describe("Mat3", func() {
 		Expect(result).To(HaveVec3Coords(1.25, 3.35, 5.45))
 	})
 
+	Specify("Mat4Vec3Transformation", func() {
+		result := Mat3Vec2Transformation(matrix, NewVec2(2.5, 1.5))
+		Expect(result).To(HaveVec2Coords(0.85, 2.35))
+	})
+
 	DescribeTable("#IsNaN",
 		func(mat Mat3, expected bool) {
 			Expect(mat.IsNaN()).To(Equal(expected))

@@ -55,6 +55,16 @@ var _ = Describe("Angle", func() {
 		})
 	})
 
+	DescribeTable("NormalizeAngle",
+		func(angle, expected Angle) {
+			Expect(NormalizeAngle(angle)).To(BeNumerically("~", expected, Epsilon))
+		},
+		Entry("zero", Radians(0.0), Radians(0.0)),
+		Entry("pi", Radians(Pi), Radians(Pi)),
+		Entry("tau", Radians(Tau), Radians(0.0)),
+		Entry("tau + pi", Radians(Tau+Pi), Radians(Pi)),
+	)
+
 	DescribeTable("#IsNaN",
 		func(angle Angle, expected bool) {
 			Expect(angle.IsNaN()).To(Equal(expected))
