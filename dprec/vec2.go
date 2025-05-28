@@ -69,6 +69,10 @@ func Vec2Prod(vector Vec2, value float64) Vec2 {
 	}
 }
 
+func Vec2Cross(a, b Vec2) float64 {
+	return a.X*b.Y - a.Y*b.X
+}
+
 func Vec2Quot(vector Vec2, value float64) Vec2 {
 	return Vec2{
 		X: vector.X / value,

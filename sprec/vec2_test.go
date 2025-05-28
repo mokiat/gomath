@@ -90,6 +90,11 @@ var _ = Describe("Vec2", func() {
 		Expect(result).To(EqualFloat32(4.0))
 	})
 
+	Specify("Vec2Cross", func() {
+		result := Vec2Cross(firstVector, secondVector)
+		Expect(result).To(EqualFloat32(7.0))
+	})
+
 	Specify("Vec2Lerp", func() {
 		first := NewVec2(1.0, 2.0)
 		second := NewVec2(2.0, 1.0)

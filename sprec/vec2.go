@@ -80,6 +80,10 @@ func Vec2Dot(a, b Vec2) float32 {
 	return a.X*b.X + a.Y*b.Y
 }
 
+func Vec2Cross(a, b Vec2) float32 {
+	return a.X*b.Y - a.Y*b.X
+}
+
 func Vec2Lerp(a, b Vec2, t float32) Vec2 {
 	return Vec2{
 		X: (1-t)*a.X + t*b.X,
