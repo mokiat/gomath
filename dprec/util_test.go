@@ -63,6 +63,20 @@ var _ = Describe("Util", func() {
 		Expect(Mix(1.0, 2.0, 0.5)).To(EqualFloat64(1.5))
 	})
 
+	Specify("Step", func() {
+		Expect(Step(2.5, 2.4)).To(EqualFloat64(0.0))
+		Expect(Step(2.5, 2.5)).To(EqualFloat64(1.0))
+		Expect(Step(2.5, 2.6)).To(EqualFloat64(1.0))
+	})
+
+	Specify("Smoothstep", func() {
+		Expect(Smoothstep(2.0, 3.0, 1.0)).To(EqualFloat64(0.0))
+		Expect(Smoothstep(2.0, 3.0, 2.0)).To(EqualFloat64(0.0))
+		Expect(Smoothstep(2.0, 3.0, 2.5)).To(EqualFloat64(0.5))
+		Expect(Smoothstep(2.0, 3.0, 3.0)).To(EqualFloat64(1.0))
+		Expect(Smoothstep(2.0, 3.0, 4.0)).To(EqualFloat64(1.0))
+	})
+
 	Specify("Eq", func() {
 		Expect(Eq(0.000000000001, 0.000000000001)).To(BeTrue())
 		Expect(Eq(0.000000000001, 0.000000000002)).To(BeFalse())
