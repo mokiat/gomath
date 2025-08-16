@@ -63,6 +63,20 @@ var _ = Describe("Util", func() {
 		Expect(Mix(float32(1.0), float32(2.0), float32(0.5))).To(EqualFloat32(1.5))
 	})
 
+	Specify("Step", func() {
+		Expect(Step(float32(2.5), float32(2.4))).To(EqualFloat32(0.0))
+		Expect(Step(float32(2.5), float32(2.5))).To(EqualFloat32(1.0))
+		Expect(Step(float32(2.5), float32(2.6))).To(EqualFloat32(1.0))
+	})
+
+	Specify("Smoothstep", func() {
+		Expect(Smoothstep(float32(2.0), float32(3.0), float32(1.0))).To(EqualFloat32(0.0))
+		Expect(Smoothstep(float32(2.0), float32(3.0), float32(2.0))).To(EqualFloat32(0.0))
+		Expect(Smoothstep(float32(2.0), float32(3.0), float32(2.5))).To(EqualFloat32(0.5))
+		Expect(Smoothstep(float32(2.0), float32(3.0), float32(3.0))).To(EqualFloat32(1.0))
+		Expect(Smoothstep(float32(2.0), float32(3.0), float32(4.0))).To(EqualFloat32(1.0))
+	})
+
 	Specify("Eq", func() {
 		Expect(Eq(0.000001, 0.000001)).To(BeTrue())
 		Expect(Eq(0.000001, 0.000002)).To(BeFalse())

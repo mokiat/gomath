@@ -48,6 +48,24 @@ func Mix[T ~float32](a, b T, amount float32) T {
 	return T(float32(a)*(1.0-amount) + float32(b)*amount)
 }
 
+func Step[T ~float32](edge, value T) T {
+	if value >= edge {
+		return 1.0
+	}
+	return 0.0
+}
+
+func Smoothstep[T ~float32](lowerEdge, upperEdge, value T) T {
+	if value <= lowerEdge {
+		return 0.0
+	}
+	if value >= upperEdge {
+		return 1.0
+	}
+	fraction := (value - lowerEdge) / (upperEdge - lowerEdge)
+	return fraction * fraction * (3.0 - 2.0*fraction)
+}
+
 func Eq(a, b float32) bool {
 	return EqEps(a, b, Epsilon)
 }
