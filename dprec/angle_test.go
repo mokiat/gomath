@@ -60,9 +60,38 @@ var _ = Describe("Angle", func() {
 			Expect(NormalizeAngle(angle)).To(BeNumerically("~", expected, Epsilon))
 		},
 		Entry("zero", Radians(0.0), Radians(0.0)),
+		Entry("-pi", Radians(-Pi), Radians(-Pi)),
 		Entry("pi", Radians(Pi), Radians(Pi)),
+		Entry("-tau", Radians(-Tau), Radians(0.0)),
 		Entry("tau", Radians(Tau), Radians(0.0)),
+		Entry("-tau - pi", Radians(-Tau-Pi), Radians(-Pi)),
 		Entry("tau + pi", Radians(Tau+Pi), Radians(Pi)),
+	)
+
+	DescribeTable("NormalizeAnglePos",
+		func(angle, expected Angle) {
+			Expect(NormalizeAnglePos(angle)).To(BeNumerically("~", expected, Epsilon))
+		},
+		Entry("zero", Radians(0.0), Radians(0.0)),
+		Entry("-pi", Radians(-Pi), Radians(Pi)),
+		Entry("pi", Radians(Pi), Radians(Pi)),
+		Entry("-tau", Radians(-Tau), Radians(0.0)),
+		Entry("tau", Radians(Tau), Radians(0.0)),
+		Entry("-tau - pi", Radians(-Tau-Pi), Radians(Pi)),
+		Entry("tau + pi", Radians(Tau+Pi), Radians(Pi)),
+	)
+
+	DescribeTable("NormalizeAngleNeg",
+		func(angle, expected Angle) {
+			Expect(NormalizeAngleNeg(angle)).To(BeNumerically("~", expected, Epsilon))
+		},
+		Entry("zero", Radians(0.0), Radians(0.0)),
+		Entry("-pi", Radians(-Pi), Radians(-Pi)),
+		Entry("pi", Radians(Pi), Radians(-Pi)),
+		Entry("-tau", Radians(-Tau), Radians(0.0)),
+		Entry("tau", Radians(Tau), Radians(0.0)),
+		Entry("-tau - pi", Radians(-Tau-Pi), Radians(-Pi)),
+		Entry("tau + pi", Radians(Tau+Pi), Radians(-Pi)),
 	)
 
 	DescribeTable("#IsNaN",
