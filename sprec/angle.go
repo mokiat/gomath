@@ -15,8 +15,11 @@ func Degrees(degrees float32) Angle {
 // NormalizeAngle normalizes an angle to the range [-Pi..Pi].
 func NormalizeAngle(a Angle) Angle {
 	radians := Mod(float32(a), Tau)
-	if radians < -Pi {
+	switch {
+	case radians < -Pi:
 		radians += Tau
+	case radians > Pi:
+		radians -= Tau
 	}
 	return Angle(radians)
 }
