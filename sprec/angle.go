@@ -42,6 +42,16 @@ func NormalizeAngleNeg(a Angle) Angle {
 	return Angle(radians)
 }
 
+// AngleVec2Rotation rotates a Vec2 by the given angle.
+func AngleVec2Rotation(angle Angle, v Vec2) Vec2 {
+	cs := Cos(angle)
+	sn := Sin(angle)
+	return Vec2{
+		X: cs*v.X - sn*v.Y,
+		Y: sn*v.X + cs*v.Y,
+	}
+}
+
 // Angle represents an angle.
 type Angle float32
 

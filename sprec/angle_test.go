@@ -106,6 +106,15 @@ var _ = Describe("Angle", func() {
 		Entry("540", Degrees(540.0), Degrees(-180.0)),
 	)
 
+	DescribeTable("AngleVec2Rotation",
+		func(angle Angle, vector, expected Vec2) {
+			Expect(AngleVec2Rotation(angle, vector)).To(HaveVec2Coords(expected.X, expected.Y))
+		},
+		Entry("zero", Degrees(0.0), BasisXVec2(), BasisXVec2()),
+		Entry("90-x", Degrees(90.0), BasisXVec2(), BasisYVec2()),
+		Entry("90-y", Degrees(90.0), BasisYVec2(), InverseVec2(BasisXVec2())),
+	)
+
 	DescribeTable("#IsNaN",
 		func(angle Angle, expected bool) {
 			Expect(angle.IsNaN()).To(Equal(expected))
