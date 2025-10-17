@@ -124,3 +124,12 @@ func IsNegative[T ~float32](value T) bool {
 func IsValid[T ~float32](value T) bool {
 	return !math.IsNaN(float64(value)) && !math.IsInf(float64(value), 0)
 }
+
+func MoveTowards[T ~float32](current, target, maxDelta T) T {
+	diff := target - current
+	if diff > 0 {
+		return current + Clamp(maxDelta, 0.0, diff)
+	} else {
+		return current - Clamp(maxDelta, 0.0, -diff)
+	}
+}
