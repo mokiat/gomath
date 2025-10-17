@@ -157,4 +157,10 @@ var _ = Describe("Util", func() {
 		Expect(IsValid(math.Inf(-1))).To(BeFalse())
 	})
 
+	Specify("MoveTowards", func() {
+		Expect(MoveTowards(0.0, 10.0, 3.0)).To(EqualFloat64(3.0))
+		Expect(MoveTowards(8.0, 10.0, 3.0)).To(EqualFloat64(10.0))
+		Expect(MoveTowards(10.0, 0.0, 4.0)).To(EqualFloat64(6.0))
+		Expect(MoveTowards(2.0, 0.0, 4.0)).To(EqualFloat64(0.0))
+	})
 })
