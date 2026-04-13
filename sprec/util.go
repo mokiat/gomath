@@ -9,7 +9,7 @@ const (
 )
 
 func Abs[T ~float32](value T) T {
-	return T(math.Float32frombits(math.Float32bits(float32(value)) &^ (1 << 31)))
+	return T(math.Abs(float64(value)))
 }
 
 func Max[T ~float32](a, b T) T {
