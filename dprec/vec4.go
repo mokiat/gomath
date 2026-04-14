@@ -68,11 +68,12 @@ func Vec4Prod(vector Vec4, value float64) Vec4 {
 }
 
 func Vec4Quot(vector Vec4, value float64) Vec4 {
+	invValue := 1.0 / value
 	return Vec4{
-		X: vector.X / value,
-		Y: vector.Y / value,
-		Z: vector.Z / value,
-		W: vector.W / value,
+		X: vector.X * invValue,
+		Y: vector.Y * invValue,
+		Z: vector.Z * invValue,
+		W: vector.W * invValue,
 	}
 }
 

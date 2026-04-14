@@ -74,9 +74,10 @@ func Vec2Cross(a, b Vec2) float64 {
 }
 
 func Vec2Quot(vector Vec2, value float64) Vec2 {
+	invValue := 1.0 / value
 	return Vec2{
-		X: vector.X / value,
-		Y: vector.Y / value,
+		X: vector.X * invValue,
+		Y: vector.Y * invValue,
 	}
 }
 

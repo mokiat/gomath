@@ -70,9 +70,10 @@ func Vec2Prod(vector Vec2, value float32) Vec2 {
 }
 
 func Vec2Quot(vector Vec2, value float32) Vec2 {
+	invValue := 1.0 / value
 	return Vec2{
-		X: vector.X / value,
-		Y: vector.Y / value,
+		X: vector.X * invValue,
+		Y: vector.Y * invValue,
 	}
 }
 
