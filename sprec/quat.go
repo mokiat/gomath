@@ -140,11 +140,12 @@ func QuatScalarProd(q Quat, value float32) Quat {
 }
 
 func QuatScalarQuot(q Quat, value float32) Quat {
+	invValue := 1.0 / value
 	return Quat{
-		W: q.W / value,
-		X: q.X / value,
-		Y: q.Y / value,
-		Z: q.Z / value,
+		W: q.W * invValue,
+		X: q.X * invValue,
+		Y: q.Y * invValue,
+		Z: q.Z * invValue,
 	}
 }
 
