@@ -204,18 +204,14 @@ func QuatSlerp(first, second Quat, t float64) Quat {
 }
 
 func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
-	vectorQuat := Quat{
-		W: 0.0,
-		X: v.X,
-		Y: v.Y,
-		Z: v.Z,
-	}
-	res := QuatProd(QuatProd(q, vectorQuat), ConjugateQuat(q))
-	return Vec3{
-		X: res.X,
-		Y: res.Y,
-		Z: res.Z,
-	}
+	// Uses the direct formula: v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v)
+	// See https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Used_methods
+	qAxis := NewVec3(q.X, q.Y, q.Z)
+	shared := Vec3Prod(Vec3Cross(qAxis, v), 2.0)
+	return Vec3Sum(
+		Vec3Sum(v, Vec3Prod(shared, q.W)),
+		Vec3Cross(qAxis, shared),
+	)
 }
 
 func UnitQuat(q Quat) Quat {
