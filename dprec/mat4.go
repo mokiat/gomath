@@ -378,38 +378,42 @@ func (m Mat4) Scale() Vec3 {
 // want to get the rotation of a matrix that has non-identity scale, consider
 // using the TRS method.
 func (m Mat4) Rotation() Quat {
-	// This is calculated by inversing the equations for
-	// quat.OrientationX, quat.OrientationY and quat.OrientationZ.
+	// This is the Shepperd method. The four squared quaternion components
+	// are derived by inversing the equations for quat.OrientationX,
+	// quat.OrientationY and quat.OrientationZ.
 
-	sqrX := (1.0 + m.M11 - m.M22 - m.M33) / 4.0
-	sqrY := (1.0 - m.M11 + m.M22 - m.M33) / 4.0
-	sqrZ := (1.0 - m.M11 - m.M22 + m.M33) / 4.0
+	const invFour = 1.0 / 4.0
+	sqrW := (1.0 + m.M11 + m.M22 + m.M33) * invFour
+	sqrX := (1.0 + m.M11 - m.M22 - m.M33) * invFour
+	sqrY := (1.0 - m.M11 + m.M22 - m.M33) * invFour
+	sqrZ := (1.0 - m.M11 - m.M22 + m.M33) * invFour
 
 	var x, y, z, w float64
-	if sqrZ > sqrX && sqrZ > sqrY { // Z is largest
-		if Abs(sqrZ) < Epsilon {
-			return IdentityQuat()
-		}
+	switch {
+	case sqrW >= sqrX && sqrW >= sqrY && sqrW >= sqrZ: // W is largest
+		w = Sqrt(sqrW)
+		scale := 1.0 / (4.0 * w)
+		x = (m.M32 - m.M23) * scale
+		y = (m.M13 - m.M31) * scale
+		z = (m.M21 - m.M12) * scale
+	case sqrZ >= sqrX && sqrZ >= sqrY: // Z is largest
 		z = Sqrt(sqrZ)
-		x = (m.M31 + m.M13) / (4 * z)
-		y = (m.M32 + m.M23) / (4 * z)
-		w = (m.M21 - m.M12) / (4 * z)
-	} else if sqrY > sqrX { // Y is largest
-		if Abs(sqrY) < Epsilon {
-			return IdentityQuat()
-		}
+		scale := 1.0 / (4.0 * z)
+		x = (m.M31 + m.M13) * scale
+		y = (m.M32 + m.M23) * scale
+		w = (m.M21 - m.M12) * scale
+	case sqrY >= sqrX: // Y is largest
 		y = Sqrt(sqrY)
-		x = (m.M21 + m.M12) / (4 * y)
-		z = (m.M32 + m.M23) / (4 * y)
-		w = (m.M13 - m.M31) / (4 * y)
-	} else { // X is largest
-		if Abs(sqrX) < Epsilon {
-			return IdentityQuat()
-		}
+		scale := 1.0 / (4.0 * y)
+		x = (m.M21 + m.M12) * scale
+		z = (m.M32 + m.M23) * scale
+		w = (m.M13 - m.M31) * scale
+	default: // X is largest
 		x = Sqrt(sqrX)
-		y = (m.M21 + m.M12) / (4 * x)
-		z = (m.M31 + m.M13) / (4 * x)
-		w = (m.M32 - m.M23) / (4 * x)
+		scale := 1.0 / (4.0 * x)
+		y = (m.M21 + m.M12) * scale
+		z = (m.M31 + m.M13) * scale
+		w = (m.M32 - m.M23) * scale
 	}
 	return UnitQuat(NewQuat(w, x, y, z))
 }
