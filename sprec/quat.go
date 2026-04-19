@@ -200,7 +200,7 @@ func QuatPow(q Quat, pow float32) Quat {
 func QuatSlerp(first, second Quat, t float32) Quat {
 	delta := QuatDiff(second, first, true)
 	fractDelta := QuatPow(delta, t)
-	return UnitQuat(QuatProd(fractDelta, first))
+	return QuatProd(fractDelta, first)
 }
 
 func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
