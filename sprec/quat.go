@@ -60,6 +60,7 @@ const (
 	RotationOrderLocalZYX = RotationOrderGlobalXYZ
 )
 
+// NewQuat creates a quaternion with the given W, X, Y, and Z components.
 func NewQuat(w, x, y, z float32) Quat {
 	return Quat{
 		W: w,
@@ -69,6 +70,7 @@ func NewQuat(w, x, y, z float32) Quat {
 	}
 }
 
+// IdentityQuat returns the identity quaternion (no rotation).
 func IdentityQuat() Quat {
 	return Quat{
 		W: 1.0,
@@ -78,6 +80,7 @@ func IdentityQuat() Quat {
 	}
 }
 
+// NegativeQuat returns the negation of the given quaternion.
 func NegativeQuat(q Quat) Quat {
 	return Quat{
 		W: -q.W,
@@ -87,6 +90,8 @@ func NegativeQuat(q Quat) Quat {
 	}
 }
 
+// RotationQuat returns a quaternion representing a rotation of angle around
+// the given axis direction.
 func RotationQuat(angle Angle, direction Vec3) Quat {
 	cs := Cos(angle / 2.0)
 	sn := Sin(angle / 2.0)
@@ -99,6 +104,8 @@ func RotationQuat(angle Angle, direction Vec3) Quat {
 	}
 }
 
+// EulerQuat returns a quaternion from the given Euler angles and rotation
+// order.
 func EulerQuat(x, y, z Angle, order RotationOrder) Quat {
 	xRot := RotationQuat(x, BasisXVec3())
 	yRot := RotationQuat(y, BasisYVec3())
@@ -121,6 +128,7 @@ func EulerQuat(x, y, z Angle, order RotationOrder) Quat {
 	}
 }
 
+// ConjugateQuat returns the conjugate of the given quaternion.
 func ConjugateQuat(q Quat) Quat {
 	return Quat{
 		W: q.W,
@@ -130,6 +138,7 @@ func ConjugateQuat(q Quat) Quat {
 	}
 }
 
+// QuatScalarProd multiplies a quaternion by a scalar value.
 func QuatScalarProd(q Quat, value float32) Quat {
 	return Quat{
 		W: q.W * value,
@@ -139,6 +148,7 @@ func QuatScalarProd(q Quat, value float32) Quat {
 	}
 }
 
+// QuatScalarQuot divides a quaternion by a scalar value.
 func QuatScalarQuot(q Quat, value float32) Quat {
 	invValue := 1.0 / value
 	return Quat{
@@ -149,6 +159,8 @@ func QuatScalarQuot(q Quat, value float32) Quat {
 	}
 }
 
+// QuatProd returns the product of two quaternions, applying second's rotation
+// after first's.
 func QuatProd(first, second Quat) Quat {
 	return Quat{
 		W: first.W*second.W - first.X*second.X - first.Y*second.Y - first.Z*second.Z,
@@ -158,10 +170,13 @@ func QuatProd(first, second Quat) Quat {
 	}
 }
 
+// QuatDot returns the dot product of two quaternions.
 func QuatDot(a, b Quat) float32 {
 	return a.W*b.W + a.X*b.X + a.Y*b.Y + a.Z*b.Z
 }
 
+// QuatLerp returns the linear interpolation between first and second using t.
+// A value of t=0 returns first and t=1 returns second.
 func QuatLerp(first, second Quat, t float32) Quat {
 	return Quat{
 		W: first.W + t*(second.W-first.W),
@@ -171,10 +186,14 @@ func QuatLerp(first, second Quat, t float32) Quat {
 	}
 }
 
+// QuatNLerp returns the normalized linear interpolation between first and
+// second using t.
 func QuatNLerp(first, second Quat, t float32) Quat {
 	return UnitQuat(QuatLerp(first, second, t))
 }
 
+// QuatDiff returns the rotation from first to second. When shortest is true,
+// the result uses the shorter arc between the two orientations.
 func QuatDiff(second, first Quat, shortest bool) Quat {
 	if shortest && (QuatDot(second, first) < 0) {
 		second = NegativeQuat(second)
@@ -182,6 +201,7 @@ func QuatDiff(second, first Quat, shortest bool) Quat {
 	return QuatProd(second, ConjugateQuat(first))
 }
 
+// QuatPow raises the quaternion to the given power.
 func QuatPow(q Quat, pow float32) Quat {
 	if q.W > 1.0 {
 		return IdentityQuat()
@@ -197,12 +217,15 @@ func QuatPow(q Quat, pow float32) Quat {
 	return RotationQuat(angle, norm)
 }
 
+// QuatSlerp returns the spherical linear interpolation between first and
+// second using t.
 func QuatSlerp(first, second Quat, t float32) Quat {
 	delta := QuatDiff(second, first, true)
 	fractDelta := QuatPow(delta, t)
 	return QuatProd(fractDelta, first)
 }
 
+// QuatVec3Rotation rotates the vector v by the quaternion q.
 func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
 	// Uses the direct formula: v + 2.0 * cross(q.xyz, cross(q.xyz, v) + q.w * v)
 	// See https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation#Used_methods
@@ -214,14 +237,17 @@ func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
 	)
 }
 
+// UnitQuat returns the normalized quaternion.
 func UnitQuat(q Quat) Quat {
 	return QuatScalarQuot(q, q.Norm())
 }
 
+// InverseQuat returns the multiplicative inverse of the given quaternion.
 func InverseQuat(q Quat) Quat {
 	return QuatScalarQuot(ConjugateQuat(q), q.SqrNorm())
 }
 
+// Quat is a quaternion with float32 components.
 type Quat struct {
 	W float32
 	X float32
@@ -229,26 +255,32 @@ type Quat struct {
 	Z float32
 }
 
+// IsNaN returns true if any component is NaN.
 func (q Quat) IsNaN() bool {
 	return math.IsNaN(float64(q.X)) || math.IsNaN(float64(q.Y)) || math.IsNaN(float64(q.Z)) || math.IsNaN(float64(q.W))
 }
 
+// IsInf returns true if any component is Inf.
 func (q Quat) IsInf() bool {
 	return math.IsInf(float64(q.X), 0) || math.IsInf(float64(q.Y), 0) || math.IsInf(float64(q.Z), 0) || math.IsInf(float64(q.W), 0)
 }
 
+// IsIdentity returns true if this is the identity quaternion.
 func (q Quat) IsIdentity() bool {
 	return Eq(q.X, 0.0) && Eq(q.Y, 0.0) && Eq(q.Z, 0.0) && Eq(q.W, 1.0)
 }
 
+// SqrNorm returns the squared norm of the quaternion.
 func (q Quat) SqrNorm() float32 {
 	return q.W*q.W + q.X*q.X + q.Y*q.Y + q.Z*q.Z
 }
 
+// Norm returns the norm (magnitude) of the quaternion.
 func (q Quat) Norm() float32 {
 	return Sqrt(q.SqrNorm())
 }
 
+// OrientationX returns the X basis vector of the rotation.
 func (q Quat) OrientationX() Vec3 {
 	return Vec3{
 		X: 1.0 - 2.0*(q.Y*q.Y+q.Z*q.Z),
@@ -257,6 +289,7 @@ func (q Quat) OrientationX() Vec3 {
 	}
 }
 
+// OrientationY returns the Y basis vector of the rotation.
 func (q Quat) OrientationY() Vec3 {
 	return Vec3{
 		X: 2.0 * (q.X*q.Y - q.W*q.Z),
@@ -265,6 +298,7 @@ func (q Quat) OrientationY() Vec3 {
 	}
 }
 
+// OrientationZ returns the Z basis vector of the rotation.
 func (q Quat) OrientationZ() Vec3 {
 	return Vec3{
 		X: 2.0 * (q.X*q.Z + q.W*q.Y),
@@ -345,6 +379,7 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 	return
 }
 
+// String returns a string representation of the quaternion.
 func (q Quat) String() string {
 	return fmt.Sprintf("(%f, %f, %f, %f)", q.W, q.X, q.Y, q.Z)
 }

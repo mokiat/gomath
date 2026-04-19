@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// NewVec4 creates a Vec4 with the given X, Y, Z, and W components.
 func NewVec4(x, y, z, w float64) Vec4 {
 	return Vec4{
 		X: x,
@@ -14,10 +15,12 @@ func NewVec4(x, y, z, w float64) Vec4 {
 	}
 }
 
+// ZeroVec4 returns the zero Vec4.
 func ZeroVec4() Vec4 {
 	return Vec4{}
 }
 
+// Vec4Sum returns the sum of two vectors.
 func Vec4Sum(a, b Vec4) Vec4 {
 	return Vec4{
 		X: a.X + b.X,
@@ -27,6 +30,7 @@ func Vec4Sum(a, b Vec4) Vec4 {
 	}
 }
 
+// Vec4MultiSum returns the sum of multiple vectors.
 func Vec4MultiSum(first Vec4, others ...Vec4) Vec4 {
 	result := first
 	for _, other := range others {
@@ -38,6 +42,7 @@ func Vec4MultiSum(first Vec4, others ...Vec4) Vec4 {
 	return result
 }
 
+// Vec4Diff returns the difference of two vectors (a - b).
 func Vec4Diff(a, b Vec4) Vec4 {
 	return Vec4{
 		X: a.X - b.X,
@@ -47,6 +52,7 @@ func Vec4Diff(a, b Vec4) Vec4 {
 	}
 }
 
+// Vec4MultiDiff subtracts each subsequent vector from the first.
 func Vec4MultiDiff(first Vec4, others ...Vec4) Vec4 {
 	result := first
 	for _, other := range others {
@@ -58,6 +64,7 @@ func Vec4MultiDiff(first Vec4, others ...Vec4) Vec4 {
 	return result
 }
 
+// Vec4Prod multiplies a vector by a scalar value.
 func Vec4Prod(vector Vec4, value float64) Vec4 {
 	return Vec4{
 		X: vector.X * value,
@@ -67,6 +74,7 @@ func Vec4Prod(vector Vec4, value float64) Vec4 {
 	}
 }
 
+// Vec4Quot divides a vector by a scalar value.
 func Vec4Quot(vector Vec4, value float64) Vec4 {
 	invValue := 1.0 / value
 	return Vec4{
@@ -77,10 +85,13 @@ func Vec4Quot(vector Vec4, value float64) Vec4 {
 	}
 }
 
+// Vec4Dot returns the dot product of two vectors.
 func Vec4Dot(a, b Vec4) float64 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z + a.W*b.W
 }
 
+// Vec4Lerp returns the linear interpolation between a and b using t.
+// A value of t=0 returns a and t=1 returns b.
 func Vec4Lerp(a, b Vec4, t float64) Vec4 {
 	return Vec4{
 		X: a.X + t*(b.X-a.X),
@@ -90,6 +101,7 @@ func Vec4Lerp(a, b Vec4, t float64) Vec4 {
 	}
 }
 
+// InverseVec4 returns the negation of the given vector.
 func InverseVec4(vector Vec4) Vec4 {
 	return Vec4{
 		X: -vector.X,
@@ -99,6 +111,7 @@ func InverseVec4(vector Vec4) Vec4 {
 	}
 }
 
+// ArrayToVec4 creates a Vec4 from a four-element array.
 func ArrayToVec4(array [4]float64) Vec4 {
 	return Vec4{
 		X: array[0],
@@ -108,6 +121,7 @@ func ArrayToVec4(array [4]float64) Vec4 {
 	}
 }
 
+// Vec4 is a four-dimensional vector with float64 components.
 type Vec4 struct {
 	X float64
 	Y float64
@@ -115,26 +129,32 @@ type Vec4 struct {
 	W float64
 }
 
+// IsNaN returns true if any component is NaN.
 func (v Vec4) IsNaN() bool {
 	return math.IsNaN(v.X) || math.IsNaN(v.Y) || math.IsNaN(v.Z) || math.IsNaN(v.W)
 }
 
+// IsInf returns true if any component is Inf.
 func (v Vec4) IsInf() bool {
 	return math.IsInf(v.X, 0) || math.IsInf(v.Y, 0) || math.IsInf(v.Z, 0) || math.IsInf(v.W, 0)
 }
 
+// IsZero returns true if all components are within Epsilon of zero.
 func (v Vec4) IsZero() bool {
 	return Eq(v.X, 0.0) && Eq(v.Y, 0.0) && Eq(v.Z, 0.0) && Eq(v.W, 0.0)
 }
 
+// VecXYZ returns the X, Y, and Z components as a Vec3.
 func (v Vec4) VecXYZ() Vec3 {
 	return NewVec3(v.X, v.Y, v.Z)
 }
 
+// Array returns the vector components as an array.
 func (v Vec4) Array() [4]float64 {
 	return [4]float64{v.X, v.Y, v.Z, v.W}
 }
 
+// String returns a string representation of the vector.
 func (v Vec4) String() string {
 	return fmt.Sprintf("(%f, %f, %f, %f)", v.X, v.Y, v.Z, v.W)
 }

@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// NewMat3 creates a Mat3 from the given row-major element values.
 func NewMat3(
 	m11, m12, m13 float32,
 	m21, m22, m23 float32,
@@ -17,10 +18,12 @@ func NewMat3(
 	}
 }
 
+// ZeroMat3 returns a zero Mat3.
 func ZeroMat3() Mat3 {
 	return Mat3{}
 }
 
+// IdentityMat3 returns the identity Mat3.
 func IdentityMat3() Mat3 {
 	var result Mat3
 	result.M11 = 1.0
@@ -29,6 +32,7 @@ func IdentityMat3() Mat3 {
 	return result
 }
 
+// TransposedMat3 returns the transpose of the given matrix.
 func TransposedMat3(m Mat3) Mat3 {
 	return NewMat3(
 		m.M11, m.M21, m.M31,
@@ -37,6 +41,7 @@ func TransposedMat3(m Mat3) Mat3 {
 	)
 }
 
+// TranslationMat3 returns a 2D translation matrix for the given offsets.
 func TranslationMat3(x, y float32) Mat3 {
 	result := IdentityMat3()
 	result.M13 = x
@@ -44,6 +49,7 @@ func TranslationMat3(x, y float32) Mat3 {
 	return result
 }
 
+// ScaleMat3 returns a 2D scale matrix for the given scale factors.
 func ScaleMat3(x, y float32) Mat3 {
 	var result Mat3
 	result.M11 = x
@@ -52,6 +58,7 @@ func ScaleMat3(x, y float32) Mat3 {
 	return result
 }
 
+// RotationMat3 returns a 2D rotation matrix for the given angle.
 func RotationMat3(angle Angle) Mat3 {
 	cs := Cos(angle)
 	sn := Sin(angle)
@@ -65,6 +72,7 @@ func RotationMat3(angle Angle) Mat3 {
 	return result
 }
 
+// OrthoMat3 returns a 2D orthographic projection matrix.
 func OrthoMat3(left, right, top, bottom float32) Mat3 {
 	var result Mat3
 	result.M11 = 2.0 / (right - left)
@@ -120,6 +128,8 @@ func InverseMat3(m Mat3) Mat3 {
 	)
 }
 
+// TransformationMat3 builds a 2D transformation matrix from orientation
+// vectors and a translation.
 func TransformationMat3(orientX, orientY, translation Vec2) Mat3 {
 	var result Mat3
 	result.M11 = orientX.X
@@ -134,6 +144,7 @@ func TransformationMat3(orientX, orientY, translation Vec2) Mat3 {
 	return result
 }
 
+// RowMajorArrayToMat3 creates a Mat3 from a row-major array.
 func RowMajorArrayToMat3(values [9]float32) Mat3 {
 	return Mat3{
 		M11: values[0], M12: values[1], M13: values[2],
@@ -142,6 +153,7 @@ func RowMajorArrayToMat3(values [9]float32) Mat3 {
 	}
 }
 
+// ColumnMajorArrayToMat3 creates a Mat3 from a column-major array.
 func ColumnMajorArrayToMat3(values [9]float32) Mat3 {
 	return Mat3{
 		M11: values[0], M12: values[3], M13: values[6],
@@ -150,6 +162,7 @@ func ColumnMajorArrayToMat3(values [9]float32) Mat3 {
 	}
 }
 
+// Mat3Prod returns the product of two matrices.
 func Mat3Prod(left, right Mat3) Mat3 {
 	return Mat3{
 		M11: left.M11*right.M11 + left.M12*right.M21 + left.M13*right.M31,
@@ -166,6 +179,7 @@ func Mat3Prod(left, right Mat3) Mat3 {
 	}
 }
 
+// Mat3MultiProd returns the product of multiple matrices.
 func Mat3MultiProd(first Mat3, others ...Mat3) Mat3 {
 	result := first
 	for _, matrix := range others {
@@ -174,6 +188,7 @@ func Mat3MultiProd(first Mat3, others ...Mat3) Mat3 {
 	return result
 }
 
+// Mat3Vec3Prod multiplies a matrix by a Vec3.
 func Mat3Vec3Prod(mat Mat3, vec Vec3) Vec3 {
 	return Vec3{
 		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13*vec.Z,
@@ -182,6 +197,7 @@ func Mat3Vec3Prod(mat Mat3, vec Vec3) Vec3 {
 	}
 }
 
+// Mat3Vec2Transformation applies the 2D affine transformation to a Vec2.
 func Mat3Vec2Transformation(mat Mat3, vec Vec2) Vec2 {
 	return Vec2{
 		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13,
@@ -189,60 +205,74 @@ func Mat3Vec2Transformation(mat Mat3, vec Vec2) Vec2 {
 	}
 }
 
+// Mat3 is a 3x3 matrix with float32 components.
+// Fields use row-major notation: M<row><col>.
 type Mat3 struct {
 	M11, M12, M13 float32
 	M21, M22, M23 float32
 	M31, M32, M33 float32
 }
 
+// IsNaN returns true if any component is NaN.
 func (m Mat3) IsNaN() bool {
 	return math.IsNaN(float64(m.M11)) || math.IsNaN(float64(m.M12)) || math.IsNaN(float64(m.M13)) ||
 		math.IsNaN(float64(m.M21)) || math.IsNaN(float64(m.M22)) || math.IsNaN(float64(m.M23)) ||
 		math.IsNaN(float64(m.M31)) || math.IsNaN(float64(m.M32)) || math.IsNaN(float64(m.M33))
 }
 
+// IsInf returns true if any component is Inf.
 func (m Mat3) IsInf() bool {
 	return math.IsInf(float64(m.M11), 0) || math.IsInf(float64(m.M12), 0) || math.IsInf(float64(m.M13), 0) ||
 		math.IsInf(float64(m.M21), 0) || math.IsInf(float64(m.M22), 0) || math.IsInf(float64(m.M23), 0) ||
 		math.IsInf(float64(m.M31), 0) || math.IsInf(float64(m.M32), 0) || math.IsInf(float64(m.M33), 0)
 }
 
+// Row1 returns the first row as a Vec3.
 func (m Mat3) Row1() Vec3 {
 	return NewVec3(m.M11, m.M12, m.M13)
 }
 
+// Row2 returns the second row as a Vec3.
 func (m Mat3) Row2() Vec3 {
 	return NewVec3(m.M21, m.M22, m.M23)
 }
 
+// Row3 returns the third row as a Vec3.
 func (m Mat3) Row3() Vec3 {
 	return NewVec3(m.M31, m.M32, m.M33)
 }
 
+// Column1 returns the first column as a Vec3.
 func (m Mat3) Column1() Vec3 {
 	return NewVec3(m.M11, m.M21, m.M31)
 }
 
+// Column2 returns the second column as a Vec3.
 func (m Mat3) Column2() Vec3 {
 	return NewVec3(m.M12, m.M22, m.M32)
 }
 
+// Column3 returns the third column as a Vec3.
 func (m Mat3) Column3() Vec3 {
 	return NewVec3(m.M13, m.M23, m.M33)
 }
 
+// OrientationX returns the X orientation vector of the matrix.
 func (m Mat3) OrientationX() Vec2 {
 	return NewVec2(m.M11, m.M21)
 }
 
+// OrientationY returns the Y orientation vector of the matrix.
 func (m Mat3) OrientationY() Vec2 {
 	return NewVec2(m.M12, m.M22)
 }
 
+// Translation returns the translation vector of the matrix.
 func (m Mat3) Translation() Vec2 {
 	return NewVec2(m.M13, m.M23)
 }
 
+// RowMajorArray returns the matrix components in row-major order.
 func (m Mat3) RowMajorArray() [9]float32 {
 	return [9]float32{
 		m.M11, m.M12, m.M13,
@@ -251,6 +281,7 @@ func (m Mat3) RowMajorArray() [9]float32 {
 	}
 }
 
+// ColumnMajorArray returns the matrix components in column-major order.
 func (m Mat3) ColumnMajorArray() [9]float32 {
 	return [9]float32{
 		m.M11, m.M21, m.M31,
@@ -259,6 +290,7 @@ func (m Mat3) ColumnMajorArray() [9]float32 {
 	}
 }
 
+// String returns a string representation of the matrix.
 func (m Mat3) String() string {
 	return fmt.Sprintf("((%f, %f, %f), (%f, %f, %f), (%f, %f, %f))",
 		m.M11, m.M12, m.M13,
