@@ -164,10 +164,10 @@ func QuatDot(a, b Quat) float32 {
 
 func QuatLerp(first, second Quat, t float32) Quat {
 	return Quat{
-		W: (1-t)*first.W + t*second.W,
-		X: (1-t)*first.X + t*second.X,
-		Y: (1-t)*first.Y + t*second.Y,
-		Z: (1-t)*first.Z + t*second.Z,
+		W: first.W + t*(second.W-first.W),
+		X: first.X + t*(second.X-first.X),
+		Y: first.Y + t*(second.Y-first.Y),
+		Z: first.Z + t*(second.Z-first.Z),
 	}
 }
 
