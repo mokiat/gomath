@@ -110,6 +110,10 @@ func Atan2(y, x float32) Angle {
 	return Radians(float32(math.Atan2(float64(y), float64(x))))
 }
 
+// Sign returns the sign of the value. It returns -1.0 for negative values and
+// 1.0 for non-negative values. Keep in mind that zero can be either positive
+// or negative, so Sign(0.0) returns 1.0,
+// while Sign(math.Copysign(0.0, -1.0)) returns -1.0.
 func Sign(value float32) float32 {
 	if math.Signbit(float64(value)) {
 		return -1.0
