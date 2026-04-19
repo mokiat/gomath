@@ -349,6 +349,6 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 	return
 }
 
-func (q Quat) GoString() string {
+func (q Quat) String() string {
 	return fmt.Sprintf("(%f, %f, %f, %f)", q.W, q.X, q.Y, q.Z)
 }

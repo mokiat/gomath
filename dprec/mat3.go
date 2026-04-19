@@ -259,7 +259,7 @@ func (m Mat3) ColumnMajorArray() [9]float64 {
 	}
 }
 
-func (m Mat3) GoString() string {
+func (m Mat3) String() string {
 	return fmt.Sprintf("((%f, %f, %f), (%f, %f, %f), (%f, %f, %f))",
 		m.M11, m.M12, m.M13,
 		m.M21, m.M22, m.M23,

@@ -135,6 +135,6 @@ func (v Vec4) Array() [4]float64 {
 	return [4]float64{v.X, v.Y, v.Z, v.W}
 }
 
-func (v Vec4) GoString() string {
+func (v Vec4) String() string {
 	return fmt.Sprintf("(%f, %f, %f, %f)", v.X, v.Y, v.Z, v.W)
 }

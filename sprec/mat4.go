@@ -448,7 +448,7 @@ func (m Mat4) ColumnMajorArray() [16]float32 {
 	}
 }
 
-func (m Mat4) GoString() string {
+func (m Mat4) String() string {
 	return fmt.Sprintf("((%f, %f, %f, %f), (%f, %f, %f, %f), (%f, %f, %f, %f), (%f, %f, %f, %f))",
 		m.M11, m.M12, m.M13, m.M14,
 		m.M21, m.M22, m.M23, m.M24,

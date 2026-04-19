@@ -274,8 +274,8 @@ var _ = Describe("QuatTest", func() {
 		}
 	})
 
-	Specify("#GoString", func() {
-		result := quat.GoString()
+	Specify("#String", func() {
+		result := quat.String()
 		Expect(result).To(Equal("(5.100000, -4.100000, 3.100000, -2.100000)"))
 	})
 })

@@ -223,6 +223,6 @@ func (v Vec3) Array() [3]float32 {
 	return [3]float32{v.X, v.Y, v.Z}
 }
 
-func (v Vec3) GoString() string {
+func (v Vec3) String() string {
 	return fmt.Sprintf("(%f, %f, %f)", v.X, v.Y, v.Z)
 }

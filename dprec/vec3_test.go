@@ -212,8 +212,8 @@ var _ = Describe("Vec3", func() {
 		}))
 	})
 
-	Specify("#GoString", func() {
-		result := firstVector.GoString()
+	Specify("#String", func() {
+		result := firstVector.String()
 		Expect(result).To(Equal("(2.000000, 3.000000, 4.000000)"))
 	})
 })

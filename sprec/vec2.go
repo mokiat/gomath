@@ -147,6 +147,6 @@ func (v Vec2) Length() float32 {
 	return Sqrt(Vec2Dot(v, v))
 }
 
-func (v Vec2) GoString() string {
+func (v Vec2) String() string {
 	return fmt.Sprintf("(%f, %f)", v.X, v.Y)
 }

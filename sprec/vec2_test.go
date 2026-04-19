@@ -170,8 +170,8 @@ var _ = Describe("Vec2", func() {
 		Expect(lng).To(EqualFloat32(3.605551275463))
 	})
 
-	Specify("#GoString", func() {
-		result := firstVector.GoString()
+	Specify("#String", func() {
+		result := firstVector.String()
 		Expect(result).To(Equal("(2.000000, 3.000000)"))
 	})
 })
