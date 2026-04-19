@@ -163,12 +163,16 @@ func QuatDot(a, b Quat) float32 {
 }
 
 func QuatLerp(first, second Quat, t float32) Quat {
-	return UnitQuat(Quat{
+	return Quat{
 		W: (1-t)*first.W + t*second.W,
 		X: (1-t)*first.X + t*second.X,
 		Y: (1-t)*first.Y + t*second.Y,
 		Z: (1-t)*first.Z + t*second.Z,
-	})
+	}
+}
+
+func QuatNLerp(first, second Quat, t float32) Quat {
+	return UnitQuat(QuatLerp(first, second, t))
 }
 
 func QuatDiff(second, first Quat, shortest bool) Quat {
