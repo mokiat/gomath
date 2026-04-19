@@ -19,11 +19,19 @@ func Abs[T ~float64](value T) T {
 }
 
 // Max returns the larger of the two values.
+//
+// Deprecated: Use built-in max function instead.
+//
+//go:fix inline
 func Max[T ~float64](a, b T) T {
 	return max(a, b)
 }
 
 // Min returns the smaller of the two values.
+//
+// Deprecated: Use built-in min function instead.
+//
+//go:fix inline
 func Min[T ~float64](a, b T) T {
 	return min(a, b)
 }
