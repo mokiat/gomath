@@ -161,8 +161,6 @@ func NormalVec3(vector Vec3) Vec3 {
 // Vec3Angle returns the shortest angle between two vectors. It always
 // returns a positive angle.
 func Vec3Angle(a, b Vec3) Angle {
-	a = UnitVec3(a)
-	b = UnitVec3(b)
 	dot := Vec3Dot(a, b)
 	cross := Vec3Cross(a, b)
 	return Atan2(cross.Length(), dot)
