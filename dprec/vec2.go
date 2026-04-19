@@ -78,11 +78,6 @@ func Vec2Prod(vector Vec2, value float64) Vec2 {
 	}
 }
 
-// Vec2Cross returns the 2D cross product (scalar) of two vectors.
-func Vec2Cross(a, b Vec2) float64 {
-	return a.X*b.Y - a.Y*b.X
-}
-
 // Vec2Quot divides a vector by a scalar value.
 func Vec2Quot(vector Vec2, value float64) Vec2 {
 	invValue := 1.0 / value
@@ -95,6 +90,11 @@ func Vec2Quot(vector Vec2, value float64) Vec2 {
 // Vec2Dot returns the dot product of two vectors.
 func Vec2Dot(a, b Vec2) float64 {
 	return a.X*b.X + a.Y*b.Y
+}
+
+// Vec2Cross returns the 2D cross product (scalar) of two vectors.
+func Vec2Cross(a, b Vec2) float64 {
+	return a.X*b.Y - a.Y*b.X
 }
 
 // Vec2Lerp returns the linear interpolation between a and b using t.
