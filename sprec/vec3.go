@@ -108,9 +108,9 @@ func Vec3Cross(a, b Vec3) Vec3 {
 
 func Vec3Lerp(a, b Vec3, t float32) Vec3 {
 	return Vec3{
-		X: (1-t)*a.X + t*b.X,
-		Y: (1-t)*a.Y + t*b.Y,
-		Z: (1-t)*a.Z + t*b.Z,
+		X: a.X + t*(b.X-a.X),
+		Y: a.Y + t*(b.Y-a.Y),
+		Z: a.Z + t*(b.Z-a.Z),
 	}
 }
 

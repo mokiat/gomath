@@ -87,8 +87,8 @@ func Vec2Cross(a, b Vec2) float32 {
 
 func Vec2Lerp(a, b Vec2, t float32) Vec2 {
 	return Vec2{
-		X: (1-t)*a.X + t*b.X,
-		Y: (1-t)*a.Y + t*b.Y,
+		X: a.X + t*(b.X-a.X),
+		Y: a.Y + t*(b.Y-a.Y),
 	}
 }
 

@@ -83,10 +83,10 @@ func Vec4Dot(a, b Vec4) float32 {
 
 func Vec4Lerp(a, b Vec4, t float32) Vec4 {
 	return Vec4{
-		X: (1-t)*a.X + t*b.X,
-		Y: (1-t)*a.Y + t*b.Y,
-		Z: (1-t)*a.Z + t*b.Z,
-		W: (1-t)*a.W + t*b.W,
+		X: a.X + t*(b.X-a.X),
+		Y: a.Y + t*(b.Y-a.Y),
+		Z: a.Z + t*(b.Z-a.Z),
+		W: a.W + t*(b.W-a.W),
 	}
 }
 
