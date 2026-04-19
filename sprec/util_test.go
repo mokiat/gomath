@@ -139,6 +139,8 @@ var _ = Describe("Util", func() {
 
 	Specify("Sign", func() {
 		Expect(Sign(0.1)).To(EqualFloat32(1.0))
+		Expect(Sign(float32(math.Copysign(0.0, 1.0)))).To(EqualFloat32(1.0))
+		Expect(Sign(float32(math.Copysign(0.0, -1.0)))).To(EqualFloat32(-1.0))
 		Expect(Sign(-0.1)).To(EqualFloat32(-1.0))
 	})
 

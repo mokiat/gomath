@@ -9,22 +9,18 @@ import (
 )
 
 func HaveQuatCoords(expectedW, expectedX, expectedY, expectedZ float32) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
-		quat, ok := actualValue.(sprec.Quat)
-		if !ok {
-			return testing.MatchStatus{}, fmt.Errorf("HaveQuatCoords matcher expects a sprec.Quat")
-		}
-
-		matches := AreEqualFloat32(quat.X, expectedX) &&
-			AreEqualFloat32(quat.Y, expectedY) &&
-			AreEqualFloat32(quat.Z, expectedZ) &&
-			AreEqualFloat32(quat.W, expectedW)
-		if !matches {
-			return testing.FailureMatchStatus(
-				fmt.Sprintf("Expected\n\t%#v\nto have coords\n\t(%f, %f, %f, %f)", quat, expectedW, expectedX, expectedY, expectedZ),
-				fmt.Sprintf("Expected\n\t%#v\nnot to have coords\n\t(%f, %f, %f, %f)", quat, expectedW, expectedX, expectedY, expectedZ),
-			), nil
-		}
-		return testing.SuccessMatchStatus(), nil
-	})
+	return testing.GenericMatcher(
+		func(quat sprec.Quat) bool {
+			return AreEqualFloat32(quat.X, expectedX) &&
+				AreEqualFloat32(quat.Y, expectedY) &&
+				AreEqualFloat32(quat.Z, expectedZ) &&
+				AreEqualFloat32(quat.W, expectedW)
+		},
+		func(quat sprec.Quat) string {
+			return fmt.Sprintf("Expected\n\t%#v\nto have coords\n\t(%f, %f, %f, %f)", quat, expectedW, expectedX, expectedY, expectedZ)
+		},
+		func(quat sprec.Quat) string {
+			return fmt.Sprintf("Expected\n\t%#v\nnot to have coords\n\t(%f, %f, %f, %f)", quat, expectedW, expectedX, expectedY, expectedZ)
+		},
+	)
 }

@@ -359,8 +359,8 @@ var _ = Describe("Mat3", func() {
 		Expect(array[8]).To(EqualFloat32(0.9))
 	})
 
-	Specify("#GoString", func() {
-		result := matrix.GoString()
+	Specify("#String", func() {
+		result := matrix.String()
 		Expect(result).Should(Equal("(" +
 			"(0.100000, 0.200000, 0.300000), " +
 			"(0.400000, 0.500000, 0.600000), " +

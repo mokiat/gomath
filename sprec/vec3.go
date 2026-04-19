@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// NewVec3 creates a Vec3 with the given X, Y, and Z components.
 func NewVec3(x, y, z float32) Vec3 {
 	return Vec3{
 		X: x,
@@ -13,10 +14,12 @@ func NewVec3(x, y, z float32) Vec3 {
 	}
 }
 
+// ZeroVec3 returns the zero Vec3.
 func ZeroVec3() Vec3 {
 	return Vec3{}
 }
 
+// BasisXVec3 returns the unit vector along the X axis.
 func BasisXVec3() Vec3 {
 	return Vec3{
 		X: 1.0,
@@ -25,6 +28,7 @@ func BasisXVec3() Vec3 {
 	}
 }
 
+// BasisYVec3 returns the unit vector along the Y axis.
 func BasisYVec3() Vec3 {
 	return Vec3{
 		X: 0.0,
@@ -33,6 +37,7 @@ func BasisYVec3() Vec3 {
 	}
 }
 
+// BasisZVec3 returns the unit vector along the Z axis.
 func BasisZVec3() Vec3 {
 	return Vec3{
 		X: 0.0,
@@ -41,6 +46,7 @@ func BasisZVec3() Vec3 {
 	}
 }
 
+// Vec3Sum returns the sum of two vectors.
 func Vec3Sum(a, b Vec3) Vec3 {
 	return Vec3{
 		X: a.X + b.X,
@@ -49,6 +55,7 @@ func Vec3Sum(a, b Vec3) Vec3 {
 	}
 }
 
+// Vec3MultiSum returns the sum of multiple vectors.
 func Vec3MultiSum(first Vec3, others ...Vec3) Vec3 {
 	result := first
 	for _, other := range others {
@@ -59,6 +66,7 @@ func Vec3MultiSum(first Vec3, others ...Vec3) Vec3 {
 	return result
 }
 
+// Vec3Diff returns the difference of two vectors (a - b).
 func Vec3Diff(a, b Vec3) Vec3 {
 	return Vec3{
 		X: a.X - b.X,
@@ -67,6 +75,7 @@ func Vec3Diff(a, b Vec3) Vec3 {
 	}
 }
 
+// Vec3MultiDiff subtracts each subsequent vector from the first.
 func Vec3MultiDiff(first Vec3, others ...Vec3) Vec3 {
 	result := first
 	for _, other := range others {
@@ -77,6 +86,7 @@ func Vec3MultiDiff(first Vec3, others ...Vec3) Vec3 {
 	return result
 }
 
+// Vec3Prod multiplies a vector by a scalar value.
 func Vec3Prod(vector Vec3, value float32) Vec3 {
 	return Vec3{
 		X: vector.X * value,
@@ -85,18 +95,22 @@ func Vec3Prod(vector Vec3, value float32) Vec3 {
 	}
 }
 
+// Vec3Quot divides a vector by a scalar value.
 func Vec3Quot(vector Vec3, value float32) Vec3 {
+	invValue := 1.0 / value
 	return Vec3{
-		X: vector.X / value,
-		Y: vector.Y / value,
-		Z: vector.Z / value,
+		X: vector.X * invValue,
+		Y: vector.Y * invValue,
+		Z: vector.Z * invValue,
 	}
 }
 
+// Vec3Dot returns the dot product of two vectors.
 func Vec3Dot(a, b Vec3) float32 {
 	return a.X*b.X + a.Y*b.Y + a.Z*b.Z
 }
 
+// Vec3Cross returns the cross product of two vectors.
 func Vec3Cross(a, b Vec3) Vec3 {
 	return Vec3{
 		X: a.Y*b.Z - a.Z*b.Y,
@@ -105,23 +119,29 @@ func Vec3Cross(a, b Vec3) Vec3 {
 	}
 }
 
+// Vec3Lerp returns the linear interpolation between a and b using t.
+// A value of t=0 returns a and t=1 returns b.
 func Vec3Lerp(a, b Vec3, t float32) Vec3 {
 	return Vec3{
-		X: (1-t)*a.X + t*b.X,
-		Y: (1-t)*a.Y + t*b.Y,
-		Z: (1-t)*a.Z + t*b.Z,
+		X: a.X + t*(b.X-a.X),
+		Y: a.Y + t*(b.Y-a.Y),
+		Z: a.Z + t*(b.Z-a.Z),
 	}
 }
 
+// UnitVec3 returns the unit (normalized) vector in the direction of vector.
 func UnitVec3(vector Vec3) Vec3 {
 	return Vec3Quot(vector, vector.Length())
 }
 
+// ResizedVec3 returns a vector in the same direction as vector but with
+// the given length.
 func ResizedVec3(vector Vec3, newLength float32) Vec3 {
 	ratio := newLength / vector.Length()
 	return Vec3Prod(vector, ratio)
 }
 
+// InverseVec3 returns the negation of the given vector.
 func InverseVec3(vector Vec3) Vec3 {
 	return Vec3{
 		X: -vector.X,
@@ -130,6 +150,7 @@ func InverseVec3(vector Vec3) Vec3 {
 	}
 }
 
+// NormalVec3 returns a unit vector perpendicular to the given vector.
 func NormalVec3(vector Vec3) Vec3 {
 	sqrX := vector.X * vector.X
 	sqrY := vector.Y * vector.Y
@@ -160,8 +181,6 @@ func NormalVec3(vector Vec3) Vec3 {
 // Vec3Angle returns the shortest angle between two vectors. It always
 // returns a positive angle.
 func Vec3Angle(a, b Vec3) Angle {
-	a = UnitVec3(a)
-	b = UnitVec3(b)
 	dot := Vec3Dot(a, b)
 	cross := Vec3Cross(a, b)
 	return Atan2(cross.Length(), dot)
@@ -186,6 +205,7 @@ func Vec3ProjectionAngle(a, b, normal Vec3) Angle {
 	return Atan2(Vec3Dot(cross, normal), dot)
 }
 
+// ArrayToVec3 creates a Vec3 from a three-element array.
 func ArrayToVec3(array [3]float32) Vec3 {
 	return Vec3{
 		X: array[0],
@@ -194,36 +214,44 @@ func ArrayToVec3(array [3]float32) Vec3 {
 	}
 }
 
+// Vec3 is a three-dimensional vector with float32 components.
 type Vec3 struct {
 	X float32
 	Y float32
 	Z float32
 }
 
+// IsNaN returns true if any component is NaN.
 func (v Vec3) IsNaN() bool {
 	return math.IsNaN(float64(v.X)) || math.IsNaN(float64(v.Y)) || math.IsNaN(float64(v.Z))
 }
 
+// IsInf returns true if any component is Inf.
 func (v Vec3) IsInf() bool {
 	return math.IsInf(float64(v.X), 0) || math.IsInf(float64(v.Y), 0) || math.IsInf(float64(v.Z), 0)
 }
 
+// IsZero returns true if all components are within Epsilon of zero.
 func (v Vec3) IsZero() bool {
 	return Eq(v.X, 0.0) && Eq(v.Y, 0.0) && Eq(v.Z, 0.0)
 }
 
+// SqrLength returns the squared length of the vector.
 func (v Vec3) SqrLength() float32 {
 	return Vec3Dot(v, v)
 }
 
+// Length returns the length of the vector.
 func (v Vec3) Length() float32 {
 	return Sqrt(Vec3Dot(v, v))
 }
 
+// Array returns the vector components as an array.
 func (v Vec3) Array() [3]float32 {
 	return [3]float32{v.X, v.Y, v.Z}
 }
 
-func (v Vec3) GoString() string {
+// String returns a string representation of the vector.
+func (v Vec3) String() string {
 	return fmt.Sprintf("(%f, %f, %f)", v.X, v.Y, v.Z)
 }

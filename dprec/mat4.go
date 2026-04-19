@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// NewMat4 creates a Mat4 from the given row-major element values.
 func NewMat4(
 	m11, m12, m13, m14 float64,
 	m21, m22, m23, m24 float64,
@@ -19,10 +20,12 @@ func NewMat4(
 	}
 }
 
+// ZeroMat4 returns a zero Mat4.
 func ZeroMat4() Mat4 {
 	return Mat4{}
 }
 
+// IdentityMat4 returns the identity Mat4.
 func IdentityMat4() Mat4 {
 	var result Mat4
 	result.M11 = 1.0
@@ -32,6 +35,7 @@ func IdentityMat4() Mat4 {
 	return result
 }
 
+// TransposedMat4 returns the transpose of the given matrix.
 func TransposedMat4(m Mat4) Mat4 {
 	return NewMat4(
 		m.M11, m.M21, m.M31, m.M41,
@@ -41,6 +45,7 @@ func TransposedMat4(m Mat4) Mat4 {
 	)
 }
 
+// TranslationMat4 returns a 3D translation matrix for the given offsets.
 func TranslationMat4(x, y, z float64) Mat4 {
 	result := IdentityMat4()
 	result.M14 = x
@@ -49,6 +54,7 @@ func TranslationMat4(x, y, z float64) Mat4 {
 	return result
 }
 
+// ScaleMat4 returns a 3D scale matrix for the given scale factors.
 func ScaleMat4(x, y, z float64) Mat4 {
 	var result Mat4
 	result.M11 = x
@@ -58,6 +64,8 @@ func ScaleMat4(x, y, z float64) Mat4 {
 	return result
 }
 
+// RotationMat4 returns a rotation matrix for the given angle around the
+// axis defined by (x, y, z).
 func RotationMat4(angle Angle, x, y, z float64) Mat4 {
 	vector := UnitVec3(NewVec3(x, y, z))
 	return rotationMat4FromNormalizedData(Cos(angle), Sin(angle), vector)
@@ -83,6 +91,8 @@ func rotationMat4FromNormalizedData(cs, sn float64, vector Vec3) Mat4 {
 	return result
 }
 
+// TRSMat4 constructs a transformation matrix from translation, rotation,
+// and scale.
 func TRSMat4(translation Vec3, rotation Quat, scale Vec3) Mat4 {
 	orientX := rotation.OrientationX()
 	orientY := rotation.OrientationY()
@@ -108,6 +118,7 @@ func TRSMat4(translation Vec3, rotation Quat, scale Vec3) Mat4 {
 	return result
 }
 
+// OrthoMat4 returns a 3D orthographic projection matrix.
 func OrthoMat4(left, right, top, bottom, near, far float64) Mat4 {
 	var result Mat4
 	result.M11 = 2.0 / (right - left)
@@ -123,6 +134,7 @@ func OrthoMat4(left, right, top, bottom, near, far float64) Mat4 {
 	return result
 }
 
+// PerspectiveMat4 returns a 3D perspective projection matrix.
 func PerspectiveMat4(left, right, bottom, top, near, far float64) Mat4 {
 	var result Mat4
 	result.M11 = 2.0 * near / (right - left)
@@ -190,6 +202,8 @@ func InverseMat4(m Mat4) Mat4 {
 	)
 }
 
+// TransformationMat4 builds a 3D transformation matrix from orientation
+// vectors and a translation.
 func TransformationMat4(orientX, orientY, orientZ, translation Vec3) Mat4 {
 	var result Mat4
 	result.M11 = orientX.X
@@ -211,6 +225,7 @@ func TransformationMat4(orientX, orientY, orientZ, translation Vec3) Mat4 {
 	return result
 }
 
+// OrientationMat4 builds a 3D orientation matrix from three axis vectors.
 func OrientationMat4(orientX, orientY, orientZ Vec3) Mat4 {
 	var result Mat4
 	result.M11 = orientX.X
@@ -229,6 +244,7 @@ func OrientationMat4(orientX, orientY, orientZ Vec3) Mat4 {
 	return result
 }
 
+// RowMajorArrayToMat4 creates a Mat4 from a row-major array.
 func RowMajorArrayToMat4(values [16]float64) Mat4 {
 	return Mat4{
 		M11: values[0], M12: values[1], M13: values[2], M14: values[3],
@@ -238,6 +254,7 @@ func RowMajorArrayToMat4(values [16]float64) Mat4 {
 	}
 }
 
+// ColumnMajorArrayToMat4 creates a Mat4 from a column-major array.
 func ColumnMajorArrayToMat4(values [16]float64) Mat4 {
 	return Mat4{
 		M11: values[0], M12: values[4], M13: values[8], M14: values[12],
@@ -247,6 +264,7 @@ func ColumnMajorArrayToMat4(values [16]float64) Mat4 {
 	}
 }
 
+// Mat4Prod returns the product of two matrices.
 func Mat4Prod(left, right Mat4) Mat4 {
 	return Mat4{
 		M11: left.M11*right.M11 + left.M12*right.M21 + left.M13*right.M31 + left.M14*right.M41,
@@ -271,6 +289,7 @@ func Mat4Prod(left, right Mat4) Mat4 {
 	}
 }
 
+// Mat4MultiProd returns the product of multiple matrices.
 func Mat4MultiProd(first Mat4, others ...Mat4) Mat4 {
 	result := first
 	for _, matrix := range others {
@@ -279,6 +298,7 @@ func Mat4MultiProd(first Mat4, others ...Mat4) Mat4 {
 	return result
 }
 
+// Mat4Vec4Prod multiplies a matrix by a Vec4.
 func Mat4Vec4Prod(mat Mat4, vec Vec4) Vec4 {
 	return Vec4{
 		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13*vec.Z + mat.M14*vec.W,
@@ -288,6 +308,7 @@ func Mat4Vec4Prod(mat Mat4, vec Vec4) Vec4 {
 	}
 }
 
+// Mat4Vec3Transformation applies the 3D affine transformation to a Vec3.
 func Mat4Vec3Transformation(mat Mat4, vec Vec3) Vec3 {
 	return Vec3{
 		X: mat.M11*vec.X + mat.M12*vec.Y + mat.M13*vec.Z + mat.M14,
@@ -296,6 +317,8 @@ func Mat4Vec3Transformation(mat Mat4, vec Vec3) Vec3 {
 	}
 }
 
+// Mat4 is a 4x4 matrix with float64 components.
+// Fields use row-major notation: M<row><col>.
 type Mat4 struct {
 	M11, M12, M13, M14 float64
 	M21, M22, M23, M24 float64
@@ -303,6 +326,7 @@ type Mat4 struct {
 	M41, M42, M43, M44 float64
 }
 
+// IsNaN returns true if any component is NaN.
 func (m Mat4) IsNaN() bool {
 	return math.IsNaN(m.M11) || math.IsNaN(m.M12) || math.IsNaN(m.M13) || math.IsNaN(m.M14) ||
 		math.IsNaN(m.M21) || math.IsNaN(m.M22) || math.IsNaN(m.M23) || math.IsNaN(m.M24) ||
@@ -310,6 +334,7 @@ func (m Mat4) IsNaN() bool {
 		math.IsNaN(m.M41) || math.IsNaN(m.M42) || math.IsNaN(m.M43) || math.IsNaN(m.M44)
 }
 
+// IsInf returns true if any component is Inf.
 func (m Mat4) IsInf() bool {
 	return math.IsInf(m.M11, 0) || math.IsInf(m.M12, 0) || math.IsInf(m.M13, 0) || math.IsInf(m.M14, 0) ||
 		math.IsInf(m.M21, 0) || math.IsInf(m.M22, 0) || math.IsInf(m.M23, 0) || math.IsInf(m.M24, 0) ||
@@ -317,54 +342,67 @@ func (m Mat4) IsInf() bool {
 		math.IsInf(m.M41, 0) || math.IsInf(m.M42, 0) || math.IsInf(m.M43, 0) || math.IsInf(m.M44, 0)
 }
 
+// Row1 returns the first row as a Vec4.
 func (m Mat4) Row1() Vec4 {
 	return NewVec4(m.M11, m.M12, m.M13, m.M14)
 }
 
+// Row2 returns the second row as a Vec4.
 func (m Mat4) Row2() Vec4 {
 	return NewVec4(m.M21, m.M22, m.M23, m.M24)
 }
 
+// Row3 returns the third row as a Vec4.
 func (m Mat4) Row3() Vec4 {
 	return NewVec4(m.M31, m.M32, m.M33, m.M34)
 }
 
+// Row4 returns the fourth row as a Vec4.
 func (m Mat4) Row4() Vec4 {
 	return NewVec4(m.M41, m.M42, m.M43, m.M44)
 }
 
+// Column1 returns the first column as a Vec4.
 func (m Mat4) Column1() Vec4 {
 	return NewVec4(m.M11, m.M21, m.M31, m.M41)
 }
 
+// Column2 returns the second column as a Vec4.
 func (m Mat4) Column2() Vec4 {
 	return NewVec4(m.M12, m.M22, m.M32, m.M42)
 }
 
+// Column3 returns the third column as a Vec4.
 func (m Mat4) Column3() Vec4 {
 	return NewVec4(m.M13, m.M23, m.M33, m.M43)
 }
 
+// Column4 returns the fourth column as a Vec4.
 func (m Mat4) Column4() Vec4 {
 	return NewVec4(m.M14, m.M24, m.M34, m.M44)
 }
 
+// OrientationX returns the X orientation vector of the matrix.
 func (m Mat4) OrientationX() Vec3 {
 	return NewVec3(m.M11, m.M21, m.M31)
 }
 
+// OrientationY returns the Y orientation vector of the matrix.
 func (m Mat4) OrientationY() Vec3 {
 	return NewVec3(m.M12, m.M22, m.M32)
 }
 
+// OrientationZ returns the Z orientation vector of the matrix.
 func (m Mat4) OrientationZ() Vec3 {
 	return NewVec3(m.M13, m.M23, m.M33)
 }
 
+// Translation returns the translation vector of the matrix.
 func (m Mat4) Translation() Vec3 {
 	return NewVec3(m.M14, m.M24, m.M34)
 }
 
+// Scale returns the scale factors of the matrix.
 func (m Mat4) Scale() Vec3 {
 	return NewVec3(
 		m.OrientationX().Length(),
@@ -378,42 +416,47 @@ func (m Mat4) Scale() Vec3 {
 // want to get the rotation of a matrix that has non-identity scale, consider
 // using the TRS method.
 func (m Mat4) Rotation() Quat {
-	// This is calculated by inversing the equations for
-	// quat.OrientationX, quat.OrientationY and quat.OrientationZ.
+	// This is the Shepperd method. The four squared quaternion components
+	// are derived by inversing the equations for quat.OrientationX,
+	// quat.OrientationY and quat.OrientationZ.
 
-	sqrX := (1.0 + m.M11 - m.M22 - m.M33) / 4.0
-	sqrY := (1.0 - m.M11 + m.M22 - m.M33) / 4.0
-	sqrZ := (1.0 - m.M11 - m.M22 + m.M33) / 4.0
+	const invFour = 1.0 / 4.0
+	sqrW := (1.0 + m.M11 + m.M22 + m.M33) * invFour
+	sqrX := (1.0 + m.M11 - m.M22 - m.M33) * invFour
+	sqrY := (1.0 - m.M11 + m.M22 - m.M33) * invFour
+	sqrZ := (1.0 - m.M11 - m.M22 + m.M33) * invFour
 
 	var x, y, z, w float64
-	if sqrZ > sqrX && sqrZ > sqrY { // Z is largest
-		if Abs(sqrZ) < Epsilon {
-			return IdentityQuat()
-		}
+	switch {
+	case sqrW >= sqrX && sqrW >= sqrY && sqrW >= sqrZ: // W is largest
+		w = Sqrt(sqrW)
+		scale := 1.0 / (4.0 * w)
+		x = (m.M32 - m.M23) * scale
+		y = (m.M13 - m.M31) * scale
+		z = (m.M21 - m.M12) * scale
+	case sqrZ >= sqrX && sqrZ >= sqrY: // Z is largest
 		z = Sqrt(sqrZ)
-		x = (m.M31 + m.M13) / (4 * z)
-		y = (m.M32 + m.M23) / (4 * z)
-		w = (m.M21 - m.M12) / (4 * z)
-	} else if sqrY > sqrX { // Y is largest
-		if Abs(sqrY) < Epsilon {
-			return IdentityQuat()
-		}
+		scale := 1.0 / (4.0 * z)
+		x = (m.M31 + m.M13) * scale
+		y = (m.M32 + m.M23) * scale
+		w = (m.M21 - m.M12) * scale
+	case sqrY >= sqrX: // Y is largest
 		y = Sqrt(sqrY)
-		x = (m.M21 + m.M12) / (4 * y)
-		z = (m.M32 + m.M23) / (4 * y)
-		w = (m.M13 - m.M31) / (4 * y)
-	} else { // X is largest
-		if Abs(sqrX) < Epsilon {
-			return IdentityQuat()
-		}
+		scale := 1.0 / (4.0 * y)
+		x = (m.M21 + m.M12) * scale
+		z = (m.M32 + m.M23) * scale
+		w = (m.M13 - m.M31) * scale
+	default: // X is largest
 		x = Sqrt(sqrX)
-		y = (m.M21 + m.M12) / (4 * x)
-		z = (m.M31 + m.M13) / (4 * x)
-		w = (m.M32 - m.M23) / (4 * x)
+		scale := 1.0 / (4.0 * x)
+		y = (m.M21 + m.M12) * scale
+		z = (m.M31 + m.M13) * scale
+		w = (m.M32 - m.M23) * scale
 	}
 	return UnitQuat(NewQuat(w, x, y, z))
 }
 
+// TRS decomposes the matrix into translation, rotation, and scale.
 func (m Mat4) TRS() (Vec3, Quat, Vec3) {
 	translation := m.Translation()
 	scale := m.Scale()
@@ -430,6 +473,7 @@ func (m Mat4) TRS() (Vec3, Quat, Vec3) {
 	return translation, rotation, scale
 }
 
+// RowMajorArray returns the matrix components in row-major order.
 func (m Mat4) RowMajorArray() [16]float64 {
 	return [16]float64{
 		m.M11, m.M12, m.M13, m.M14,
@@ -439,6 +483,7 @@ func (m Mat4) RowMajorArray() [16]float64 {
 	}
 }
 
+// ColumnMajorArray returns the matrix components in column-major order.
 func (m Mat4) ColumnMajorArray() [16]float64 {
 	return [16]float64{
 		m.M11, m.M21, m.M31, m.M41,
@@ -448,7 +493,8 @@ func (m Mat4) ColumnMajorArray() [16]float64 {
 	}
 }
 
-func (m Mat4) GoString() string {
+// String returns a string representation of the matrix.
+func (m Mat4) String() string {
 	return fmt.Sprintf("((%f, %f, %f, %f), (%f, %f, %f, %f), (%f, %f, %f, %f), (%f, %f, %f, %f))",
 		m.M11, m.M12, m.M13, m.M14,
 		m.M21, m.M22, m.M23, m.M24,

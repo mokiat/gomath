@@ -81,25 +81,33 @@ var _ = Describe("QuatTest", func() {
 	})
 
 	Specify("QuatLerp", func() {
+		first := NewQuat(1.0, 2.0, 3.0, 4.0)
+		second := NewQuat(3.0, 4.0, 5.0, 6.0)
+
+		lerp := QuatLerp(first, second, 0.25)
+		Expect(lerp).To(HaveQuatCoords(1.5, 2.5, 3.5, 4.5))
+	})
+
+	Specify("QuatNLerp", func() {
 		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
 		second := RotationQuat(Degrees(45), NewVec3(1.0, 2.0, 3.0))
 
-		lerp := QuatLerp(first, second, 0.5)
+		lerp := QuatNLerp(first, second, 0.5)
 		expectedQuat := RotationQuat(Degrees(35), NewVec3(1.0, 2.0, 3.0))
 		Expect(lerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
 
-		lerp = QuatLerp(first, second, 0.0)
+		lerp = QuatNLerp(first, second, 0.0)
 		Expect(lerp).To(HaveQuatCoords(first.W, first.X, first.Y, first.Z))
 
-		lerp = QuatLerp(first, second, 1.0)
+		lerp = QuatNLerp(first, second, 1.0)
 		Expect(lerp).To(HaveQuatCoords(second.W, second.X, second.Y, second.Z))
 
 		// Linear interpolation does not handle such fractions
-		lerp = QuatLerp(first, second, 0.25)
+		lerp = QuatNLerp(first, second, 0.25)
 		idealQuat := RotationQuat(Degrees(30), NewVec3(1.0, 2.0, 3.0))
 		Expect(lerp).ToNot(HaveQuatCoords(idealQuat.W, idealQuat.X, idealQuat.Y, idealQuat.Z))
 
-		lerp = QuatLerp(first, second, 0.75)
+		lerp = QuatNLerp(first, second, 0.75)
 		idealQuat = RotationQuat(Degrees(40), NewVec3(1.0, 2.0, 3.0))
 		Expect(lerp).ToNot(HaveQuatCoords(idealQuat.W, idealQuat.X, idealQuat.Y, idealQuat.Z))
 	})
@@ -266,8 +274,8 @@ var _ = Describe("QuatTest", func() {
 		}
 	})
 
-	Specify("#GoString", func() {
-		result := quat.GoString()
+	Specify("#String", func() {
+		result := quat.String()
 		Expect(result).To(Equal("(5.100000, -4.100000, 3.100000, -2.100000)"))
 	})
 })

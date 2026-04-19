@@ -15,18 +15,15 @@ func AreEqualFloat32(a, b float32) bool {
 }
 
 func EqualFloat32(expectedValue float32) types.GomegaMatcher {
-	return testing.SimpleMatcher(func(actualValue any) (testing.MatchStatus, error) {
-		floatValue, ok := actualValue.(float32)
-		if !ok {
-			return testing.MatchStatus{}, fmt.Errorf("EqualFloat32 matcher expects a float32")
-		}
-
-		if !AreEqualFloat32(floatValue, expectedValue) {
-			return testing.FailureMatchStatus(
-				fmt.Sprintf("Expected\n\t%f\nto equal\n\t%f", floatValue, expectedValue),
-				fmt.Sprintf("Expected\n\t%f\nnot to equal\n\t%f", floatValue, expectedValue),
-			), nil
-		}
-		return testing.SuccessMatchStatus(), nil
-	})
+	return testing.GenericMatcher(
+		func(floatValue float32) bool {
+			return AreEqualFloat32(floatValue, expectedValue)
+		},
+		func(floatValue float32) string {
+			return fmt.Sprintf("Expected\n\t%f\nto equal\n\t%f", floatValue, expectedValue)
+		},
+		func(floatValue float32) string {
+			return fmt.Sprintf("Expected\n\t%f\nnot to equal\n\t%f", floatValue, expectedValue)
+		},
+	)
 }

@@ -5,6 +5,12 @@ import (
 	"github.com/mokiat/gomath/sprec"
 )
 
+// Angle converts the specified double-precision Angle into a single-precision
+// Angle.
+func Angle(src dprec.Angle) sprec.Angle {
+	return sprec.Angle(src)
+}
+
 // Vec2 converts the specified double-precision Vec2 into a single-precision
 // Vec2.
 func Vec2(src dprec.Vec2) sprec.Vec2 {
