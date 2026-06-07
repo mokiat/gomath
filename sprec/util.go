@@ -68,7 +68,7 @@ func Clamp[T ~float32](value, lower, upper T) T {
 // Mix performs a linear interpolation between a and b using the given amount.
 // An amount of 0.0 returns a and an amount of 1.0 returns b.
 func Mix[T ~float32](a, b T, amount float32) T {
-	return T(float32(a)*(1.0-amount) + float32(b)*amount)
+	return T(float32(a) + amount*(float32(b)-float32(a)))
 }
 
 // Step returns 0.0 if value is less than edge, and 1.0 otherwise.
