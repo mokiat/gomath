@@ -121,6 +121,7 @@ var _ = Describe("Vec2", func() {
 		result := NormalVec2(firstVector)
 		Expect(Vec2Dot(firstVector, result)).To(EqualFloat32(0.0))
 		Expect(result.Length()).To(EqualFloat32(1.0))
+		Expect(result).To(HaveVec2Coords(0.832050294, -0.554700196))
 	})
 
 	Specify("ArrayToVec2", func() {
