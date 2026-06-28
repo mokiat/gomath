@@ -126,11 +126,14 @@ func InverseVec2(vector Vec2) Vec2 {
 	}
 }
 
-// NormalVec2 returns a unit vector perpendicular to the given vector.
+// NormalVec2 returns a unit vector perpendicular to the given vector,
+// rotated 90 degrees clockwise (the right-hand perpendicular). When the
+// given vector is an edge of a counter-clockwise wound polygon, the
+// returned normal points outward.
 func NormalVec2(vector Vec2) Vec2 {
 	return UnitVec2(Vec2{
-		X: -vector.Y,
-		Y: vector.X,
+		X: vector.Y,
+		Y: -vector.X,
 	})
 }
 
