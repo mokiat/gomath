@@ -104,7 +104,7 @@ var _ = Describe("Mat4", func() {
 	})
 
 	Specify("OrthoMat4", func() {
-		orthoMatrix := OrthoMat4(-1.1, 2.1, 1.5, -3.4, 1.7, 3.8)
+		orthoMatrix := OrthoMat4(-1.1, 2.1, -3.4, 1.5, 1.7, 3.8)
 
 		// test negative boundary vector projection
 		nearCorner := NewVec4(-1.1, -3.4, -1.7, 1.0)

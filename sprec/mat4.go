@@ -119,7 +119,7 @@ func TRSMat4(translation Vec3, rotation Quat, scale Vec3) Mat4 {
 }
 
 // OrthoMat4 returns a 3D orthographic projection matrix.
-func OrthoMat4(left, right, top, bottom, near, far float32) Mat4 {
+func OrthoMat4(left, right, bottom, top, near, far float32) Mat4 {
 	var result Mat4
 	result.M11 = 2.0 / (right - left)
 	result.M14 = (right + left) / (left - right)

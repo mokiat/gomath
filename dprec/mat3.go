@@ -73,7 +73,7 @@ func RotationMat3(angle Angle) Mat3 {
 }
 
 // OrthoMat3 returns a 2D orthographic projection matrix.
-func OrthoMat3(left, right, top, bottom float64) Mat3 {
+func OrthoMat3(left, right, bottom, top float64) Mat3 {
 	var result Mat3
 	result.M11 = 2.0 / (right - left)
 	result.M13 = (right + left) / (left - right)

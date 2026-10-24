@@ -86,7 +86,7 @@ var _ = Describe("Mat3", func() {
 	})
 
 	Specify("OrthoMat3", func() {
-		orthoMatrix := OrthoMat3(-1.1, 2.1, 1.5, -3.4)
+		orthoMatrix := OrthoMat3(-1.1, 2.1, -3.4, 1.5)
 
 		// test bottom left boundary vector projection
 		bottomLeftCorner := NewVec3(-1.1, -3.4, 1.0)
