@@ -171,6 +171,12 @@ var _ = Describe("Vec2", func() {
 		Expect(lng).To(EqualFloat64(3.605551275463))
 	})
 
+	Specify("#Array", func() {
+		Expect(firstVector.Array()).To(Equal([2]float64{
+			2.0, 3.0,
+		}))
+	})
+
 	Specify("#String", func() {
 		result := firstVector.String()
 		Expect(result).To(Equal("(2.000000, 3.000000)"))

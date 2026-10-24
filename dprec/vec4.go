@@ -144,6 +144,16 @@ func (v Vec4) IsZero() bool {
 	return Eq(v.X, 0.0) && Eq(v.Y, 0.0) && Eq(v.Z, 0.0) && Eq(v.W, 0.0)
 }
 
+// SqrLength returns the squared length of the vector.
+func (v Vec4) SqrLength() float64 {
+	return Vec4Dot(v, v)
+}
+
+// Length returns the length of the vector.
+func (v Vec4) Length() float64 {
+	return Sqrt(Vec4Dot(v, v))
+}
+
 // VecXYZ returns the X, Y, and Z components as a Vec3.
 func (v Vec4) VecXYZ() Vec3 {
 	return NewVec3(v.X, v.Y, v.Z)

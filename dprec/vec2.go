@@ -176,6 +176,11 @@ func (v Vec2) Length() float64 {
 	return Sqrt(Vec2Dot(v, v))
 }
 
+// Array returns the vector components as an array.
+func (v Vec2) Array() [2]float64 {
+	return [2]float64{v.X, v.Y}
+}
+
 // String returns a string representation of the vector.
 func (v Vec2) String() string {
 	return fmt.Sprintf("(%f, %f)", v.X, v.Y)
