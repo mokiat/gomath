@@ -274,6 +274,37 @@ var _ = Describe("QuatTest", func() {
 		}
 	})
 
+	Specify("#EulerAngles at gimbal lock", func() {
+		// The index of the middle rotation axis (0=X, 1=Y, 2=Z) for each order.
+		middleAxes := map[RotationOrder]int{
+			RotationOrderGlobalXYZ: 1,
+			RotationOrderGlobalXZY: 2,
+			RotationOrderGlobalYXZ: 0,
+			RotationOrderGlobalYZX: 2,
+			RotationOrderGlobalZXY: 0,
+			RotationOrderGlobalZYX: 1,
+		}
+		for order, middleAxis := range middleAxes {
+			for _, middle := range []float64{-90, 90} {
+				for a := -180; a <= 180; a += 5 {
+					for b := -180; b <= 180; b += 5 {
+						var angles [3]float64
+						angles[middleAxis] = middle
+						angles[(middleAxis+1)%3] = float64(a)
+						angles[(middleAxis+2)%3] = float64(b)
+						quat := EulerQuat(Degrees(angles[0]), Degrees(angles[1]), Degrees(angles[2]), order)
+						actual := [3]Angle{}
+						actual[0], actual[1], actual[2] = quat.EulerAngles(order)
+						Expect(actual[0].IsNaN()).To(BeFalse())
+						Expect(actual[1].IsNaN()).To(BeFalse())
+						Expect(actual[2].IsNaN()).To(BeFalse())
+						Expect(actual[middleAxis].Degrees()).To(BeNumerically("~", middle, 0.1))
+					}
+				}
+			}
+		}
+	})
+
 	Specify("#String", func() {
 		result := quat.String()
 		Expect(result).To(Equal("(5.100000, -4.100000, 3.100000, -2.100000)"))

@@ -320,7 +320,7 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.X+q.Y*q.Z),
 			1.0-2.0*(q.X*q.X+q.Y*q.Y),
 		)
-		y = Asin(2.0 * (q.W*q.Y - q.X*q.Z))
+		y = Asin(Clamp(2.0*(q.W*q.Y-q.X*q.Z), -1.0, 1.0))
 		z = Atan2(
 			2.0*(q.W*q.Z+q.X*q.Y),
 			1.0-2.0*(q.Y*q.Y+q.Z*q.Z),
@@ -334,9 +334,9 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.Y-q.X*q.Z),
 			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
 		)
-		z = Asin(2.0 * (q.W*q.Z + q.X*q.Y))
+		z = Asin(Clamp(2.0*(q.W*q.Z+q.X*q.Y), -1.0, 1.0))
 	case RotationOrderGlobalYXZ:
-		x = Asin(2.0 * (q.W*q.X + q.Z*q.Y))
+		x = Asin(Clamp(2.0*(q.W*q.X+q.Z*q.Y), -1.0, 1.0))
 		y = Atan2(
 			2.0*(q.W*q.Y-q.Z*q.X),
 			1.0-2.0*(q.X*q.X+q.Y*q.Y),
@@ -354,9 +354,9 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.Y+q.X*q.Z),
 			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
 		)
-		z = Asin(2.0 * (q.W*q.Z - q.X*q.Y))
+		z = Asin(Clamp(2.0*(q.W*q.Z-q.X*q.Y), -1.0, 1.0))
 	case RotationOrderGlobalZXY:
-		x = Asin(2.0 * (q.W*q.X - q.Z*q.Y))
+		x = Asin(Clamp(2.0*(q.W*q.X-q.Z*q.Y), -1.0, 1.0))
 		y = Atan2(
 			2.0*(q.W*q.Y+q.Z*q.X),
 			1.0-2.0*(q.X*q.X+q.Y*q.Y),
@@ -370,7 +370,7 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.X-q.Z*q.Y),
 			1.0-2.0*(q.Y*q.Y+q.X*q.X),
 		)
-		y = Asin(2.0 * (q.W*q.Y + q.Z*q.X))
+		y = Asin(Clamp(2.0*(q.W*q.Y+q.Z*q.X), -1.0, 1.0))
 		z = Atan2(
 			2.0*(q.W*q.Z-q.Y*q.X),
 			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
