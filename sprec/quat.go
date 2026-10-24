@@ -177,6 +177,10 @@ func QuatDot(a, b Quat) float32 {
 
 // QuatLerp returns the linear interpolation between first and second using t.
 // A value of t=0 returns first and t=1 returns second.
+//
+// The components are interpolated directly, so the result is neither
+// normalized nor guaranteed to follow the shorter arc. Use QuatNLerp or
+// QuatSlerp to interpolate between rotations.
 func QuatLerp(first, second Quat, t float32) Quat {
 	return Quat{
 		W: first.W + t*(second.W-first.W),
@@ -187,18 +191,21 @@ func QuatLerp(first, second Quat, t float32) Quat {
 }
 
 // QuatNLerp returns the normalized linear interpolation between first and
-// second using t.
+// second using t. The interpolation always follows the shorter arc between
+// the two orientations.
 func QuatNLerp(first, second Quat, t float32) Quat {
+	if QuatDot(first, second) < 0.0 {
+		second = NegativeQuat(second)
+	}
 	return UnitQuat(QuatLerp(first, second, t))
 }
 
-// QuatDiff returns the rotation from first to second. When shortest is true,
-// the result uses the shorter arc between the two orientations.
-func QuatDiff(second, first Quat, shortest bool) Quat {
-	if shortest && (QuatDot(second, first) < 0) {
-		second = NegativeQuat(second)
-	}
-	return QuatProd(second, ConjugateQuat(first))
+// QuatDiff returns the rotation difference a * b^-1, i.e. the rotation that,
+// when applied after b, results in a.
+//
+// NOTE: This assumes that the quaternions are normalized.
+func QuatDiff(a, b Quat) Quat {
+	return QuatProd(a, ConjugateQuat(b))
 }
 
 // QuatPow raises the quaternion to the given power.
@@ -215,9 +222,13 @@ func QuatPow(q Quat, pow float32) Quat {
 }
 
 // QuatSlerp returns the spherical linear interpolation between first and
-// second using t.
+// second using t. The interpolation always follows the shorter arc between
+// the two orientations.
 func QuatSlerp(first, second Quat, t float32) Quat {
-	delta := QuatDiff(second, first, true)
+	if QuatDot(first, second) < 0.0 {
+		second = NegativeQuat(second)
+	}
+	delta := QuatDiff(second, first)
 	fractDelta := QuatPow(delta, t)
 	return QuatProd(fractDelta, first)
 }

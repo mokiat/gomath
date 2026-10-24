@@ -112,12 +112,28 @@ var _ = Describe("QuatTest", func() {
 		Expect(lerp).ToNot(HaveQuatCoords(idealQuat.W, idealQuat.X, idealQuat.Y, idealQuat.Z))
 	})
 
+	Specify("QuatNLerp with opposite signs", func() {
+		first := RotationQuat(Degrees(10), BasisYVec3())
+		second := NegativeQuat(RotationQuat(Degrees(30), BasisYVec3()))
+
+		lerp := QuatNLerp(first, second, 0.5)
+		expectedQuat := RotationQuat(Degrees(20), BasisYVec3())
+		Expect(lerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		lerp = QuatNLerp(first, NegativeQuat(first), 0.5)
+		Expect(lerp).To(HaveQuatCoords(first.W, first.X, first.Y, first.Z))
+	})
+
 	Specify("QuatDiff", func() {
 		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
 		second := RotationQuat(Degrees(45), NewVec3(1.0, 2.0, 3.0))
 		expectedQuat := RotationQuat(Degrees(20), NewVec3(1.0, 2.0, 3.0))
-		relative := QuatDiff(second, first, true)
+		relative := QuatDiff(second, first)
 		Expect(relative).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		// The sign of the inputs is preserved, without shortest arc adjustment.
+		relative = QuatDiff(NegativeQuat(second), first)
+		Expect(relative).To(HaveQuatCoords(-expectedQuat.W, -expectedQuat.X, -expectedQuat.Y, -expectedQuat.Z))
 	})
 
 	Specify("QuatPow", func() {
@@ -148,6 +164,19 @@ var _ = Describe("QuatTest", func() {
 
 		slerp = QuatSlerp(first, second, 0.75)
 		expectedQuat = RotationQuat(Degrees(40), NewVec3(1.0, 2.0, 3.0))
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+	})
+
+	Specify("QuatSlerp with opposite signs", func() {
+		first := RotationQuat(Degrees(10), BasisYVec3())
+		second := NegativeQuat(RotationQuat(Degrees(30), BasisYVec3()))
+
+		slerp := QuatSlerp(first, second, 0.25)
+		expectedQuat := RotationQuat(Degrees(15), BasisYVec3())
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		slerp = QuatSlerp(first, second, 0.5)
+		expectedQuat = RotationQuat(Degrees(20), BasisYVec3())
 		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
 	})
 
