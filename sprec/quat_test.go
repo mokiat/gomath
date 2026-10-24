@@ -151,6 +151,18 @@ var _ = Describe("QuatTest", func() {
 		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
 	})
 
+	Specify("QuatSlerp with small angle", func() {
+		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
+		second := RotationQuat(Degrees(25.01), NewVec3(1.0, 2.0, 3.0))
+
+		slerp := QuatSlerp(first, second, 0.5)
+		expectedQuat := RotationQuat(Degrees(25.005), NewVec3(1.0, 2.0, 3.0))
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		slerp = QuatSlerp(first, second, 1.0)
+		Expect(slerp).To(HaveQuatCoords(second.W, second.X, second.Y, second.Z))
+	})
+
 	Specify("#QuatVec3Rotation", func() {
 		quat := RotationQuat(Degrees(180), NewVec3(1.0, 1.0, 1.0))
 		rotatedVector := QuatVec3Rotation(quat, NewVec3(1.0, 0.0, 0.0))

@@ -203,18 +203,15 @@ func QuatDiff(second, first Quat, shortest bool) Quat {
 
 // QuatPow raises the quaternion to the given power.
 func QuatPow(q Quat, pow float64) Quat {
-	if q.W > 1.0 {
+	axis := NewVec3(q.X, q.Y, q.Z)
+	sn := axis.Length()
+	if sn == 0.0 {
 		return IdentityQuat()
 	}
-	if q.W < -1.0 {
-		return NegativeQuat(IdentityQuat())
-	}
-	norm := NewVec3(q.X, q.Y, q.Z)
-	if norm.IsZero() {
-		return IdentityQuat()
-	}
-	angle := (2 * Acos(q.W)) * Angle(pow)
-	return RotationQuat(angle, norm)
+	// Atan2 is used instead of Acos(q.W), since the latter loses precision
+	// for small angles, where q.W is close to 1.0.
+	angle := (2 * Atan2(sn, q.W)) * Angle(pow)
+	return RotationQuat(angle, axis)
 }
 
 // QuatSlerp returns the spherical linear interpolation between first and
