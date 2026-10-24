@@ -38,7 +38,7 @@ func HaveMat4Elements(
 	(%f, %f, %f, %f)
 	(%f, %f, %f, %f)
 	(%f, %f, %f, %f)
-	(%f, %f, %f, %f)					
+	(%f, %f, %f, %f)
 to have elements
 	(%f, %f, %f, %f)
 	(%f, %f, %f, %f)
@@ -59,7 +59,7 @@ to have elements
 	(%f, %f, %f, %f)
 	(%f, %f, %f, %f)
 	(%f, %f, %f, %f)
-	(%f, %f, %f, %f)					
+	(%f, %f, %f, %f)
 not to have elements
 	(%f, %f, %f, %f)
 	(%f, %f, %f, %f)
