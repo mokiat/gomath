@@ -159,14 +159,14 @@ func QuatScalarQuot(q Quat, value float64) Quat {
 	}
 }
 
-// QuatProd returns the product of two quaternions, applying second's rotation
-// after first's.
-func QuatProd(first, second Quat) Quat {
+// QuatProd returns the Hamilton product a * b of two quaternions. The
+// resulting rotation applies b's rotation first and a's rotation after it.
+func QuatProd(a, b Quat) Quat {
 	return Quat{
-		W: first.W*second.W - first.X*second.X - first.Y*second.Y - first.Z*second.Z,
-		X: first.W*second.X + first.X*second.W + first.Y*second.Z - first.Z*second.Y,
-		Y: first.W*second.Y - first.X*second.Z + first.Y*second.W + first.Z*second.X,
-		Z: first.W*second.Z + first.X*second.Y - first.Y*second.X + first.Z*second.W,
+		W: a.W*b.W - a.X*b.X - a.Y*b.Y - a.Z*b.Z,
+		X: a.W*b.X + a.X*b.W + a.Y*b.Z - a.Z*b.Y,
+		Y: a.W*b.Y - a.X*b.Z + a.Y*b.W + a.Z*b.X,
+		Z: a.W*b.Z + a.X*b.Y - a.Y*b.X + a.Z*b.W,
 	}
 }
 
