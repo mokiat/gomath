@@ -457,9 +457,17 @@ func (m Mat4) Rotation() Quat {
 }
 
 // TRS decomposes the matrix into translation, rotation, and scale.
+//
+// If the matrix contains a reflection (i.e. an odd number of negative scale
+// factors), it is represented as a negative X scale. This means that the
+// returned values always recompose to the same matrix through TRSMat4, though
+// they may differ from the ones that were originally used to build it.
 func (m Mat4) TRS() (Vec3, Quat, Vec3) {
 	translation := m.Translation()
 	scale := m.Scale()
+	if Vec3Dot(Vec3Cross(m.OrientationX(), m.OrientationY()), m.OrientationZ()) < 0.0 {
+		scale.X = -scale.X
+	}
 	m.M11 /= scale.X
 	m.M21 /= scale.X
 	m.M31 /= scale.X
