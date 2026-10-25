@@ -92,6 +92,8 @@ func NegativeQuat(q Quat) Quat {
 
 // RotationQuat returns a quaternion representing a rotation of angle around
 // the given axis direction.
+//
+// If direction has zero length, the result has NaN components.
 func RotationQuat(angle Angle, direction Vec3) Quat {
 	cs := Cos(angle / 2.0)
 	sn := Sin(angle / 2.0)
@@ -159,14 +161,14 @@ func QuatScalarQuot(q Quat, value float32) Quat {
 	}
 }
 
-// QuatProd returns the product of two quaternions, applying second's rotation
-// after first's.
-func QuatProd(first, second Quat) Quat {
+// QuatProd returns the Hamilton product a * b of two quaternions. The
+// resulting rotation applies b's rotation first and a's rotation after it.
+func QuatProd(a, b Quat) Quat {
 	return Quat{
-		W: first.W*second.W - first.X*second.X - first.Y*second.Y - first.Z*second.Z,
-		X: first.W*second.X + first.X*second.W + first.Y*second.Z - first.Z*second.Y,
-		Y: first.W*second.Y - first.X*second.Z + first.Y*second.W + first.Z*second.X,
-		Z: first.W*second.Z + first.X*second.Y - first.Y*second.X + first.Z*second.W,
+		W: a.W*b.W - a.X*b.X - a.Y*b.Y - a.Z*b.Z,
+		X: a.W*b.X + a.X*b.W + a.Y*b.Z - a.Z*b.Y,
+		Y: a.W*b.Y - a.X*b.Z + a.Y*b.W + a.Z*b.X,
+		Z: a.W*b.Z + a.X*b.Y - a.Y*b.X + a.Z*b.W,
 	}
 }
 
@@ -177,6 +179,10 @@ func QuatDot(a, b Quat) float32 {
 
 // QuatLerp returns the linear interpolation between first and second using t.
 // A value of t=0 returns first and t=1 returns second.
+//
+// The components are interpolated directly, so the result is neither
+// normalized nor guaranteed to follow the shorter arc. Use QuatNLerp or
+// QuatSlerp to interpolate between rotations.
 func QuatLerp(first, second Quat, t float32) Quat {
 	return Quat{
 		W: first.W + t*(second.W-first.W),
@@ -187,40 +193,44 @@ func QuatLerp(first, second Quat, t float32) Quat {
 }
 
 // QuatNLerp returns the normalized linear interpolation between first and
-// second using t.
+// second using t. The interpolation always follows the shorter arc between
+// the two orientations.
 func QuatNLerp(first, second Quat, t float32) Quat {
+	if QuatDot(first, second) < 0.0 {
+		second = NegativeQuat(second)
+	}
 	return UnitQuat(QuatLerp(first, second, t))
 }
 
-// QuatDiff returns the rotation from first to second. When shortest is true,
-// the result uses the shorter arc between the two orientations.
-func QuatDiff(second, first Quat, shortest bool) Quat {
-	if shortest && (QuatDot(second, first) < 0) {
-		second = NegativeQuat(second)
-	}
-	return QuatProd(second, ConjugateQuat(first))
+// QuatDiff returns the rotation difference a * b^-1, i.e. the rotation that,
+// when applied after b, results in a.
+//
+// NOTE: This assumes that the quaternions are normalized.
+func QuatDiff(a, b Quat) Quat {
+	return QuatProd(a, ConjugateQuat(b))
 }
 
 // QuatPow raises the quaternion to the given power.
 func QuatPow(q Quat, pow float32) Quat {
-	if q.W > 1.0 {
+	axis := NewVec3(q.X, q.Y, q.Z)
+	sn := axis.Length()
+	if sn == 0.0 {
 		return IdentityQuat()
 	}
-	if q.W < -1.0 {
-		return NegativeQuat(IdentityQuat())
-	}
-	norm := NewVec3(q.X, q.Y, q.Z)
-	if norm.IsZero() {
-		return IdentityQuat()
-	}
-	angle := (2 * Acos(q.W)) * Angle(pow)
-	return RotationQuat(angle, norm)
+	// Atan2 is used instead of Acos(q.W), since the latter loses precision
+	// for small angles, where q.W is close to 1.0.
+	angle := (2 * Atan2(sn, q.W)) * Angle(pow)
+	return RotationQuat(angle, axis)
 }
 
 // QuatSlerp returns the spherical linear interpolation between first and
-// second using t.
+// second using t. The interpolation always follows the shorter arc between
+// the two orientations.
 func QuatSlerp(first, second Quat, t float32) Quat {
-	delta := QuatDiff(second, first, true)
+	if QuatDot(first, second) < 0.0 {
+		second = NegativeQuat(second)
+	}
+	delta := QuatDiff(second, first)
 	fractDelta := QuatPow(delta, t)
 	return QuatProd(fractDelta, first)
 }
@@ -238,11 +248,15 @@ func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
 }
 
 // UnitQuat returns the normalized quaternion.
+//
+// If q has zero norm, the result has NaN components.
 func UnitQuat(q Quat) Quat {
 	return QuatScalarQuot(q, q.Norm())
 }
 
 // InverseQuat returns the multiplicative inverse of the given quaternion.
+//
+// If q has zero norm, the result has NaN components.
 func InverseQuat(q Quat) Quat {
 	return QuatScalarQuot(ConjugateQuat(q), q.SqrNorm())
 }
@@ -320,7 +334,7 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.X+q.Y*q.Z),
 			1.0-2.0*(q.X*q.X+q.Y*q.Y),
 		)
-		y = Asin(2.0 * (q.W*q.Y - q.X*q.Z))
+		y = Asin(Clamp(2.0*(q.W*q.Y-q.X*q.Z), -1.0, 1.0))
 		z = Atan2(
 			2.0*(q.W*q.Z+q.X*q.Y),
 			1.0-2.0*(q.Y*q.Y+q.Z*q.Z),
@@ -334,9 +348,9 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.Y-q.X*q.Z),
 			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
 		)
-		z = Asin(2.0 * (q.W*q.Z + q.X*q.Y))
+		z = Asin(Clamp(2.0*(q.W*q.Z+q.X*q.Y), -1.0, 1.0))
 	case RotationOrderGlobalYXZ:
-		x = Asin(2.0 * (q.W*q.X + q.Z*q.Y))
+		x = Asin(Clamp(2.0*(q.W*q.X+q.Z*q.Y), -1.0, 1.0))
 		y = Atan2(
 			2.0*(q.W*q.Y-q.Z*q.X),
 			1.0-2.0*(q.X*q.X+q.Y*q.Y),
@@ -354,9 +368,9 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.Y+q.X*q.Z),
 			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),
 		)
-		z = Asin(2.0 * (q.W*q.Z - q.X*q.Y))
+		z = Asin(Clamp(2.0*(q.W*q.Z-q.X*q.Y), -1.0, 1.0))
 	case RotationOrderGlobalZXY:
-		x = Asin(2.0 * (q.W*q.X - q.Z*q.Y))
+		x = Asin(Clamp(2.0*(q.W*q.X-q.Z*q.Y), -1.0, 1.0))
 		y = Atan2(
 			2.0*(q.W*q.Y+q.Z*q.X),
 			1.0-2.0*(q.X*q.X+q.Y*q.Y),
@@ -370,7 +384,7 @@ func (q Quat) EulerAngles(order RotationOrder) (x Angle, y Angle, z Angle) {
 			2.0*(q.W*q.X-q.Z*q.Y),
 			1.0-2.0*(q.Y*q.Y+q.X*q.X),
 		)
-		y = Asin(2.0 * (q.W*q.Y + q.Z*q.X))
+		y = Asin(Clamp(2.0*(q.W*q.Y+q.Z*q.X), -1.0, 1.0))
 		z = Atan2(
 			2.0*(q.W*q.Z-q.Y*q.X),
 			1.0-2.0*(q.Z*q.Z+q.Y*q.Y),

@@ -9,31 +9,14 @@ const (
 	// Tau is 2π.
 	Tau = float64(math.Pi * 2.0)
 
-	// Epsilon is the tolerance used for float equality comparisons.
+	// Epsilon is the tolerance used for float equality comparisons. It is
+	// absolute for values up to 1.0 and relative above that (see EqEps).
 	Epsilon = float64(0.000000000001)
 )
 
 // Abs returns the absolute value of the given value.
 func Abs[T ~float64](value T) T {
 	return T(math.Abs(float64(value)))
-}
-
-// Max returns the larger of the two values.
-//
-// Deprecated: Use built-in max function instead.
-//
-//go:fix inline
-func Max[T ~float64](a, b T) T {
-	return max(a, b)
-}
-
-// Min returns the smaller of the two values.
-//
-// Deprecated: Use built-in min function instead.
-//
-//go:fix inline
-func Min[T ~float64](a, b T) T {
-	return min(a, b)
 }
 
 // Sum returns the sum of the provided values.
@@ -94,13 +77,22 @@ func Smoothstep[T ~float64](lowerEdge, upperEdge, value T) T {
 }
 
 // Eq returns true if the two values are within Epsilon of each other.
+// See EqEps for how the tolerance scales with the magnitude of the values.
 func Eq(a, b float64) bool {
 	return EqEps(a, b, Epsilon)
 }
 
 // EqEps returns true if the two values are within epsilon of each other.
+//
+// The tolerance is absolute for values with a magnitude of up to 1.0 and
+// relative to the larger magnitude above that. This keeps the comparison
+// meaningful for both small and large values.
 func EqEps(a, b, epsilon float64) bool {
-	return Abs(a-b) < epsilon
+	if a == b {
+		return true // handles infinities
+	}
+	scale := max(1.0, Abs(a), Abs(b))
+	return Abs(a-b) < epsilon*scale
 }
 
 // Mod returns the floating-point remainder of a/b.

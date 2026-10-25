@@ -112,12 +112,28 @@ var _ = Describe("QuatTest", func() {
 		Expect(lerp).ToNot(HaveQuatCoords(idealQuat.W, idealQuat.X, idealQuat.Y, idealQuat.Z))
 	})
 
+	Specify("QuatNLerp with opposite signs", func() {
+		first := RotationQuat(Degrees(10), BasisYVec3())
+		second := NegativeQuat(RotationQuat(Degrees(30), BasisYVec3()))
+
+		lerp := QuatNLerp(first, second, 0.5)
+		expectedQuat := RotationQuat(Degrees(20), BasisYVec3())
+		Expect(lerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		lerp = QuatNLerp(first, NegativeQuat(first), 0.5)
+		Expect(lerp).To(HaveQuatCoords(first.W, first.X, first.Y, first.Z))
+	})
+
 	Specify("QuatDiff", func() {
 		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
 		second := RotationQuat(Degrees(45), NewVec3(1.0, 2.0, 3.0))
 		expectedQuat := RotationQuat(Degrees(20), NewVec3(1.0, 2.0, 3.0))
-		relative := QuatDiff(second, first, true)
+		relative := QuatDiff(second, first)
 		Expect(relative).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		// The sign of the inputs is preserved, without shortest arc adjustment.
+		relative = QuatDiff(NegativeQuat(second), first)
+		Expect(relative).To(HaveQuatCoords(-expectedQuat.W, -expectedQuat.X, -expectedQuat.Y, -expectedQuat.Z))
 	})
 
 	Specify("QuatPow", func() {
@@ -149,6 +165,31 @@ var _ = Describe("QuatTest", func() {
 		slerp = QuatSlerp(first, second, 0.75)
 		expectedQuat = RotationQuat(Degrees(40), NewVec3(1.0, 2.0, 3.0))
 		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+	})
+
+	Specify("QuatSlerp with opposite signs", func() {
+		first := RotationQuat(Degrees(10), BasisYVec3())
+		second := NegativeQuat(RotationQuat(Degrees(30), BasisYVec3()))
+
+		slerp := QuatSlerp(first, second, 0.25)
+		expectedQuat := RotationQuat(Degrees(15), BasisYVec3())
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		slerp = QuatSlerp(first, second, 0.5)
+		expectedQuat = RotationQuat(Degrees(20), BasisYVec3())
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+	})
+
+	Specify("QuatSlerp with small angle", func() {
+		first := RotationQuat(Degrees(25), NewVec3(1.0, 2.0, 3.0))
+		second := RotationQuat(Degrees(25.01), NewVec3(1.0, 2.0, 3.0))
+
+		slerp := QuatSlerp(first, second, 0.5)
+		expectedQuat := RotationQuat(Degrees(25.005), NewVec3(1.0, 2.0, 3.0))
+		Expect(slerp).To(HaveQuatCoords(expectedQuat.W, expectedQuat.X, expectedQuat.Y, expectedQuat.Z))
+
+		slerp = QuatSlerp(first, second, 1.0)
+		Expect(slerp).To(HaveQuatCoords(second.W, second.X, second.Y, second.Z))
 	})
 
 	Specify("#QuatVec3Rotation", func() {
@@ -268,6 +309,37 @@ var _ = Describe("QuatTest", func() {
 						Expect(actualX.Degrees()).To(BeNumerically("~", xAng.Degrees(), 0.001))
 						Expect(actualY.Degrees()).To(BeNumerically("~", yAng.Degrees(), 0.001))
 						Expect(actualZ.Degrees()).To(BeNumerically("~", zAng.Degrees(), 0.001))
+					}
+				}
+			}
+		}
+	})
+
+	Specify("#EulerAngles at gimbal lock", func() {
+		// The index of the middle rotation axis (0=X, 1=Y, 2=Z) for each order.
+		middleAxes := map[RotationOrder]int{
+			RotationOrderGlobalXYZ: 1,
+			RotationOrderGlobalXZY: 2,
+			RotationOrderGlobalYXZ: 0,
+			RotationOrderGlobalYZX: 2,
+			RotationOrderGlobalZXY: 0,
+			RotationOrderGlobalZYX: 1,
+		}
+		for order, middleAxis := range middleAxes {
+			for _, middle := range []float32{-90, 90} {
+				for a := -180; a <= 180; a += 5 {
+					for b := -180; b <= 180; b += 5 {
+						var angles [3]float32
+						angles[middleAxis] = middle
+						angles[(middleAxis+1)%3] = float32(a)
+						angles[(middleAxis+2)%3] = float32(b)
+						quat := EulerQuat(Degrees(angles[0]), Degrees(angles[1]), Degrees(angles[2]), order)
+						actual := [3]Angle{}
+						actual[0], actual[1], actual[2] = quat.EulerAngles(order)
+						Expect(actual[0].IsNaN()).To(BeFalse())
+						Expect(actual[1].IsNaN()).To(BeFalse())
+						Expect(actual[2].IsNaN()).To(BeFalse())
+						Expect(actual[middleAxis].Degrees()).To(BeNumerically("~", middle, 0.1))
 					}
 				}
 			}

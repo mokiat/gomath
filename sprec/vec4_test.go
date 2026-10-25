@@ -148,6 +148,16 @@ var _ = Describe("Vec4", func() {
 		Expect(NewVec4(0.0, 0.0, 0.0, Epsilon).IsZero()).To(BeFalse())
 	})
 
+	Specify("#SqrLength", func() {
+		lng := firstVector.SqrLength()
+		Expect(lng).To(EqualFloat32(54.0))
+	})
+
+	Specify("#Length", func() {
+		lng := firstVector.Length()
+		Expect(lng).To(EqualFloat32(7.348469228349))
+	})
+
 	Specify("#VecXYZ", func() {
 		Expect(firstVector.VecXYZ()).To(HaveVec3Coords(2.0, 3.0, 4.0))
 	})

@@ -104,7 +104,7 @@ var _ = Describe("Mat4", func() {
 	})
 
 	Specify("OrthoMat4", func() {
-		orthoMatrix := OrthoMat4(-1.1, 2.1, 1.5, -3.4, 1.7, 3.8)
+		orthoMatrix := OrthoMat4(-1.1, 2.1, -3.4, 1.5, 1.7, 3.8)
 
 		// test negative boundary vector projection
 		nearCorner := NewVec4(-1.1, -3.4, -1.7, 1.0)
@@ -473,6 +473,35 @@ var _ = Describe("Mat4", func() {
 		Expect(t).To(HaveVec3Coords(translation.X, translation.Y, translation.Z))
 		Expect(r).To(HaveQuatCoords(rotation.W, rotation.X, rotation.Y, rotation.Z))
 		Expect(s).To(HaveVec3Coords(scale.X, scale.Y, scale.Z))
+	})
+
+	Specify("#TRS with negative X scale", func() {
+		translation := NewVec3(15.0, 5.0, -3.0)
+		rotation := RotationQuat(Degrees(30), BasisXVec3())
+		scale := NewVec3(-0.1, 0.5, 0.3)
+		matrix := TRSMat4(translation, rotation, scale)
+
+		t, r, s := matrix.TRS()
+		Expect(t).To(HaveVec3Coords(translation.X, translation.Y, translation.Z))
+		Expect(r).To(HaveQuatCoords(rotation.W, rotation.X, rotation.Y, rotation.Z))
+		Expect(s).To(HaveVec3Coords(scale.X, scale.Y, scale.Z))
+	})
+
+	Specify("#TRS with negative Y scale", func() {
+		translation := NewVec3(15.0, 5.0, -3.0)
+		rotation := RotationQuat(Degrees(30), BasisXVec3())
+		scale := NewVec3(0.1, -0.5, 0.3)
+		matrix := TRSMat4(translation, rotation, scale)
+
+		// The reflection is moved to the X axis, so only the recomposed
+		// matrix can be compared with the original.
+		t, r, s := matrix.TRS()
+		Expect(s.X).To(BeNumerically("<", 0.0))
+		expected := matrix.RowMajorArray()
+		actual := TRSMat4(t, r, s).RowMajorArray()
+		for i := range expected {
+			Expect(actual[i]).To(EqualFloat32(expected[i]))
+		}
 	})
 
 	Specify("#RowMajorArray", func() {

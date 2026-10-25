@@ -18,18 +18,6 @@ var _ = Describe("Util", func() {
 		Expect(Abs(float32(11.01))).To(EqualFloat32(11.01))
 	})
 
-	Specify("Max", func() {
-		Expect(Max(float32(1.0), float32(2.0))).To(EqualFloat32(2.0))
-		Expect(Max(float32(1.0), float32(-1.0))).To(EqualFloat32(1.0))
-		Expect(Max(float32(5.0), float32(5.0))).To(EqualFloat32(5.0))
-	})
-
-	Specify("Min", func() {
-		Expect(Min(float32(1.0), float32(2.0))).To(EqualFloat32(1.0))
-		Expect(Min(float32(1.0), float32(-1.0))).To(EqualFloat32(-1.0))
-		Expect(Min(float32(5.0), float32(5.0))).To(EqualFloat32(5.0))
-	})
-
 	Specify("Sum", func() {
 		Expect(Sum(float32(1.0), float32(2.0))).To(EqualFloat32(3.0))
 		Expect(Sum(float32(1.0), float32(-1.0))).To(EqualFloat32(0.0))
@@ -83,10 +71,30 @@ var _ = Describe("Util", func() {
 		Expect(Eq(0.0000003, 0.0000002)).To(BeTrue()) // outside precision
 	})
 
+	Specify("Eq with large values", func() {
+		Expect(Eq(1000000.0, 1000000.5)).To(BeTrue())
+		Expect(Eq(1000000.0, 1000002.0)).To(BeFalse())
+		Expect(Eq(-1000000.0, -1000000.5)).To(BeTrue())
+		Expect(Eq(-1000000.0, 1000000.0)).To(BeFalse())
+	})
+
+	Specify("Eq with special values", func() {
+		inf := float32(math.Inf(1))
+		nan := float32(math.NaN())
+		Expect(Eq(inf, inf)).To(BeTrue())
+		Expect(Eq(-inf, -inf)).To(BeTrue())
+		Expect(Eq(inf, -inf)).To(BeFalse())
+		Expect(Eq(inf, math.MaxFloat32)).To(BeFalse())
+		Expect(Eq(nan, nan)).To(BeFalse())
+		Expect(Eq(nan, 0.0)).To(BeFalse())
+	})
+
 	Specify("EqEps", func() {
 		Expect(EqEps(0.01, 0.01, 0.01)).To(BeTrue())
 		Expect(EqEps(0.01, 0.02, 0.01)).To(BeFalse())
 		Expect(EqEps(0.003, 0.002, 0.01)).To(BeTrue()) // outside precision
+		Expect(EqEps(1000.0, 1009.0, 0.01)).To(BeTrue())
+		Expect(EqEps(1000.0, 1011.0, 0.01)).To(BeFalse())
 	})
 
 	Specify("Mod", func() {

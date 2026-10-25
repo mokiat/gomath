@@ -66,6 +66,8 @@ func ScaleMat4(x, y, z float64) Mat4 {
 
 // RotationMat4 returns a rotation matrix for the given angle around the
 // axis defined by (x, y, z).
+//
+// If the axis has zero length, the result has NaN elements.
 func RotationMat4(angle Angle, x, y, z float64) Mat4 {
 	vector := UnitVec3(NewVec3(x, y, z))
 	return rotationMat4FromNormalizedData(Cos(angle), Sin(angle), vector)
@@ -119,7 +121,7 @@ func TRSMat4(translation Vec3, rotation Quat, scale Vec3) Mat4 {
 }
 
 // OrthoMat4 returns a 3D orthographic projection matrix.
-func OrthoMat4(left, right, top, bottom, near, far float64) Mat4 {
+func OrthoMat4(left, right, bottom, top, near, far float64) Mat4 {
 	var result Mat4
 	result.M11 = 2.0 / (right - left)
 	result.M14 = (right + left) / (left - right)
@@ -457,9 +459,17 @@ func (m Mat4) Rotation() Quat {
 }
 
 // TRS decomposes the matrix into translation, rotation, and scale.
+//
+// If the matrix contains a reflection (i.e. an odd number of negative scale
+// factors), it is represented as a negative X scale. This means that the
+// returned values always recompose to the same matrix through TRSMat4, though
+// they may differ from the ones that were originally used to build it.
 func (m Mat4) TRS() (Vec3, Quat, Vec3) {
 	translation := m.Translation()
 	scale := m.Scale()
+	if Vec3Dot(Vec3Cross(m.OrientationX(), m.OrientationY()), m.OrientationZ()) < 0.0 {
+		scale.X = -scale.X
+	}
 	m.M11 /= scale.X
 	m.M21 /= scale.X
 	m.M31 /= scale.X

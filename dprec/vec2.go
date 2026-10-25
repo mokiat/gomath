@@ -107,12 +107,16 @@ func Vec2Lerp(a, b Vec2, t float64) Vec2 {
 }
 
 // UnitVec2 returns the unit (normalized) vector in the direction of vector.
+//
+// If vector has zero length, the result has NaN components.
 func UnitVec2(vector Vec2) Vec2 {
 	return Vec2Quot(vector, vector.Length())
 }
 
 // ResizedVec2 returns a vector in the same direction as vector but with
 // the given length.
+//
+// If vector has zero length, the result has NaN components.
 func ResizedVec2(vector Vec2, newLength float64) Vec2 {
 	ratio := newLength / vector.Length()
 	return Vec2Prod(vector, ratio)
@@ -130,6 +134,8 @@ func InverseVec2(vector Vec2) Vec2 {
 // rotated 90 degrees clockwise (the right-hand perpendicular). When the
 // given vector is an edge of a counter-clockwise wound polygon, the
 // returned normal points outward.
+//
+// If vector has zero length, the result has NaN components.
 func NormalVec2(vector Vec2) Vec2 {
 	return UnitVec2(Vec2{
 		X: vector.Y,
@@ -174,6 +180,11 @@ func (v Vec2) SqrLength() float64 {
 // Length returns the length of the vector.
 func (v Vec2) Length() float64 {
 	return Sqrt(Vec2Dot(v, v))
+}
+
+// Array returns the vector components as an array.
+func (v Vec2) Array() [2]float64 {
+	return [2]float64{v.X, v.Y}
 }
 
 // String returns a string representation of the vector.
