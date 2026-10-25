@@ -66,6 +66,8 @@ func ScaleMat4(x, y, z float32) Mat4 {
 
 // RotationMat4 returns a rotation matrix for the given angle around the
 // axis defined by (x, y, z).
+//
+// If the axis has zero length, the result has NaN elements.
 func RotationMat4(angle Angle, x, y, z float32) Mat4 {
 	vector := UnitVec3(NewVec3(x, y, z))
 	return rotationMat4FromNormalizedData(Cos(angle), Sin(angle), vector)

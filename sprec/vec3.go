@@ -130,12 +130,16 @@ func Vec3Lerp(a, b Vec3, t float32) Vec3 {
 }
 
 // UnitVec3 returns the unit (normalized) vector in the direction of vector.
+//
+// If vector has zero length, the result has NaN components.
 func UnitVec3(vector Vec3) Vec3 {
 	return Vec3Quot(vector, vector.Length())
 }
 
 // ResizedVec3 returns a vector in the same direction as vector but with
 // the given length.
+//
+// If vector has zero length, the result has NaN components.
 func ResizedVec3(vector Vec3, newLength float32) Vec3 {
 	ratio := newLength / vector.Length()
 	return Vec3Prod(vector, ratio)
@@ -151,6 +155,8 @@ func InverseVec3(vector Vec3) Vec3 {
 }
 
 // NormalVec3 returns a unit vector perpendicular to the given vector.
+//
+// If vector has zero length, the result has NaN components.
 func NormalVec3(vector Vec3) Vec3 {
 	sqrX := vector.X * vector.X
 	sqrY := vector.Y * vector.Y

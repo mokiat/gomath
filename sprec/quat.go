@@ -92,6 +92,8 @@ func NegativeQuat(q Quat) Quat {
 
 // RotationQuat returns a quaternion representing a rotation of angle around
 // the given axis direction.
+//
+// If direction has zero length, the result has NaN components.
 func RotationQuat(angle Angle, direction Vec3) Quat {
 	cs := Cos(angle / 2.0)
 	sn := Sin(angle / 2.0)
@@ -246,11 +248,15 @@ func QuatVec3Rotation(q Quat, v Vec3) Vec3 {
 }
 
 // UnitQuat returns the normalized quaternion.
+//
+// If q has zero norm, the result has NaN components.
 func UnitQuat(q Quat) Quat {
 	return QuatScalarQuot(q, q.Norm())
 }
 
 // InverseQuat returns the multiplicative inverse of the given quaternion.
+//
+// If q has zero norm, the result has NaN components.
 func InverseQuat(q Quat) Quat {
 	return QuatScalarQuot(ConjugateQuat(q), q.SqrNorm())
 }
