@@ -71,10 +71,30 @@ var _ = Describe("Util", func() {
 		Expect(Eq(0.0000000000003, 0.0000000000002)).To(BeTrue()) // outside precision
 	})
 
+	Specify("Eq with large values", func() {
+		Expect(Eq(1000000000000.0, 1000000000000.5)).To(BeTrue())
+		Expect(Eq(1000000000000.0, 1000000000002.0)).To(BeFalse())
+		Expect(Eq(-1000000000000.0, -1000000000000.5)).To(BeTrue())
+		Expect(Eq(-1000000000000.0, 1000000000000.0)).To(BeFalse())
+	})
+
+	Specify("Eq with special values", func() {
+		inf := math.Inf(1)
+		nan := math.NaN()
+		Expect(Eq(inf, inf)).To(BeTrue())
+		Expect(Eq(-inf, -inf)).To(BeTrue())
+		Expect(Eq(inf, -inf)).To(BeFalse())
+		Expect(Eq(inf, math.MaxFloat64)).To(BeFalse())
+		Expect(Eq(nan, nan)).To(BeFalse())
+		Expect(Eq(nan, 0.0)).To(BeFalse())
+	})
+
 	Specify("EqEps", func() {
 		Expect(EqEps(0.01, 0.01, 0.01)).To(BeTrue())
 		Expect(EqEps(0.01, 0.02, 0.01)).To(BeFalse())
 		Expect(EqEps(0.003, 0.002, 0.01)).To(BeTrue()) // outside precision
+		Expect(EqEps(1000.0, 1009.0, 0.01)).To(BeTrue())
+		Expect(EqEps(1000.0, 1011.0, 0.01)).To(BeFalse())
 	})
 
 	Specify("Mod", func() {

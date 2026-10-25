@@ -9,7 +9,8 @@ const (
 	// Tau is 2π.
 	Tau = float32(math.Pi * 2.0)
 
-	// Epsilon is the tolerance used for float equality comparisons.
+	// Epsilon is the tolerance used for float equality comparisons. It is
+	// absolute for values up to 1.0 and relative above that (see EqEps).
 	Epsilon = float32(0.000001)
 )
 
@@ -76,13 +77,22 @@ func Smoothstep[T ~float32](lowerEdge, upperEdge, value T) T {
 }
 
 // Eq returns true if the two values are within Epsilon of each other.
+// See EqEps for how the tolerance scales with the magnitude of the values.
 func Eq(a, b float32) bool {
 	return EqEps(a, b, Epsilon)
 }
 
 // EqEps returns true if the two values are within epsilon of each other.
+//
+// The tolerance is absolute for values with a magnitude of up to 1.0 and
+// relative to the larger magnitude above that. This keeps the comparison
+// meaningful for both small and large values.
 func EqEps(a, b, epsilon float32) bool {
-	return Abs(a-b) < epsilon
+	if a == b {
+		return true // handles infinities
+	}
+	scale := max(1.0, Abs(a), Abs(b))
+	return Abs(a-b) < epsilon*scale
 }
 
 // Mod returns the floating-point remainder of a/b.
