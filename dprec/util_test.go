@@ -18,18 +18,6 @@ var _ = Describe("Util", func() {
 		Expect(Abs(11.01)).To(EqualFloat64(11.01))
 	})
 
-	Specify("Max", func() {
-		Expect(Max(1.0, 2.0)).To(EqualFloat64(2.0))
-		Expect(Max(1.0, -1.0)).To(EqualFloat64(1.0))
-		Expect(Max(5.0, 5.0)).To(EqualFloat64(5.0))
-	})
-
-	Specify("Min", func() {
-		Expect(Min(1.0, 2.0)).To(EqualFloat64(1.0))
-		Expect(Min(1.0, -1.0)).To(EqualFloat64(-1.0))
-		Expect(Min(5.0, 5.0)).To(EqualFloat64(5.0))
-	})
-
 	Specify("Sum", func() {
 		Expect(Sum(1.0, 2.0)).To(EqualFloat64(3.0))
 		Expect(Sum(1.0, -1.0)).To(EqualFloat64(0.0))

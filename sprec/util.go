@@ -18,24 +18,6 @@ func Abs[T ~float32](value T) T {
 	return T(math.Abs(float64(value)))
 }
 
-// Max returns the larger of the two values.
-//
-// Deprecated: Use built-in max function instead.
-//
-//go:fix inline
-func Max[T ~float32](a, b T) T {
-	return max(a, b)
-}
-
-// Min returns the smaller of the two values.
-//
-// Deprecated: Use built-in min function instead.
-//
-//go:fix inline
-func Min[T ~float32](a, b T) T {
-	return min(a, b)
-}
-
 // Sum returns the sum of the provided values.
 func Sum[T ~float32](values ...T) T {
 	var sum T
